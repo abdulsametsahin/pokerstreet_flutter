@@ -47,41 +47,82 @@ class _EventsPageState extends State<EventsPage> {
     return Consumer<EventsProvider>(
       builder: (context, eventsProvider, child) {
         if (eventsProvider.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Loading events...',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
           );
         }
 
         if (eventsProvider.error != null) {
           return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: theme.colorScheme.error,
+            child: Container(
+              margin: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.errorContainer.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: theme.colorScheme.error.withOpacity(0.2),
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  l10n.errorLoadingData,
-                  style: theme.textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  eventsProvider.error!,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.error.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.error_outline_rounded,
+                      size: 32,
+                      color: theme.colorScheme.error,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
-                FilledButton.icon(
-                  onPressed: () => eventsProvider.refreshEvents(),
-                  icon: const Icon(Icons.refresh),
-                  label: Text(l10n.retry),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.errorLoadingData,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    eventsProvider.error!,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  FilledButton.icon(
+                    onPressed: () => eventsProvider.refreshEvents(),
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: Text(l10n.retry),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -91,73 +132,92 @@ class _EventsPageState extends State<EventsPage> {
 
         if (runningEvents.isEmpty && upcomingEvents.isEmpty) {
           return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.event_busy,
-                  size: 64,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  l10n.noEventsAvailable,
-                  style: theme.textTheme.titleLarge,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  l10n.noEventsAvailableMessage,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+            child: Container(
+              margin: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.event_busy_rounded,
+                      size: 48,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
-                FilledButton.icon(
-                  onPressed: () => eventsProvider.refreshEvents(),
-                  icon: const Icon(Icons.refresh),
-                  label: Text(l10n.refresh),
-                ),
-              ],
+                  const SizedBox(height: 24),
+                  Text(
+                    l10n.noEventsAvailable,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.noEventsAvailableMessage,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 32),
+                  FilledButton.icon(
+                    onPressed: () => eventsProvider.refreshEvents(),
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: Text(l10n.refresh),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }
 
         return RefreshIndicator(
           onRefresh: () => eventsProvider.loadEvents(),
+          color: theme.colorScheme.primary,
           child: ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             children: [
               if (runningEvents.isNotEmpty) ...[
                 _buildSectionHeader(
                   l10n.liveEvents,
                   runningEvents.length,
-                  Colors.green,
-                  Icons.play_arrow,
+                  const Color(0xFF10B981),
+                  Icons.play_circle_filled_rounded,
                   theme,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 ...runningEvents.map((event) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.only(bottom: 16),
                       child: _buildEventCard(event, l10n, theme),
                     )),
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
               ],
               if (upcomingEvents.isNotEmpty) ...[
                 _buildSectionHeader(
                   l10n.upcomingEvents,
                   upcomingEvents.length,
                   theme.colorScheme.primary,
-                  Icons.schedule,
+                  Icons.schedule_rounded,
                   theme,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 ...upcomingEvents.map((event) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.only(bottom: 16),
                       child: _buildEventCard(event, l10n, theme),
                     )),
               ],
-              const SizedBox(height: 80), // Bottom padding for navigation
+              const SizedBox(height: 100), // Bottom padding for navigation
             ],
           ),
         );
@@ -172,209 +232,363 @@ class _EventsPageState extends State<EventsPage> {
     IconData icon,
     ThemeData theme,
   ) {
-    return Row(
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 8),
-        Text(
-          title,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-        const SizedBox(width: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(
-            '$count',
-            style: theme.textTheme.labelSmall?.copyWith(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              icon,
               color: color,
-              fontWeight: FontWeight.w600,
+              size: 20,
             ),
           ),
-        ),
-      ],
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              title,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              '$count',
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: color,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildEventCard(Event event, AppLocalizations l10n, ThemeData theme) {
-    return Card(
-      elevation: 2,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () => _showEventDetails(event, l10n),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      event.name,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: event.isRunning
-                          ? Colors.green.withOpacity(0.2)
-                          : event.isPaused
-                              ? Colors.orange.withOpacity(0.2)
-                              : theme.colorScheme.primary.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: event.isRunning
-                                ? Colors.green
-                                : event.isPaused
-                                    ? Colors.orange
-                                    : theme.colorScheme.primary,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          event.isRunning
-                              ? l10n.live
-                              : event.isPaused
-                                  ? l10n.paused
-                                  : l10n.pending,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: event.isRunning
-                                ? Colors.green
-                                : event.isPaused
-                                    ? Colors.orange
-                                    : theme.colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              if (event.description.isNotEmpty) ...[
-                Text(
-                  event.description,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 12),
-              ],
-              if (event.isRunning || event.isPaused) ...[
-                if (event.currentLevel != null)
-                  LevelCountdownWidget(
-                    levelRemaining: event.levelRemainingDuration,
-                    levelText: event.currentLevel!.blindsText,
-                    isBreak: event.currentLevel!.isBreak,
-                  ),
-                const SizedBox(height: 12),
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+        border: Border.all(
+          color: theme.colorScheme.outline.withOpacity(0.1),
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () => _showEventDetails(event, l10n),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header Row
                 Row(
                   children: [
                     Expanded(
-                      child: _buildInfoItem(
-                        icon: Icons.people,
-                        label: l10n.players,
-                        value: '${event.activePlayersCount}',
-                        theme: theme,
+                      child: Text(
+                        event.name,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
                     ),
-                    if (event.nextLevel != null)
-                      Expanded(
-                        child: _buildInfoItem(
-                          icon: Icons.trending_up,
-                          label: l10n.nextLevel,
-                          value: event.nextLevel!.blindsText,
-                          theme: theme,
-                        ),
-                      ),
+                    _buildStatusBadge(event, l10n, theme),
                   ],
                 ),
-              ] else if (event.isUpcoming) ...[
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(8),
+
+                // Description
+                if (event.description.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    event.description,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      height: 1.4,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.schedule,
-                        size: 20,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '${l10n.starts}: ${_formatDateTime(event.startsAt)}',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                ],
+
+                const SizedBox(height: 16),
+
+                // Live Event Content
+                if (event.isRunning || event.isPaused) ...[
+                  if (event.currentLevel != null) ...[
+                    _buildLiveCountdown(event, theme),
+                    const SizedBox(height: 16),
+                  ],
+                  _buildEventStats(event, l10n, theme),
+                ] else if (event.isUpcoming) ...[
+                  _buildUpcomingInfo(event, l10n, theme),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildInfoItem({
-    required IconData icon,
-    required String label,
-    required String value,
-    required ThemeData theme,
-  }) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: 16,
-          color: theme.colorScheme.onSurfaceVariant,
+  Widget _buildStatusBadge(
+      Event event, AppLocalizations l10n, ThemeData theme) {
+    Color statusColor;
+    String statusText;
+    IconData statusIcon;
+
+    if (event.isRunning) {
+      statusColor = const Color(0xFF10B981);
+      statusText = l10n.live;
+      statusIcon = Icons.radio_button_checked;
+    } else if (event.isPaused) {
+      statusColor = const Color(0xFFF59E0B);
+      statusText = l10n.paused;
+      statusIcon = Icons.pause_circle_filled;
+    } else {
+      statusColor = theme.colorScheme.primary;
+      statusText = l10n.pending;
+      statusIcon = Icons.schedule;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: statusColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: statusColor.withOpacity(0.3),
+          width: 1,
         ),
-        const SizedBox(width: 4),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            statusIcon,
+            size: 14,
+            color: statusColor,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            statusText,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: statusColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLiveCountdown(Event event, ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            theme.colorScheme.primaryContainer.withOpacity(0.3),
+            theme.colorScheme.primaryContainer.withOpacity(0.1),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.primary.withOpacity(0.2),
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(
+                event.currentLevel!.isBreak
+                    ? Icons.coffee_rounded
+                    : Icons.trending_up_rounded,
+                color: theme.colorScheme.primary,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                event.currentLevel!.isBreak ? 'Break' : 'Current Level',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            event.currentLevel!.blindsText,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 8),
+          LevelCountdownWidget(
+            levelRemaining: event.levelRemainingDuration,
+            levelText: event.currentLevel!.blindsText,
+            isBreak: event.currentLevel!.isBreak,
+            onCountdownComplete: () {
+              // Refresh events when countdown hits zero
+              context.read<EventsProvider>().refreshEvents();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEventStats(Event event, AppLocalizations l10n, ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildStatItem(
+              Icons.people_rounded,
+              l10n.players,
+              '${event.activePlayersCount}',
+              theme,
+            ),
+          ),
+          if (event.nextLevel != null) ...[
+            Container(
+              width: 1,
+              height: 40,
+              color: theme.colorScheme.outline.withOpacity(0.2),
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+            ),
+            Expanded(
+              child: _buildStatItem(
+                Icons.skip_next_rounded,
+                l10n.nextLevel,
+                event.nextLevel!.blindsText,
+                theme,
               ),
             ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(
+    IconData icon,
+    String label,
+    String value,
+    ThemeData theme,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: 6),
             Text(
-              value,
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w600,
+              label,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ],
         ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget _buildUpcomingInfo(
+      Event event, AppLocalizations l10n, ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.secondaryContainer.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.secondary.withOpacity(0.2),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.schedule_rounded,
+              size: 20,
+              color: theme.colorScheme.secondary,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${l10n.starts}:',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  _formatDateTime(event.startsAt),
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -418,10 +632,17 @@ class _EventDetailsBottomSheet extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      height: screenHeight * 0.8,
+      height: screenHeight * 0.85,
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -429,15 +650,15 @@ class _EventDetailsBottomSheet extends StatelessWidget {
           Container(
             width: 40,
             height: 4,
-            margin: const EdgeInsets.symmetric(vertical: 12),
+            margin: const EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4),
+              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -452,44 +673,27 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: event.isRunning
-                              ? Colors.green.withOpacity(0.2)
-                              : event.isPaused
-                                  ? Colors.orange.withOpacity(0.2)
-                                  : theme.colorScheme.primary.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          event.isRunning
-                              ? l10n.live
-                              : event.isPaused
-                                  ? l10n.paused
-                                  : l10n.pending,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: event.isRunning
-                                ? Colors.green
-                                : event.isPaused
-                                    ? Colors.orange
-                                    : theme.colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
+                      _buildStatusBadge(event, theme),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
 
                   // Description
                   if (event.description.isNotEmpty) ...[
-                    Text(
-                      event.description,
-                      style: theme.textTheme.bodyLarge,
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color:
+                            theme.colorScheme.surfaceVariant.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        event.description,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          height: 1.5,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 24),
                   ],
@@ -497,74 +701,216 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                   // Current level for running and paused events
                   if ((event.isRunning || event.isPaused) &&
                       event.currentLevel != null) ...[
-                    LevelCountdownWidget(
-                      levelRemaining: event.levelRemainingDuration,
-                      levelText: event.currentLevel!.blindsText,
-                      isBreak: event.currentLevel!.isBreak,
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            theme.colorScheme.primaryContainer.withOpacity(0.3),
+                            theme.colorScheme.primaryContainer.withOpacity(0.1),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: theme.colorScheme.primary.withOpacity(0.2),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                event.currentLevel!.isBreak
+                                    ? Icons.coffee_rounded
+                                    : Icons.trending_up_rounded,
+                                color: theme.colorScheme.primary,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                event.currentLevel!.isBreak
+                                    ? 'Break Time'
+                                    : 'Current Level',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            event.currentLevel!.blindsText,
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          LevelCountdownWidget(
+                            levelRemaining: event.levelRemainingDuration,
+                            levelText: event.currentLevel!.blindsText,
+                            isBreak: event.currentLevel!.isBreak,
+                            onCountdownComplete: () {
+                              context.read<EventsProvider>().refreshEvents();
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 24),
                   ],
 
                   // Event details
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildDetailItem(
-                          l10n.status,
-                          event.isRunning
-                              ? l10n.running
-                              : event.isPaused
-                                  ? l10n.paused
-                                  : l10n.pending,
-                          theme,
-                        ),
-                      ),
-                      Expanded(
-                        child: _buildDetailItem(
-                          l10n.players,
-                          '${event.activePlayersCount}',
-                          theme,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Start time for upcoming events
-                  if (event.isUpcoming) ...[
-                    _buildDetailItem(
-                      l10n.startsAt,
-                      _formatFullDateTime(event.startsAt),
-                      theme,
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    const SizedBox(height: 16),
-                  ],
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildDetailItem(
+                                l10n.status,
+                                event.isRunning
+                                    ? l10n.running
+                                    : event.isPaused
+                                        ? l10n.paused
+                                        : l10n.pending,
+                                theme,
+                              ),
+                            ),
+                            Expanded(
+                              child: _buildDetailItem(
+                                l10n.players,
+                                '${event.activePlayersCount}',
+                                theme,
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (event.isUpcoming) ...[
+                          const SizedBox(height: 16),
+                          _buildDetailItem(
+                            l10n.startsAt,
+                            _formatFullDateTime(event.startsAt),
+                            theme,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
 
                   // Blind structure
                   if (event.levels.isNotEmpty) ...[
-                    Text(
-                      l10n.blindStructure,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.view_list_rounded,
+                          color: theme.colorScheme.primary,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          l10n.blindStructure,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    ...event.levels
-                        .take(8)
-                        .map((level) => _buildLevelItem(level, theme)),
-                    if (event.levels.length > 8) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        l10n.andMoreLevels(event.levels.length - 8),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                          fontStyle: FontStyle.italic,
+                    const SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: theme.colorScheme.outline.withOpacity(0.1),
                         ),
                       ),
-                    ],
+                      child: Column(
+                        children: [
+                          ...event.levels
+                              .take(10)
+                              .map((level) => _buildLevelItem(level, theme)),
+                          if (event.levels.length > 10) ...[
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              child: Text(
+                                l10n.andMoreLevels(event.levels.length - 10),
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
                   ],
                 ],
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(Event event, ThemeData theme) {
+    Color statusColor;
+    String statusText;
+    IconData statusIcon;
+
+    if (event.isRunning) {
+      statusColor = const Color(0xFF10B981);
+      statusText = l10n.live;
+      statusIcon = Icons.radio_button_checked;
+    } else if (event.isPaused) {
+      statusColor = const Color(0xFFF59E0B);
+      statusText = l10n.paused;
+      statusIcon = Icons.pause_circle_filled;
+    } else {
+      statusColor = theme.colorScheme.primary;
+      statusText = l10n.pending;
+      statusIcon = Icons.schedule;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: statusColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: statusColor.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            statusIcon,
+            size: 14,
+            color: statusColor,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            statusText,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: statusColor,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -594,44 +940,81 @@ class _EventDetailsBottomSheet extends StatelessWidget {
   }
 
   Widget _buildLevelItem(Level level, ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: theme.colorScheme.outline.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+      ),
       child: Row(
         children: [
           Container(
-            width: 32,
-            height: 32,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: level.isBreak
-                  ? theme.colorScheme.secondary.withOpacity(0.2)
-                  : theme.colorScheme.primary.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(6),
+                  ? theme.colorScheme.secondary.withOpacity(0.1)
+                  : theme.colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: level.isBreak
+                    ? theme.colorScheme.secondary.withOpacity(0.3)
+                    : theme.colorScheme.primary.withOpacity(0.3),
+              ),
             ),
             child: Center(
-              child: Text(
-                level.isBreak ? 'B' : '${level.levelNumber ?? 0}',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: level.isBreak
-                      ? theme.colorScheme.secondary
-                      : theme.colorScheme.primary,
-                ),
-              ),
+              child: level.isBreak
+                  ? Icon(
+                      Icons.coffee_rounded,
+                      size: 20,
+                      color: theme.colorScheme.secondary,
+                    )
+                  : Text(
+                      '${level.levelNumber ?? 0}',
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),
           Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  level.blindsText,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  level.isBreak ? 'Break' : 'Level ${level.levelNumber ?? 0}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(8),
+            ),
             child: Text(
-              level.blindsText,
-              style: theme.textTheme.bodyMedium?.copyWith(
+              '${level.duration}min',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
                 fontWeight: FontWeight.w500,
               ),
-            ),
-          ),
-          Text(
-            '${level.duration}min',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -645,5 +1028,179 @@ class _EventDetailsBottomSheet extends StatelessWidget {
         '${dateTime.year} '
         '${dateTime.hour.toString().padLeft(2, '0')}:'
         '${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+}
+
+// Enhanced LevelCountdownWidget with callback functionality
+class LevelCountdownWidget extends StatefulWidget {
+  final Duration levelRemaining;
+  final String levelText;
+  final bool isBreak;
+  final VoidCallback? onCountdownComplete;
+
+  const LevelCountdownWidget({
+    Key? key,
+    required this.levelRemaining,
+    required this.levelText,
+    required this.isBreak,
+    this.onCountdownComplete,
+  }) : super(key: key);
+
+  @override
+  State<LevelCountdownWidget> createState() => _LevelCountdownWidgetState();
+}
+
+class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
+    with TickerProviderStateMixin {
+  late Timer _timer;
+  late Duration _remaining;
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _remaining = widget.levelRemaining;
+
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+
+    _pulseAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.05,
+    ).animate(CurvedAnimation(
+      parent: _pulseController,
+      curve: Curves.easeInOut,
+    ));
+
+    _startTimer();
+
+    // Start pulsing animation when countdown is low
+    if (_remaining.inSeconds <= 60) {
+      _pulseController.repeat(reverse: true);
+    }
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          if (_remaining.inSeconds > 0) {
+            _remaining = Duration(seconds: _remaining.inSeconds - 1);
+
+            // Start pulsing when countdown gets low
+            if (_remaining.inSeconds <= 60 && !_pulseController.isAnimating) {
+              _pulseController.repeat(reverse: true);
+            }
+
+            // Stop pulsing when countdown ends
+            if (_remaining.inSeconds <= 0) {
+              _pulseController.stop();
+              timer.cancel();
+              widget.onCountdownComplete?.call();
+            }
+          }
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isLowTime = _remaining.inSeconds <= 60;
+    final isVeryLowTime = _remaining.inSeconds <= 10;
+
+    Color timeColor = theme.colorScheme.onSurface;
+    if (isVeryLowTime) {
+      timeColor = const Color(0xFFDC2626); // Red for very low time
+    } else if (isLowTime) {
+      timeColor = const Color(0xFFF59E0B); // Orange for low time
+    }
+
+    return AnimatedBuilder(
+      animation: _pulseAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: isLowTime ? _pulseAnimation.value : 1.0,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.timer_rounded,
+                      color: timeColor,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Time Remaining',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: timeColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _formatDuration(_remaining),
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: timeColor,
+                    fontFeatures: [const FontFeature.tabularFigures()],
+                  ),
+                ),
+                if (isLowTime) ...[
+                  const SizedBox(height: 4),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: timeColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      isVeryLowTime ? 'ENDING SOON!' : 'Low Time',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: timeColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String _formatDuration(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+
+    if (hours > 0) {
+      return '${hours.toString().padLeft(2, '0')}:'
+          '${minutes.toString().padLeft(2, '0')}:'
+          '${seconds.toString().padLeft(2, '0')}';
+    } else {
+      return '${minutes.toString().padLeft(2, '0')}:'
+          '${seconds.toString().padLeft(2, '0')}';
+    }
   }
 }
