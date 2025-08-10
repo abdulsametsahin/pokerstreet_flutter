@@ -1,0 +1,21 @@
+{
+  "@@locale": "lt",
+  "appTitle": "PokerStreet",
+  "events": "Įvykiai",
+  "topPlayers": "Geriausi žaidėjai",
+  "profile": "Profilis",
+  "settings": "Nustatymai",
+  "language": "Kalba",
+  "theme": "Tema",
+  "light": "Šviesi",
+  "dark": "Tamsi",
+  "system": "Sistemos",
+  "english": "Anglų",
+  "lithuanian": "Lietuvių",
+  "eventsPageTitle": "Įvykiai",
+  "topPlayersPageTitle": "Geriausi žaidėjai",
+  "profilePageTitle": "Profilis",
+  "noEventsAvailable": "Nėra prieinamy įvykių",
+  "noPlayersAvailable": "Nėra prieinamų žaidėjų",
+  "profileNotAvailable": "Profilis neprieinamas"
+}

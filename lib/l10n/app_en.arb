@@ -1,0 +1,21 @@
+{
+  "@@locale": "en",
+  "appTitle": "PokerStreet",
+  "events": "Events",
+  "topPlayers": "Top Players",
+  "profile": "Profile",
+  "settings": "Settings",
+  "language": "Language",
+  "theme": "Theme",
+  "light": "Light",
+  "dark": "Dark",
+  "system": "System",
+  "english": "English",
+  "lithuanian": "Lithuanian",
+  "eventsPageTitle": "Events",
+  "topPlayersPageTitle": "Top Players",
+  "profilePageTitle": "Profile",
+  "noEventsAvailable": "No events available",
+  "noPlayersAvailable": "No players available",
+  "profileNotAvailable": "Profile not available"
+}
