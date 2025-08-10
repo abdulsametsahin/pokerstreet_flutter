@@ -136,6 +136,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadingEvents => 'Loading events...';
 
   @override
+  String get loadingMoreEvents => 'Loading more events...';
+
+  @override
+  String get loadingProfile => 'Loading profile...';
+
+  @override
+  String get pleaseWait => 'Please wait while we load your information';
+
+  @override
   String get totalEvents => 'Total Events';
 
   @override

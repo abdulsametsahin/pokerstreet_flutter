@@ -136,6 +136,15 @@ class AppLocalizationsLt extends AppLocalizations {
   String get loadingEvents => 'Kraunami renginiai...';
 
   @override
+  String get loadingMoreEvents => 'Kraunami daugiau renginių...';
+
+  @override
+  String get loadingProfile => 'Kraunamas profilis...';
+
+  @override
+  String get pleaseWait => 'Palaukite, kol įkeliame jūsų informaciją';
+
+  @override
   String get totalEvents => 'Visi renginiai';
 
   @override

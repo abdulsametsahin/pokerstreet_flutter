@@ -353,6 +353,24 @@ abstract class AppLocalizations {
   /// **'Loading events...'**
   String get loadingEvents;
 
+  /// No description provided for @loadingMoreEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading more events...'**
+  String get loadingMoreEvents;
+
+  /// No description provided for @loadingProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading profile...'**
+  String get loadingProfile;
+
+  /// No description provided for @pleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait while we load your information'**
+  String get pleaseWait;
+
   /// No description provided for @totalEvents.
   ///
   /// In en, this message translates to:

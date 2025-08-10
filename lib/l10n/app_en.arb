@@ -43,6 +43,9 @@
   "active": "Active",
   "eliminated": "Eliminated",
   "loadingEvents": "Loading events...",
+  "loadingMoreEvents": "Loading more events...",
+  "loadingProfile": "Loading profile...",
+  "pleaseWait": "Please wait while we load your information",
   "totalEvents": "Total Events",
   "viewAllEvents": "View all {count} events",
   "@viewAllEvents": {

@@ -13,6 +13,52 @@ class UserEventsPage extends StatefulWidget {
 class _UserEventsPageState extends State<UserEventsPage> {
   String _sortBy = 'date';
   String _filterStatus = 'all';
+  int _currentPage = 0;
+  final int _itemsPerPage = 10;
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      _loadMore();
+    }
+  }
+
+  void _loadMore() {
+    setState(() {
+      _currentPage++;
+    });
+  }
+
+  void _resetPagination() {
+    setState(() {
+      _currentPage = 0;
+    });
+  }
+
+  int _getPaginatedItemCount(int totalItems) {
+    final displayedItems = (_currentPage + 1) * _itemsPerPage;
+    if (displayedItems >= totalItems) {
+      return totalItems;
+    }
+    return displayedItems + 1; // +1 for loading indicator
+  }
+
+  bool _hasMoreItems(int totalItems) {
+    return (_currentPage + 1) * _itemsPerPage < totalItems;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +74,7 @@ class _UserEventsPageState extends State<UserEventsPage> {
               setState(() {
                 _sortBy = value;
               });
+              _resetPagination();
             },
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -68,6 +115,7 @@ class _UserEventsPageState extends State<UserEventsPage> {
               setState(() {
                 _filterStatus = value;
               });
+              _resetPagination();
             },
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -268,11 +316,45 @@ class _UserEventsPageState extends State<UserEventsPage> {
               // Events List
               Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: filteredEvents.length,
+                  itemCount: _getPaginatedItemCount(filteredEvents.length),
                   itemBuilder: (context, index) {
-                    final event = filteredEvents[index];
-                    return _buildEventCard(context, event, index);
+                    // Show loading indicator if we're at the end and there are more items
+                    if (index ==
+                            _getPaginatedItemCount(filteredEvents.length) - 1 &&
+                        _hasMoreItems(filteredEvents.length)) {
+                      return Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              const CircularProgressIndicator(),
+                              const SizedBox(height: 8),
+                              Text(
+                                l10n.loadingMoreEvents,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    // Show actual event card
+                    if (index < filteredEvents.length) {
+                      final event = filteredEvents[index];
+                      return _buildEventCard(context, event, index);
+                    }
+
+                    return const SizedBox.shrink();
                   },
                 ),
               ),
