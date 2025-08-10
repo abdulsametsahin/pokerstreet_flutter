@@ -118,5 +118,20 @@
   "timeRemaining": "Liko laiko",
   "lowTime": "Mažai laiko",
   "endingSoon": "BAIGIASI!",
-  "level": "Lygis"
+  "level": "Lygis",
+  "register": "Registruotis",
+  "fullName": "Vardas Pavardė",
+  "password": "Slaptažodis",
+  "confirmPassword": "Patvirtinti slaptažodį",
+  "dontHaveAccount": "Neturite paskyros? Registruokitės",
+  "alreadyHaveAccount": "Jau turite paskyrą? Prisijunkite",
+  "pleaseEnterEmail": "Įveskite savo el. paštą",
+  "pleaseEnterValidEmail": "Įveskite teisingą el. pašto adresą",
+  "pleaseEnterPassword": "Įveskite savo slaptažodį",
+  "pleaseEnterName": "Įveskite savo vardą",
+  "pleaseConfirmPassword": "Patvirtinkite savo slaptažodį",
+  "passwordMustBe8Characters": "Slaptažodis turi būti mažiausiai 8 simbolių",
+  "passwordsDoNotMatch": "Slaptažodžiai nesutampa",
+  "tapForDetails": "Spustelėkite, kad peržiūrėtumėte informaciją",
+  "performance": "Veikla"
 }

@@ -118,5 +118,20 @@
   "timeRemaining": "Time Remaining",
   "lowTime": "Low Time",
   "endingSoon": "ENDING SOON!",
-  "level": "Level"
+  "level": "Level",
+  "register": "Register",
+  "fullName": "Full Name",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "dontHaveAccount": "Don't have an account? Register",
+  "alreadyHaveAccount": "Already have an account? Login",
+  "pleaseEnterEmail": "Please enter your email",
+  "pleaseEnterValidEmail": "Please enter a valid email",
+  "pleaseEnterPassword": "Please enter your password",
+  "pleaseEnterName": "Please enter your name",
+  "pleaseConfirmPassword": "Please confirm your password",
+  "passwordMustBe8Characters": "Password must be at least 8 characters",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "tapForDetails": "Tap for details",
+  "performance": "Performance"
 }

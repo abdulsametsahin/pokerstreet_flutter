@@ -116,7 +116,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildLoginForm(BuildContext context, AuthProvider authProvider, AppLocalizations l10n) {
+  Widget _buildLoginForm(
+      BuildContext context, AuthProvider authProvider, AppLocalizations l10n) {
     final _formKey = GlobalKey<FormState>();
     final _emailController = TextEditingController();
     final _passwordController = TextEditingController();
@@ -179,10 +180,10 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your email';
+                return l10n.pleaseEnterEmail;
               }
               if (!value.contains('@')) {
-                return 'Please enter a valid email';
+                return l10n.pleaseEnterValidEmail;
               }
               return null;
             },
@@ -194,7 +195,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _passwordController,
                 obscureText: _obscurePassword,
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: l10n.password,
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.lock),
                   suffixIcon: IconButton(
@@ -212,7 +213,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
+                    return l10n.pleaseEnterPassword;
                   }
                   return null;
                 },
@@ -241,7 +242,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               );
             },
-            child: const Text('Don\'t have an account? Register'),
+            child: Text(l10n.dontHaveAccount),
           ),
         ],
       ),
@@ -699,7 +700,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Tap for details',
+                    l10n.tapForDetails,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Theme.of(context)
                               .colorScheme
@@ -811,7 +812,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Performance',
+                    l10n.performance,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -1022,6 +1023,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildError(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1033,12 +1036,12 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Error loading profile',
+            l10n.errorLoadingProfile,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 8),
           Text(
-            'Please try again later',
+            l10n.pleaseRetryLater,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),

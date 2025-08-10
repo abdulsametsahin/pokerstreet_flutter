@@ -287,4 +287,49 @@ class AppLocalizationsLt extends AppLocalizations {
 
   @override
   String get level => 'Lygis';
+
+  @override
+  String get register => 'Registruotis';
+
+  @override
+  String get fullName => 'Vardas Pavardė';
+
+  @override
+  String get password => 'Slaptažodis';
+
+  @override
+  String get confirmPassword => 'Patvirtinti slaptažodį';
+
+  @override
+  String get dontHaveAccount => 'Neturite paskyros? Registruokitės';
+
+  @override
+  String get alreadyHaveAccount => 'Jau turite paskyrą? Prisijunkite';
+
+  @override
+  String get pleaseEnterEmail => 'Įveskite savo el. paštą';
+
+  @override
+  String get pleaseEnterValidEmail => 'Įveskite teisingą el. pašto adresą';
+
+  @override
+  String get pleaseEnterPassword => 'Įveskite savo slaptažodį';
+
+  @override
+  String get pleaseEnterName => 'Įveskite savo vardą';
+
+  @override
+  String get pleaseConfirmPassword => 'Patvirtinkite savo slaptažodį';
+
+  @override
+  String get passwordMustBe8Characters => 'Slaptažodis turi būti mažiausiai 8 simbolių';
+
+  @override
+  String get passwordsDoNotMatch => 'Slaptažodžiai nesutampa';
+
+  @override
+  String get tapForDetails => 'Spustelėkite, kad peržiūrėtumėte informaciją';
+
+  @override
+  String get performance => 'Veikla';
 }
