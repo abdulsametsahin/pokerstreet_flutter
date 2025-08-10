@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
-import 'login_screen.dart';
+import 'register_screen.dart';
 import 'user_events_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -106,63 +106,144 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildLoginPrompt(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .surfaceVariant
-                    .withOpacity(0.3),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Icon(
-                Icons.person_off,
-                size: 64,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        return Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: _buildLoginForm(context, authProvider, l10n),
+        );
+      },
+    );
+  }
+
+  Widget _buildLoginForm(BuildContext context, AuthProvider authProvider, AppLocalizations l10n) {
+    final _formKey = GlobalKey<FormState>();
+    final _emailController = TextEditingController();
+    final _passwordController = TextEditingController();
+    bool _obscurePassword = true;
+
+    Future<void> _login() async {
+      if (!_formKey.currentState!.validate()) return;
+
+      final response = await authProvider.login(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      if (mounted) {
+        if (response.success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response.message),
+              backgroundColor: Colors.green,
             ),
-            const SizedBox(height: 24),
-            Text(
-              l10n.pleaseLoginToViewProfile,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-              textAlign: TextAlign.center,
+          );
+          // No need to pop as we're already on the profile page
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response.message),
+              backgroundColor: Colors.red,
             ),
-            const SizedBox(height: 12),
-            Text(
-              l10n.loginPromptDescription,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32),
-            FilledButton.icon(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const LoginScreen(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.login),
-              label: Text(l10n.login),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
+          );
+        }
+      }
+    }
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.account_circle,
+            size: 80,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(height: 32),
+          Text(
+            l10n.pleaseLoginToViewProfile,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
-              ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+          TextFormField(
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              labelText: l10n.email,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.email),
             ),
-          ],
-        ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your email';
+              }
+              if (!value.contains('@')) {
+                return 'Please enter a valid email';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 16),
+          StatefulBuilder(
+            builder: (context, setState) {
+              return TextFormField(
+                controller: _passwordController,
+                obscureText: _obscurePassword,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  return null;
+                },
+              );
+            },
+          ),
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: authProvider.isLoading ? null : _login,
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              child: authProvider.isLoading
+                  ? const CircularProgressIndicator()
+                  : Text(l10n.login),
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const RegisterScreen(),
+                ),
+              );
+            },
+            child: const Text('Don\'t have an account? Register'),
+          ),
+        ],
       ),
     );
   }
