@@ -8,6 +8,7 @@ import 'providers/auth_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/top_players_provider.dart';
+import 'providers/events_provider.dart';
 import 'screens/main_screen.dart';
 
 void main() async {
@@ -29,6 +30,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => TopPlayersProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => EventsProvider(),
         ),
       ],
       child: const MyApp(),
