@@ -1024,7 +1024,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildError(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
