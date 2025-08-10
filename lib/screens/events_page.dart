@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import '../providers/events_provider.dart';
 import '../models/event.dart';
-import '../widgets/countdown_widget.dart';
 import '../l10n/app_localizations.dart';
 
 class EventsPage extends StatefulWidget {

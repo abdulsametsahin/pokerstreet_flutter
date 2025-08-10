@@ -31,14 +31,16 @@ class EventsProvider with ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    _eventsStreamController.add(_events);
-
     try {
       _events = await EventsService.getPublicEvents();
       _error = null;
+      // Emit the updated events to the stream
+      _eventsStreamController.add(_events);
     } catch (e) {
       _error = e.toString();
       _events = [];
+      // Emit empty list on error
+      _eventsStreamController.add(_events);
     } finally {
       _isLoading = false;
       notifyListeners();
