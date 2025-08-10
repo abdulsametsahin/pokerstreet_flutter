@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'l10n/app_localizations.dart';
+import 'providers/auth_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
 import 'screens/main_screen.dart';
@@ -21,6 +22,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => LocaleProvider(prefs),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(prefs),
         ),
       ],
       child: const MyApp(),
