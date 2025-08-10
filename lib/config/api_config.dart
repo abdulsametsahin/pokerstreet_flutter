@@ -11,6 +11,11 @@ class ApiConfig {
   static const String logoutEndpoint = '$mobileBaseUrl/auth/logout';
   static const String logoutAllEndpoint = '$mobileBaseUrl/auth/logout-all';
 
+  // Public endpoints
+  static const String topPlayersEndpoint = '$mobileBaseUrl/top-players';
+  static const String availableMonthsEndpoint =
+      '$mobileBaseUrl/top-players/months';
+
   // Headers
   static Map<String, String> get headers => {
         'Content-Type': 'application/json',

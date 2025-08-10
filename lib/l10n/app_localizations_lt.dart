@@ -139,6 +139,33 @@ class AppLocalizationsLt extends AppLocalizations {
   String get loadingMoreEvents => 'Kraunami daugiau renginių...';
 
   @override
+  String get rank => 'Vieta';
+
+  @override
+  String get player => 'Žaidėjas';
+
+  @override
+  String get topPlayersTitle => 'Geriausi žaidėjai';
+
+  @override
+  String get selectMonth => 'Pasirinkti mėnesį';
+
+  @override
+  String get noPlayersThisMonth => 'Šį mėnesį žaidėjų nerasta';
+
+  @override
+  String get errorLoadingPlayers => 'Klaida kraunant žaidėjus';
+
+  @override
+  String get retry => 'Bandyti dar kartą';
+
+  @override
+  String get eventsPlayed => 'Renginiai';
+
+  @override
+  String get avgPosition => 'Vid. poz.';
+
+  @override
   String get loadingProfile => 'Kraunamas profilis...';
 
   @override

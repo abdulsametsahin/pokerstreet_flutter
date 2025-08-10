@@ -7,6 +7,7 @@ import 'l10n/app_localizations.dart';
 import 'providers/auth_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
+import 'providers/top_players_provider.dart';
 import 'screens/main_screen.dart';
 
 void main() async {
@@ -25,6 +26,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => AuthProvider(prefs),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TopPlayersProvider(),
         ),
       ],
       child: const MyApp(),

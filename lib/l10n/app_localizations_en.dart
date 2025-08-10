@@ -139,6 +139,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadingMoreEvents => 'Loading more events...';
 
   @override
+  String get rank => 'Rank';
+
+  @override
+  String get player => 'Player';
+
+  @override
+  String get topPlayersTitle => 'Top Players';
+
+  @override
+  String get selectMonth => 'Select Month';
+
+  @override
+  String get noPlayersThisMonth => 'No players found for this month';
+
+  @override
+  String get errorLoadingPlayers => 'Error loading players';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get eventsPlayed => 'Events';
+
+  @override
+  String get avgPosition => 'Avg Pos';
+
+  @override
   String get loadingProfile => 'Loading profile...';
 
   @override

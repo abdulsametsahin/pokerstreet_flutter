@@ -359,6 +359,60 @@ abstract class AppLocalizations {
   /// **'Loading more events...'**
   String get loadingMoreEvents;
 
+  /// No description provided for @rank.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank'**
+  String get rank;
+
+  /// No description provided for @player.
+  ///
+  /// In en, this message translates to:
+  /// **'Player'**
+  String get player;
+
+  /// No description provided for @topPlayersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Players'**
+  String get topPlayersTitle;
+
+  /// No description provided for @selectMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Month'**
+  String get selectMonth;
+
+  /// No description provided for @noPlayersThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'No players found for this month'**
+  String get noPlayersThisMonth;
+
+  /// No description provided for @errorLoadingPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading players'**
+  String get errorLoadingPlayers;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @eventsPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get eventsPlayed;
+
+  /// No description provided for @avgPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Pos'**
+  String get avgPosition;
+
   /// No description provided for @loadingProfile.
   ///
   /// In en, this message translates to:
