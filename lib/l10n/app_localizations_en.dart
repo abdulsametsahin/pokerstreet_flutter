@@ -59,4 +59,122 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileNotAvailable => 'Profile not available';
+
+  @override
+  String get pleaseLoginToViewProfile => 'Please login to view your profile';
+
+  @override
+  String get loginPromptDescription => 'You need to be logged in to access your profile information';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get accountInformation => 'Account Information';
+
+  @override
+  String get userId => 'User ID';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get memberSince => 'Member Since';
+
+  @override
+  String get myEvents => 'My Events';
+
+  @override
+  String get noEventsFound => 'No events found';
+
+  @override
+  String get noEventsDescription => 'You haven\'t participated in any events yet';
+
+  @override
+  String get errorLoadingProfile => 'Error loading profile';
+
+  @override
+  String get pleaseRetryLater => 'Please try again later';
+
+  @override
+  String get eventStatus => 'Status';
+
+  @override
+  String get position => 'Position';
+
+  @override
+  String get score => 'Score';
+
+  @override
+  String get balance => 'Balance';
+
+  @override
+  String get joinedAt => 'Joined';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get inProgress => 'In Progress';
+
+  @override
+  String get paused => 'Paused';
+
+  @override
+  String get upcoming => 'Upcoming';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get eliminated => 'Eliminated';
+
+  @override
+  String get loadingEvents => 'Loading events...';
+
+  @override
+  String get totalEvents => 'Total Events';
+
+  @override
+  String viewAllEvents(int count) {
+    return 'View all $count events';
+  }
+
+  @override
+  String get sortByDate => 'Sort by Date';
+
+  @override
+  String get sortByName => 'Sort by Name';
+
+  @override
+  String get sortByPosition => 'Sort by Position';
+
+  @override
+  String get allEvents => 'All Events';
+
+  @override
+  String get averagePosition => 'Avg Position';
+
+  @override
+  String get totalBalance => 'Total Balance';
+
+  @override
+  String showingFilteredEvents(int filtered, int total) {
+    return 'Showing $filtered of $total events';
+  }
+
+  @override
+  String get clearFilter => 'Clear Filter';
+
+  @override
+  String get joinedOn => 'Joined on';
+
+  @override
+  String get participationStatus => 'Participation Status';
+
+  @override
+  String get close => 'Close';
 }

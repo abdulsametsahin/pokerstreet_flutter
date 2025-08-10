@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user.dart';
 import '../models/api_response.dart';
+import '../models/user_event.dart';
 import '../services/api_service.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -13,6 +14,8 @@ class AuthProvider extends ChangeNotifier {
   String? _token;
   User? _user;
   bool _isLoading = false;
+  List<UserEvent> _userEvents = [];
+  bool _eventsLoading = false;
 
   AuthProvider(this._prefs) {
     _loadAuthData();
@@ -22,6 +25,8 @@ class AuthProvider extends ChangeNotifier {
   String? get token => _token;
   User? get user => _user;
   bool get isLoading => _isLoading;
+  List<UserEvent> get userEvents => _userEvents;
+  bool get eventsLoading => _eventsLoading;
   bool get isAuthenticated => _token != null && _user != null;
 
   // Load auth data from storage
@@ -192,5 +197,37 @@ class AuthProvider extends ChangeNotifier {
       await ApiService.logout(_token!);
     }
     await _clearAuthData();
+  }
+
+  // Get user events
+  Future<ApiResponse<UserEventsResponse>> getUserEvents() async {
+    if (_token == null) {
+      return ApiResponse<UserEventsResponse>(
+        success: false,
+        message: 'No authentication token',
+      );
+    }
+
+    _eventsLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await ApiService.getUserEvents(_token!);
+
+      if (response.success && response.data != null) {
+        _userEvents = response.data!.events;
+      }
+
+      _eventsLoading = false;
+      notifyListeners();
+      return response;
+    } catch (e) {
+      _eventsLoading = false;
+      notifyListeners();
+      return ApiResponse<UserEventsResponse>(
+        success: false,
+        message: 'Failed to get events: ${e.toString()}',
+      );
+    }
   }
 }

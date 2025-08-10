@@ -17,5 +17,63 @@
   "profilePageTitle": "Profile",
   "noEventsAvailable": "No events available",
   "noPlayersAvailable": "No players available",
-  "profileNotAvailable": "Profile not available"
+  "profileNotAvailable": "Profile not available",
+  "pleaseLoginToViewProfile": "Please login to view your profile",
+  "loginPromptDescription": "You need to be logged in to access your profile information",
+  "login": "Login",
+  "accountInformation": "Account Information",
+  "userId": "User ID",
+  "name": "Name",
+  "email": "Email",
+  "memberSince": "Member Since",
+  "myEvents": "My Events",
+  "noEventsFound": "No events found",
+  "noEventsDescription": "You haven't participated in any events yet",
+  "errorLoadingProfile": "Error loading profile",
+  "pleaseRetryLater": "Please try again later",
+  "eventStatus": "Status",
+  "position": "Position",
+  "score": "Score",
+  "balance": "Balance",
+  "joinedAt": "Joined",
+  "completed": "Completed",
+  "inProgress": "In Progress",
+  "paused": "Paused",
+  "upcoming": "Upcoming",
+  "active": "Active",
+  "eliminated": "Eliminated",
+  "loadingEvents": "Loading events...",
+  "totalEvents": "Total Events",
+  "viewAllEvents": "View all {count} events",
+  "@viewAllEvents": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "sortByDate": "Sort by Date",
+  "sortByName": "Sort by Name",
+  "sortByPosition": "Sort by Position",
+  "allEvents": "All Events",
+  "averagePosition": "Avg Position",
+  "totalBalance": "Total Balance",
+  "showingFilteredEvents": "Showing {filtered} of {total} events",
+  "@showingFilteredEvents": {
+    "placeholders": {
+      "filtered": {
+        "type": "int",
+        "example": "3"
+      },
+      "total": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+  "clearFilter": "Clear Filter",
+  "joinedOn": "Joined on",
+  "participationStatus": "Participation Status",
+  "close": "Close"
 }

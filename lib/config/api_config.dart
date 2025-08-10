@@ -7,6 +7,7 @@ class ApiConfig {
   static const String loginEndpoint = '$mobileBaseUrl/auth/login';
   static const String registerEndpoint = '$mobileBaseUrl/auth/register';
   static const String profileEndpoint = '$mobileBaseUrl/auth/profile';
+  static const String userEventsEndpoint = '$mobileBaseUrl/auth/events';
   static const String logoutEndpoint = '$mobileBaseUrl/auth/logout';
   static const String logoutAllEndpoint = '$mobileBaseUrl/auth/logout-all';
 

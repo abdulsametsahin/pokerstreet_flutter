@@ -202,6 +202,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Profile not available'**
   String get profileNotAvailable;
+
+  /// No description provided for @pleaseLoginToViewProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Please login to view your profile'**
+  String get pleaseLoginToViewProfile;
+
+  /// No description provided for @loginPromptDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'You need to be logged in to access your profile information'**
+  String get loginPromptDescription;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// No description provided for @accountInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Information'**
+  String get accountInformation;
+
+  /// No description provided for @userId.
+  ///
+  /// In en, this message translates to:
+  /// **'User ID'**
+  String get userId;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @memberSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Member Since'**
+  String get memberSince;
+
+  /// No description provided for @myEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'My Events'**
+  String get myEvents;
+
+  /// No description provided for @noEventsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No events found'**
+  String get noEventsFound;
+
+  /// No description provided for @noEventsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t participated in any events yet'**
+  String get noEventsDescription;
+
+  /// No description provided for @errorLoadingProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading profile'**
+  String get errorLoadingProfile;
+
+  /// No description provided for @pleaseRetryLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again later'**
+  String get pleaseRetryLater;
+
+  /// No description provided for @eventStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get eventStatus;
+
+  /// No description provided for @position.
+  ///
+  /// In en, this message translates to:
+  /// **'Position'**
+  String get position;
+
+  /// No description provided for @score.
+  ///
+  /// In en, this message translates to:
+  /// **'Score'**
+  String get score;
+
+  /// No description provided for @balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get balance;
+
+  /// No description provided for @joinedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined'**
+  String get joinedAt;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @inProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get inProgress;
+
+  /// No description provided for @paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get paused;
+
+  /// No description provided for @upcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get upcoming;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @eliminated.
+  ///
+  /// In en, this message translates to:
+  /// **'Eliminated'**
+  String get eliminated;
+
+  /// No description provided for @loadingEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading events...'**
+  String get loadingEvents;
+
+  /// No description provided for @totalEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Events'**
+  String get totalEvents;
+
+  /// No description provided for @viewAllEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'View all {count} events'**
+  String viewAllEvents(int count);
+
+  /// No description provided for @sortByDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Date'**
+  String get sortByDate;
+
+  /// No description provided for @sortByName.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Name'**
+  String get sortByName;
+
+  /// No description provided for @sortByPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Position'**
+  String get sortByPosition;
+
+  /// No description provided for @allEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'All Events'**
+  String get allEvents;
+
+  /// No description provided for @averagePosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Position'**
+  String get averagePosition;
+
+  /// No description provided for @totalBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Balance'**
+  String get totalBalance;
+
+  /// No description provided for @showingFilteredEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing {filtered} of {total} events'**
+  String showingFilteredEvents(int filtered, int total);
+
+  /// No description provided for @clearFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Filter'**
+  String get clearFilter;
+
+  /// No description provided for @joinedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined on'**
+  String get joinedOn;
+
+  /// No description provided for @participationStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Participation Status'**
+  String get participationStatus;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 import '../config/api_config.dart';
 import '../models/api_response.dart';
+import '../models/user_event.dart';
 
 class ApiService {
   static Future<ApiResponse<AuthResponse>> login({
@@ -127,6 +128,36 @@ class ApiService {
       );
     } catch (e) {
       return ApiResponse<void>(
+        success: false,
+        message: 'Network error: ${e.toString()}',
+      );
+    }
+  }
+
+  static Future<ApiResponse<UserEventsResponse>> getUserEvents(
+      String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse(ApiConfig.userEventsEndpoint),
+        headers: ApiConfig.authHeaders(token),
+      );
+
+      final jsonResponse = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return ApiResponse<UserEventsResponse>(
+          success: jsonResponse['success'],
+          message: jsonResponse['message'],
+          data: UserEventsResponse.fromJson(jsonResponse['data']),
+        );
+      } else {
+        return ApiResponse<UserEventsResponse>(
+          success: false,
+          message: jsonResponse['message'] ?? 'Failed to get events',
+        );
+      }
+    } catch (e) {
+      return ApiResponse<UserEventsResponse>(
         success: false,
         message: 'Network error: ${e.toString()}',
       );

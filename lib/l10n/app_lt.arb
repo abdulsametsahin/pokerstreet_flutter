@@ -17,5 +17,63 @@
   "profilePageTitle": "Profilis",
   "noEventsAvailable": "Nėra prieinamy įvykių",
   "noPlayersAvailable": "Nėra prieinamų žaidėjų",
-  "profileNotAvailable": "Profilis neprieinamas"
+  "profileNotAvailable": "Profilis neprieinamas",
+  "pleaseLoginToViewProfile": "Prisijunkite, kad peržiūrėtumėte savo profilį",
+  "loginPromptDescription": "Turite būti prisijungę, kad galėtumėte pasiekti savo profilio informaciją",
+  "login": "Prisijungti",
+  "accountInformation": "Paskyros informacija",
+  "userId": "Vartotojo ID",
+  "name": "Vardas",
+  "email": "El. paštas",
+  "memberSince": "Narys nuo",
+  "myEvents": "Mano įvykiai",
+  "noEventsFound": "Nerasta įvykių",
+  "noEventsDescription": "Dar nedalyvavote jokiuose įvykiuose",
+  "errorLoadingProfile": "Klaida kraunant profilį",
+  "pleaseRetryLater": "Bandykite dar kartą vėliau",
+  "eventStatus": "Būsena",
+  "position": "Pozicija",
+  "score": "Taškai",
+  "balance": "Balansas",
+  "joinedAt": "Prisijungė",
+  "completed": "Baigtas",
+  "inProgress": "Vyksta",
+  "paused": "Pristabdytas",
+  "upcoming": "Būsimas",
+  "active": "Aktyvus",
+  "eliminated": "Eliminuotas",
+  "loadingEvents": "Kraunami renginiai...",
+  "totalEvents": "Visi renginiai",
+  "viewAllEvents": "Peržiūrėti visus {count} renginius",
+  "@viewAllEvents": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "sortByDate": "Rūšiuoti pagal datą",
+  "sortByName": "Rūšiuoti pagal pavadinimą",
+  "sortByPosition": "Rūšiuoti pagal poziciją",
+  "allEvents": "Visi renginiai",
+  "averagePosition": "Vid. pozicija",
+  "totalBalance": "Bendras balansas",
+  "showingFilteredEvents": "Rodoma {filtered} iš {total} renginių",
+  "@showingFilteredEvents": {
+    "placeholders": {
+      "filtered": {
+        "type": "int",
+        "example": "3"
+      },
+      "total": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+  "clearFilter": "Išvalyti filtrą",
+  "joinedOn": "Prisijungė",
+  "participationStatus": "Dalyvavimo statusas",
+  "close": "Uždaryti"
 }
