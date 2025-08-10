@@ -420,26 +420,6 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                if (player.totalBalance != 0)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: player.totalBalance >= 0
-                          ? Colors.green.withValues(alpha: 0.1)
-                          : Colors.red.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      '\$${player.totalBalance.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: player.totalBalance >= 0
-                                ? Colors.green.shade700
-                                : Colors.red.shade700,
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
-                  ),
               ],
             ),
           ],

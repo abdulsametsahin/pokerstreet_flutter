@@ -6,7 +6,6 @@ class TopPlayer {
   final double score;
   final int eventsCount;
   final double? averagePosition;
-  final double totalBalance;
   final DateTime? createdAt;
 
   TopPlayer({
@@ -17,7 +16,6 @@ class TopPlayer {
     required this.score,
     required this.eventsCount,
     this.averagePosition,
-    required this.totalBalance,
     this.createdAt,
   });
 
@@ -32,7 +30,6 @@ class TopPlayer {
       averagePosition: json['average_position'] != null
           ? (json['average_position'] as num).toDouble()
           : null,
-      totalBalance: (json['total_balance'] as num).toDouble(),
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,
@@ -48,7 +45,6 @@ class TopPlayer {
       'score': score,
       'events_count': eventsCount,
       'average_position': averagePosition,
-      'total_balance': totalBalance,
       'created_at': createdAt?.toIso8601String(),
     };
   }
