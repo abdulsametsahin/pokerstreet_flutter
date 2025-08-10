@@ -221,7 +221,9 @@ class _EventsPageState extends State<EventsPage> {
                     decoration: BoxDecoration(
                       color: event.isRunning
                           ? Colors.green.withOpacity(0.2)
-                          : theme.colorScheme.primary.withOpacity(0.2),
+                          : event.isPaused
+                              ? Colors.orange.withOpacity(0.2)
+                              : theme.colorScheme.primary.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
@@ -233,17 +235,25 @@ class _EventsPageState extends State<EventsPage> {
                           decoration: BoxDecoration(
                             color: event.isRunning
                                 ? Colors.green
-                                : theme.colorScheme.primary,
+                                : event.isPaused
+                                    ? Colors.orange
+                                    : theme.colorScheme.primary,
                             shape: BoxShape.circle,
                           ),
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          event.isRunning ? l10n.live : l10n.pending,
+                          event.isRunning
+                              ? l10n.live
+                              : event.isPaused
+                                  ? l10n.paused
+                                  : l10n.pending,
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: event.isRunning
                                 ? Colors.green
-                                : theme.colorScheme.primary,
+                                : event.isPaused
+                                    ? Colors.orange
+                                    : theme.colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -290,6 +300,30 @@ class _EventsPageState extends State<EventsPage> {
                         ),
                       ),
                   ],
+                ),
+              ] else if (event.isPaused) ...[
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.pause_circle,
+                        size: 20,
+                        color: Colors.orange,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${l10n.players}: ${event.activePlayersCount}',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ] else if (event.isUpcoming) ...[
                 Container(

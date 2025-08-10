@@ -77,7 +77,7 @@ class Event {
       nextLevel: json['next_level'] != null
           ? Level.fromJson(json['next_level'])
           : null,
-      levelRemaining: json['level_remaining'] ?? 0,
+      levelRemaining: _parseDouble(json['level_remaining']).toInt(),
     );
   }
 
@@ -101,6 +101,7 @@ class Event {
   bool get isUpcoming => status == 'upcoming' || status == 'pending';
   bool get isCompleted => status == 'completed';
   bool get isPending => status == 'pending';
+  bool get isPaused => status == 'paused';
 
   String get statusColor {
     switch (status) {

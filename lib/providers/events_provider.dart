@@ -11,11 +11,15 @@ class EventsProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  List<Event> get runningEvents =>
-      _events.where((event) => event.isRunning).toList();
+  List<Event> get runningEvents => _events
+      .where((event) => event.isRunning || event.status == 'paused')
+      .toList();
 
   List<Event> get upcomingEvents =>
       _events.where((event) => event.isUpcoming).toList();
+
+  List<Event> get pausedEvents =>
+      _events.where((event) => event.status == 'paused').toList();
 
   Future<void> loadEvents() async {
     _isLoading = true;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 import '../providers/events_provider.dart';
 import '../models/event.dart';
 import '../widgets/countdown_widget.dart';
@@ -13,11 +14,28 @@ class EventsPage extends StatefulWidget {
 }
 
 class _EventsPageState extends State<EventsPage> {
+  Timer? _refreshTimer;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<EventsProvider>().loadEvents();
+      _startAutoRefresh();
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startAutoRefresh() {
+    _refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      if (mounted) {
+        context.read<EventsProvider>().loadEvents();
+      }
     });
   }
 
@@ -26,132 +44,124 @@ class _EventsPageState extends State<EventsPage> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.events),
-        elevation: 0,
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
-      ),
-      body: Consumer<EventsProvider>(
-        builder: (context, eventsProvider, child) {
-          if (eventsProvider.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+    return Consumer<EventsProvider>(
+      builder: (context, eventsProvider, child) {
+        if (eventsProvider.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-          if (eventsProvider.error != null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: theme.colorScheme.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    l10n.errorLoadingData,
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    eventsProvider.error!,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  FilledButton.icon(
-                    onPressed: () => eventsProvider.refreshEvents(),
-                    icon: const Icon(Icons.refresh),
-                    label: Text(l10n.retry),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final runningEvents = eventsProvider.runningEvents;
-          final upcomingEvents = eventsProvider.upcomingEvents;
-
-          if (runningEvents.isEmpty && upcomingEvents.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.event_busy,
-                    size: 64,
+        if (eventsProvider.error != null) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 64,
+                  color: theme.colorScheme.error,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.errorLoadingData,
+                  style: theme.textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  eventsProvider.error!,
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    l10n.noEventsAvailable,
-                    style: theme.textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.noEventsAvailableMessage,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  FilledButton.icon(
-                    onPressed: () => eventsProvider.refreshEvents(),
-                    icon: const Icon(Icons.refresh),
-                    label: Text(l10n.refresh),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return RefreshIndicator(
-            onRefresh: () => eventsProvider.loadEvents(),
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                if (runningEvents.isNotEmpty) ...[
-                  _buildSectionHeader(
-                    l10n.liveEvents,
-                    runningEvents.length,
-                    Colors.green,
-                    Icons.live_tv,
-                    theme,
-                  ),
-                  const SizedBox(height: 12),
-                  ...runningEvents.map((event) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: _buildEventCard(event, l10n, theme),
-                      )),
-                  const SizedBox(height: 24),
-                ],
-                if (upcomingEvents.isNotEmpty) ...[
-                  _buildSectionHeader(
-                    l10n.upcomingEvents,
-                    upcomingEvents.length,
-                    theme.colorScheme.primary,
-                    Icons.schedule,
-                    theme,
-                  ),
-                  const SizedBox(height: 12),
-                  ...upcomingEvents.map((event) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: _buildEventCard(event, l10n, theme),
-                      )),
-                ],
-                const SizedBox(height: 80), // Bottom padding for navigation
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                FilledButton.icon(
+                  onPressed: () => eventsProvider.refreshEvents(),
+                  icon: const Icon(Icons.refresh),
+                  label: Text(l10n.retry),
+                ),
               ],
             ),
           );
-        },
-      ),
+        }
+
+        final runningEvents = eventsProvider.runningEvents;
+        final upcomingEvents = eventsProvider.upcomingEvents;
+
+        if (runningEvents.isEmpty && upcomingEvents.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.event_busy,
+                  size: 64,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.noEventsAvailable,
+                  style: theme.textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.noEventsAvailableMessage,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                FilledButton.icon(
+                  onPressed: () => eventsProvider.refreshEvents(),
+                  icon: const Icon(Icons.refresh),
+                  label: Text(l10n.refresh),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () => eventsProvider.loadEvents(),
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              if (runningEvents.isNotEmpty) ...[
+                _buildSectionHeader(
+                  l10n.liveEvents,
+                  runningEvents.length,
+                  Colors.green,
+                  Icons.play_arrow,
+                  theme,
+                ),
+                const SizedBox(height: 12),
+                ...runningEvents.map((event) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _buildEventCard(event, l10n, theme),
+                    )),
+                const SizedBox(height: 24),
+              ],
+              if (upcomingEvents.isNotEmpty) ...[
+                _buildSectionHeader(
+                  l10n.upcomingEvents,
+                  upcomingEvents.length,
+                  theme.colorScheme.primary,
+                  Icons.schedule,
+                  theme,
+                ),
+                const SizedBox(height: 12),
+                ...upcomingEvents.map((event) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _buildEventCard(event, l10n, theme),
+                    )),
+              ],
+              const SizedBox(height: 80), // Bottom padding for navigation
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -221,7 +231,9 @@ class _EventsPageState extends State<EventsPage> {
                     decoration: BoxDecoration(
                       color: event.isRunning
                           ? Colors.green.withOpacity(0.2)
-                          : theme.colorScheme.primary.withOpacity(0.2),
+                          : event.isPaused
+                              ? Colors.orange.withOpacity(0.2)
+                              : theme.colorScheme.primary.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
@@ -233,17 +245,25 @@ class _EventsPageState extends State<EventsPage> {
                           decoration: BoxDecoration(
                             color: event.isRunning
                                 ? Colors.green
-                                : theme.colorScheme.primary,
+                                : event.isPaused
+                                    ? Colors.orange
+                                    : theme.colorScheme.primary,
                             shape: BoxShape.circle,
                           ),
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          event.isRunning ? l10n.live : l10n.pending,
+                          event.isRunning
+                              ? l10n.live
+                              : event.isPaused
+                                  ? l10n.paused
+                                  : l10n.pending,
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: event.isRunning
                                 ? Colors.green
-                                : theme.colorScheme.primary,
+                                : event.isPaused
+                                    ? Colors.orange
+                                    : theme.colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -262,7 +282,7 @@ class _EventsPageState extends State<EventsPage> {
                 ),
                 const SizedBox(height: 12),
               ],
-              if (event.isRunning) ...[
+              if (event.isRunning || event.isPaused) ...[
                 if (event.currentLevel != null)
                   LevelCountdownWidget(
                     levelRemaining: event.levelRemainingDuration,
@@ -440,15 +460,23 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: event.isRunning
                               ? Colors.green.withOpacity(0.2)
-                              : theme.colorScheme.primary.withOpacity(0.2),
+                              : event.isPaused
+                                  ? Colors.orange.withOpacity(0.2)
+                                  : theme.colorScheme.primary.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
-                          event.isRunning ? l10n.live : l10n.pending,
+                          event.isRunning
+                              ? l10n.live
+                              : event.isPaused
+                                  ? l10n.paused
+                                  : l10n.pending,
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: event.isRunning
                                 ? Colors.green
-                                : theme.colorScheme.primary,
+                                : event.isPaused
+                                    ? Colors.orange
+                                    : theme.colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -466,8 +494,9 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                     const SizedBox(height: 24),
                   ],
 
-                  // Current level for running events
-                  if (event.isRunning && event.currentLevel != null) ...[
+                  // Current level for running and paused events
+                  if ((event.isRunning || event.isPaused) &&
+                      event.currentLevel != null) ...[
                     LevelCountdownWidget(
                       levelRemaining: event.levelRemainingDuration,
                       levelText: event.currentLevel!.blindsText,
@@ -482,7 +511,11 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                       Expanded(
                         child: _buildDetailItem(
                           l10n.status,
-                          event.isRunning ? l10n.running : l10n.pending,
+                          event.isRunning
+                              ? l10n.running
+                              : event.isPaused
+                                  ? l10n.paused
+                                  : l10n.pending,
                           theme,
                         ),
                       ),
