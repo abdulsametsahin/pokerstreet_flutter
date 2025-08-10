@@ -383,6 +383,132 @@ abstract class AppLocalizations {
   /// **'Select Month'**
   String get selectMonth;
 
+  /// No description provided for @errorLoadingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Error Loading Data'**
+  String get errorLoadingData;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @noEventsAvailableMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'There are currently no running or upcoming events.'**
+  String get noEventsAvailableMessage;
+
+  /// No description provided for @liveEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Events'**
+  String get liveEvents;
+
+  /// No description provided for @upcomingEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming Events'**
+  String get upcomingEvents;
+
+  /// No description provided for @pokerEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Poker Events'**
+  String get pokerEvents;
+
+  /// No description provided for @currentLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Level'**
+  String get currentLevel;
+
+  /// No description provided for @nextLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Level'**
+  String get nextLevel;
+
+  /// No description provided for @players.
+  ///
+  /// In en, this message translates to:
+  /// **'Players'**
+  String get players;
+
+  /// No description provided for @starts.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts'**
+  String get starts;
+
+  /// No description provided for @startingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting soon'**
+  String get startingSoon;
+
+  /// No description provided for @breakTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Break Time'**
+  String get breakTime;
+
+  /// No description provided for @breakText.
+  ///
+  /// In en, this message translates to:
+  /// **'Break'**
+  String get breakText;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @running.
+  ///
+  /// In en, this message translates to:
+  /// **'RUNNING'**
+  String get running;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'UPCOMING'**
+  String get pending;
+
+  /// No description provided for @live.
+  ///
+  /// In en, this message translates to:
+  /// **'LIVE'**
+  String get live;
+
+  /// No description provided for @blindStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Blind Structure'**
+  String get blindStructure;
+
+  /// No description provided for @startsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts At'**
+  String get startsAt;
+
+  /// No description provided for @andMoreLevels.
+  ///
+  /// In en, this message translates to:
+  /// **'And {count} more levels...'**
+  String andMoreLevels(int count);
+
   /// No description provided for @noPlayersThisMonth.
   ///
   /// In en, this message translates to:
@@ -394,12 +520,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading players'**
   String get errorLoadingPlayers;
-
-  /// No description provided for @retry.
-  ///
-  /// In en, this message translates to:
-  /// **'Retry'**
-  String get retry;
 
   /// No description provided for @eventsPlayed.
   ///

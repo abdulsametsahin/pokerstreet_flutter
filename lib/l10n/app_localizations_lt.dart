@@ -151,13 +151,75 @@ class AppLocalizationsLt extends AppLocalizations {
   String get selectMonth => 'Pasirinkti mėnesį';
 
   @override
+  String get errorLoadingData => 'Klaida kraunant duomenis';
+
+  @override
+  String get retry => 'Bandyti dar kartą';
+
+  @override
+  String get refresh => 'Atnaujinti';
+
+  @override
+  String get noEventsAvailableMessage => 'Šiuo metu nėra vykstančių ar būsimų renginių.';
+
+  @override
+  String get liveEvents => 'Tiesiogiai transliuojami renginiai';
+
+  @override
+  String get upcomingEvents => 'Būsimi renginiai';
+
+  @override
+  String get pokerEvents => 'Pokerio renginiai';
+
+  @override
+  String get currentLevel => 'Dabartinis lygis';
+
+  @override
+  String get nextLevel => 'Kitas lygis';
+
+  @override
+  String get players => 'Žaidėjai';
+
+  @override
+  String get starts => 'Prasideda';
+
+  @override
+  String get startingSoon => 'Prasideda netrukus';
+
+  @override
+  String get breakTime => 'Pertrauka';
+
+  @override
+  String get breakText => 'Pertrauka';
+
+  @override
+  String get status => 'Statusas';
+
+  @override
+  String get running => 'VYKSTA';
+
+  @override
+  String get pending => 'BŪSIMAS';
+
+  @override
+  String get live => 'TIESIOGIAI';
+
+  @override
+  String get blindStructure => 'Blainds struktūra';
+
+  @override
+  String get startsAt => 'Prasideda';
+
+  @override
+  String andMoreLevels(int count) {
+    return 'Ir dar $count lygių...';
+  }
+
+  @override
   String get noPlayersThisMonth => 'Šį mėnesį žaidėjų nerasta';
 
   @override
   String get errorLoadingPlayers => 'Klaida kraunant žaidėjus';
-
-  @override
-  String get retry => 'Bandyti dar kartą';
 
   @override
   String get eventsPlayed => 'Renginiai';

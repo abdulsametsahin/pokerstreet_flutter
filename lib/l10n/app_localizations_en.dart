@@ -151,13 +151,75 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectMonth => 'Select Month';
 
   @override
+  String get errorLoadingData => 'Error Loading Data';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get noEventsAvailableMessage => 'There are currently no running or upcoming events.';
+
+  @override
+  String get liveEvents => 'Live Events';
+
+  @override
+  String get upcomingEvents => 'Upcoming Events';
+
+  @override
+  String get pokerEvents => 'Poker Events';
+
+  @override
+  String get currentLevel => 'Current Level';
+
+  @override
+  String get nextLevel => 'Next Level';
+
+  @override
+  String get players => 'Players';
+
+  @override
+  String get starts => 'Starts';
+
+  @override
+  String get startingSoon => 'Starting soon';
+
+  @override
+  String get breakTime => 'Break Time';
+
+  @override
+  String get breakText => 'Break';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get running => 'RUNNING';
+
+  @override
+  String get pending => 'UPCOMING';
+
+  @override
+  String get live => 'LIVE';
+
+  @override
+  String get blindStructure => 'Blind Structure';
+
+  @override
+  String get startsAt => 'Starts At';
+
+  @override
+  String andMoreLevels(int count) {
+    return 'And $count more levels...';
+  }
+
+  @override
   String get noPlayersThisMonth => 'No players found for this month';
 
   @override
   String get errorLoadingPlayers => 'Error loading players';
-
-  @override
-  String get retry => 'Retry';
 
   @override
   String get eventsPlayed => 'Events';

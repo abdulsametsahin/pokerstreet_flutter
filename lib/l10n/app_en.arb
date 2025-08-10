@@ -48,9 +48,36 @@
   "player": "Player",
   "topPlayersTitle": "Top Players",
   "selectMonth": "Select Month",
+  "errorLoadingData": "Error Loading Data",
+  "retry": "Retry",
+  "refresh": "Refresh",
+  "noEventsAvailableMessage": "There are currently no running or upcoming events.",
+  "liveEvents": "Live Events",
+  "upcomingEvents": "Upcoming Events",
+  "pokerEvents": "Poker Events",
+  "currentLevel": "Current Level",
+  "nextLevel": "Next Level",
+  "players": "Players",
+  "starts": "Starts",
+  "startingSoon": "Starting soon",
+  "breakTime": "Break Time",
+  "breakText": "Break",
+  "status": "Status",
+  "running": "RUNNING",
+  "pending": "UPCOMING",
+  "live": "LIVE",
+  "blindStructure": "Blind Structure",
+  "startsAt": "Starts At",
+  "andMoreLevels": "And {count} more levels...",
+  "@andMoreLevels": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "noPlayersThisMonth": "No players found for this month",
   "errorLoadingPlayers": "Error loading players",
-  "retry": "Retry",
   "eventsPlayed": "Events",
   "avgPosition": "Avg Pos",
   "loadingProfile": "Loading profile...",

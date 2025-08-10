@@ -98,8 +98,9 @@ class Event {
   }
 
   bool get isRunning => status == 'running';
-  bool get isUpcoming => status == 'upcoming';
+  bool get isUpcoming => status == 'upcoming' || status == 'pending';
   bool get isCompleted => status == 'completed';
+  bool get isPending => status == 'pending';
 
   String get statusColor {
     switch (status) {

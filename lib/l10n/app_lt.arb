@@ -48,9 +48,36 @@
   "player": "Žaidėjas",
   "topPlayersTitle": "Geriausi žaidėjai",
   "selectMonth": "Pasirinkti mėnesį",
+  "errorLoadingData": "Klaida kraunant duomenis",
+  "retry": "Bandyti dar kartą",
+  "refresh": "Atnaujinti",
+  "noEventsAvailableMessage": "Šiuo metu nėra vykstančių ar būsimų renginių.",
+  "liveEvents": "Tiesiogiai transliuojami renginiai",
+  "upcomingEvents": "Būsimi renginiai",
+  "pokerEvents": "Pokerio renginiai",
+  "currentLevel": "Dabartinis lygis",
+  "nextLevel": "Kitas lygis",
+  "players": "Žaidėjai",
+  "starts": "Prasideda",
+  "startingSoon": "Prasideda netrukus",
+  "breakTime": "Pertrauka",
+  "breakText": "Pertrauka",
+  "status": "Statusas",
+  "running": "VYKSTA",
+  "pending": "BŪSIMAS",
+  "live": "TIESIOGIAI",
+  "blindStructure": "Blainds struktūra",
+  "startsAt": "Prasideda",
+  "andMoreLevels": "Ir dar {count} lygių...",
+  "@andMoreLevels": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "noPlayersThisMonth": "Šį mėnesį žaidėjų nerasta",
   "errorLoadingPlayers": "Klaida kraunant žaidėjus",
-  "retry": "Bandyti dar kartą",
   "eventsPlayed": "Renginiai",
   "avgPosition": "Vid. poz.",
   "loadingProfile": "Kraunamas profilis...",
