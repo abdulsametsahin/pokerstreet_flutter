@@ -31,7 +31,7 @@ class _EventsPageState extends State<EventsPage> {
   }
 
   void _startAutoRefresh() {
-    _refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       if (mounted) {
         context.read<EventsProvider>().loadEvents();
       }
