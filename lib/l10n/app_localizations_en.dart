@@ -275,4 +275,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get close => 'Close';
+
+  @override
+  String get timeRemaining => 'Time Remaining';
+
+  @override
+  String get lowTime => 'Low Time';
+
+  @override
+  String get endingSoon => 'ENDING SOON!';
+
+  @override
+  String get level => 'Level';
 }

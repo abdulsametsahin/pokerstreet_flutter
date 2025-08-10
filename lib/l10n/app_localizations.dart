@@ -622,6 +622,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Close'**
   String get close;
+
+  /// No description provided for @timeRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Remaining'**
+  String get timeRemaining;
+
+  /// No description provided for @lowTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Time'**
+  String get lowTime;
+
+  /// No description provided for @endingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'ENDING SOON!'**
+  String get endingSoon;
+
+  /// No description provided for @level.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get level;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

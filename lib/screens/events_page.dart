@@ -57,7 +57,7 @@ class _EventsPageState extends State<EventsPage> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Loading events...',
+                  l10n.loadingEvents,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -338,7 +338,7 @@ class _EventsPageState extends State<EventsPage> {
                 // Live Event Content
                 if (event.isRunning || event.isPaused) ...[
                   if (event.currentLevel != null) ...[
-                    _buildLiveCountdown(event, theme),
+                    _buildLiveCountdown(event, l10n, theme),
                     const SizedBox(height: 16),
                   ],
                   _buildEventStats(event, l10n, theme),
@@ -404,7 +404,8 @@ class _EventsPageState extends State<EventsPage> {
     );
   }
 
-  Widget _buildLiveCountdown(Event event, ThemeData theme) {
+  Widget _buildLiveCountdown(
+      Event event, AppLocalizations l10n, ThemeData theme) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -434,7 +435,9 @@ class _EventsPageState extends State<EventsPage> {
               ),
               const SizedBox(width: 8),
               Text(
-                event.currentLevel!.isBreak ? 'Break' : 'Current Level',
+                event.currentLevel!.isBreak
+                    ? l10n.breakTime
+                    : l10n.currentLevel,
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: theme.colorScheme.primary,
                   fontWeight: FontWeight.w600,
@@ -612,19 +615,63 @@ class _EventsPageState extends State<EventsPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _EventDetailsBottomSheet(event: event, l10n: l10n),
+      builder: (context) => _EventDetailsBottomSheet(
+        event: event,
+        l10n: l10n,
+        eventsProvider: context.read<EventsProvider>(),
+      ),
     );
   }
 }
 
-class _EventDetailsBottomSheet extends StatelessWidget {
+class _EventDetailsBottomSheet extends StatefulWidget {
   final Event event;
   final AppLocalizations l10n;
+  final EventsProvider eventsProvider;
 
   const _EventDetailsBottomSheet({
     required this.event,
     required this.l10n,
+    required this.eventsProvider,
   });
+
+  @override
+  State<_EventDetailsBottomSheet> createState() =>
+      _EventDetailsBottomSheetState();
+}
+
+class _EventDetailsBottomSheetState extends State<_EventDetailsBottomSheet> {
+  late Event _currentEvent;
+  StreamSubscription? _eventsSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentEvent = widget.event;
+
+    // Listen to events provider changes to update the bottom sheet data
+    _eventsSubscription = widget.eventsProvider.eventsStream?.listen((events) {
+      if (mounted) {
+        // Find the updated event with the same ID
+        final updatedEvent = events.firstWhere(
+          (e) => e.id == _currentEvent.id,
+          orElse: () => _currentEvent,
+        );
+
+        if (updatedEvent != _currentEvent) {
+          setState(() {
+            _currentEvent = updatedEvent;
+          });
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _eventsSubscription?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -667,19 +714,19 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          event.name,
+                          _currentEvent.name,
                           style: theme.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      _buildStatusBadge(event, theme),
+                      _buildStatusBadge(_currentEvent, theme),
                     ],
                   ),
                   const SizedBox(height: 20),
 
                   // Description
-                  if (event.description.isNotEmpty) ...[
+                  if (_currentEvent.description.isNotEmpty) ...[
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
@@ -689,7 +736,7 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        event.description,
+                        _currentEvent.description,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           height: 1.5,
                         ),
@@ -699,8 +746,8 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                   ],
 
                   // Current level for running and paused events
-                  if ((event.isRunning || event.isPaused) &&
-                      event.currentLevel != null) ...[
+                  if ((_currentEvent.isRunning || _currentEvent.isPaused) &&
+                      _currentEvent.currentLevel != null) ...[
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
@@ -724,7 +771,7 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                event.currentLevel!.isBreak
+                                _currentEvent.currentLevel!.isBreak
                                     ? Icons.coffee_rounded
                                     : Icons.trending_up_rounded,
                                 color: theme.colorScheme.primary,
@@ -732,9 +779,9 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                event.currentLevel!.isBreak
-                                    ? 'Break Time'
-                                    : 'Current Level',
+                                _currentEvent.currentLevel!.isBreak
+                                    ? widget.l10n.breakTime
+                                    : widget.l10n.currentLevel,
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   color: theme.colorScheme.primary,
                                   fontWeight: FontWeight.w600,
@@ -744,7 +791,7 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            event.currentLevel!.blindsText,
+                            _currentEvent.currentLevel!.blindsText,
                             style: theme.textTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: theme.colorScheme.onSurface,
@@ -753,11 +800,12 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           LevelCountdownWidget(
-                            levelRemaining: event.levelRemainingDuration,
-                            levelText: event.currentLevel!.blindsText,
-                            isBreak: event.currentLevel!.isBreak,
+                            levelRemaining:
+                                _currentEvent.levelRemainingDuration,
+                            levelText: _currentEvent.currentLevel!.blindsText,
+                            isBreak: _currentEvent.currentLevel!.isBreak,
                             onCountdownComplete: () {
-                              context.read<EventsProvider>().refreshEvents();
+                              widget.eventsProvider.refreshEvents();
                               Navigator.pop(context);
                             },
                           ),
@@ -780,29 +828,29 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                           children: [
                             Expanded(
                               child: _buildDetailItem(
-                                l10n.status,
-                                event.isRunning
-                                    ? l10n.running
-                                    : event.isPaused
-                                        ? l10n.paused
-                                        : l10n.pending,
+                                widget.l10n.status,
+                                _currentEvent.isRunning
+                                    ? widget.l10n.running
+                                    : _currentEvent.isPaused
+                                        ? widget.l10n.paused
+                                        : widget.l10n.pending,
                                 theme,
                               ),
                             ),
                             Expanded(
                               child: _buildDetailItem(
-                                l10n.players,
-                                '${event.activePlayersCount}',
+                                widget.l10n.players,
+                                '${_currentEvent.activePlayersCount}',
                                 theme,
                               ),
                             ),
                           ],
                         ),
-                        if (event.isUpcoming) ...[
+                        if (_currentEvent.isUpcoming) ...[
                           const SizedBox(height: 16),
                           _buildDetailItem(
-                            l10n.startsAt,
-                            _formatFullDateTime(event.startsAt),
+                            widget.l10n.startsAt,
+                            _formatFullDateTime(_currentEvent.startsAt),
                             theme,
                           ),
                         ],
@@ -812,7 +860,7 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   // Blind structure
-                  if (event.levels.isNotEmpty) ...[
+                  if (_currentEvent.levels.isNotEmpty) ...[
                     Row(
                       children: [
                         Icon(
@@ -822,7 +870,7 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          l10n.blindStructure,
+                          widget.l10n.blindStructure,
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -840,14 +888,15 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          ...event.levels
+                          ..._currentEvent.levels
                               .take(10)
                               .map((level) => _buildLevelItem(level, theme)),
-                          if (event.levels.length > 10) ...[
+                          if (_currentEvent.levels.length > 10) ...[
                             Container(
                               padding: const EdgeInsets.all(16),
                               child: Text(
-                                l10n.andMoreLevels(event.levels.length - 10),
+                                widget.l10n.andMoreLevels(
+                                    _currentEvent.levels.length - 10),
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: theme.colorScheme.onSurfaceVariant,
                                   fontStyle: FontStyle.italic,
@@ -875,15 +924,15 @@ class _EventDetailsBottomSheet extends StatelessWidget {
 
     if (event.isRunning) {
       statusColor = const Color(0xFF10B981);
-      statusText = l10n.live;
+      statusText = widget.l10n.live;
       statusIcon = Icons.radio_button_checked;
     } else if (event.isPaused) {
       statusColor = const Color(0xFFF59E0B);
-      statusText = l10n.paused;
+      statusText = widget.l10n.paused;
       statusIcon = Icons.pause_circle_filled;
     } else {
-      statusColor = theme.colorScheme.primary;
-      statusText = l10n.pending;
+      statusColor = Theme.of(context).colorScheme.primary;
+      statusText = widget.l10n.pending;
       statusIcon = Icons.schedule;
     }
 
@@ -908,10 +957,10 @@ class _EventDetailsBottomSheet extends StatelessWidget {
           const SizedBox(width: 6),
           Text(
             statusText,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: statusColor,
-              fontWeight: FontWeight.w600,
-            ),
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: statusColor,
+                  fontWeight: FontWeight.w600,
+                ),
           ),
         ],
       ),
@@ -995,7 +1044,9 @@ class _EventDetailsBottomSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  level.isBreak ? 'Break' : 'Level ${level.levelNumber ?? 0}',
+                  level.isBreak
+                      ? widget.l10n.breakText
+                      : '${widget.l10n.currentLevel} ${level.levelNumber ?? 0}',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -1116,15 +1167,20 @@ class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final isLowTime = _remaining.inSeconds <= 60;
     final isVeryLowTime = _remaining.inSeconds <= 10;
 
     Color timeColor = theme.colorScheme.onSurface;
+    String warningText = '';
+
     if (isVeryLowTime) {
       timeColor = const Color(0xFFDC2626); // Red for very low time
+      warningText = l10n.startingSoon; // Reusing this for "ENDING SOON!"
     } else if (isLowTime) {
       timeColor = const Color(0xFFF59E0B); // Orange for low time
+      warningText = 'Low Time'; // You might want to add this to translations
     }
 
     return AnimatedBuilder(
@@ -1146,7 +1202,7 @@ class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Time Remaining',
+                      l10n.timeRemaining,
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: timeColor,
                         fontWeight: FontWeight.w500,

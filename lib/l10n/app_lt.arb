@@ -114,5 +114,9 @@
   "clearFilter": "Išvalyti filtrą",
   "joinedOn": "Prisijungė",
   "participationStatus": "Dalyvavimo statusas",
-  "close": "Uždaryti"
+  "close": "Uždaryti",
+  "timeRemaining": "Liko laiko",
+  "lowTime": "Mažai laiko",
+  "endingSoon": "BAIGIASI!",
+  "level": "Lygis"
 }

@@ -275,4 +275,16 @@ class AppLocalizationsLt extends AppLocalizations {
 
   @override
   String get close => 'Uždaryti';
+
+  @override
+  String get timeRemaining => 'Liko laiko';
+
+  @override
+  String get lowTime => 'Mažai laiko';
+
+  @override
+  String get endingSoon => 'BAIGIASI!';
+
+  @override
+  String get level => 'Lygis';
 }

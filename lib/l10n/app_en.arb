@@ -114,5 +114,9 @@
   "clearFilter": "Clear Filter",
   "joinedOn": "Joined on",
   "participationStatus": "Participation Status",
-  "close": "Close"
+  "close": "Close",
+  "timeRemaining": "Time Remaining",
+  "lowTime": "Low Time",
+  "endingSoon": "ENDING SOON!",
+  "level": "Level"
 }
