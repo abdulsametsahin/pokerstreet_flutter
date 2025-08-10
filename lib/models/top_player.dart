@@ -1,7 +1,6 @@
 class TopPlayer {
   final int id;
   final String name;
-  final String email;
   final int rank;
   final double score;
   final int eventsCount;
@@ -11,7 +10,6 @@ class TopPlayer {
   TopPlayer({
     required this.id,
     required this.name,
-    required this.email,
     required this.rank,
     required this.score,
     required this.eventsCount,
@@ -23,7 +21,6 @@ class TopPlayer {
     return TopPlayer(
       id: json['id'],
       name: json['name'],
-      email: json['email'],
       rank: json['rank'],
       score: (json['score'] as num).toDouble(),
       eventsCount: json['events_count'],
@@ -40,7 +37,6 @@ class TopPlayer {
     return {
       'id': id,
       'name': name,
-      'email': email,
       'rank': rank,
       'score': score,
       'events_count': eventsCount,
