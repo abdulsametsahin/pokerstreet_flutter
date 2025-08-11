@@ -22,16 +22,6 @@ class _MainScreenState extends State<MainScreen> {
     const ProfilePage(),
   ];
 
-  void _showSettingsBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => const SettingsBottomSheet(),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -40,12 +30,7 @@ class _MainScreenState extends State<MainScreen> {
       appBar: _currentIndex == 0 // Show settings only on Events page (home)
           ? AppBar(
               title: Text(l10n.eventsPageTitle),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: _showSettingsBottomSheet,
-                ),
-              ],
+              actions: [],
             )
           : null,
       body: _pages[_currentIndex],

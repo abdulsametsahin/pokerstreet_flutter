@@ -736,6 +736,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Performance'**
   String get performance;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

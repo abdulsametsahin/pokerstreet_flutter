@@ -133,5 +133,6 @@
   "passwordMustBe8Characters": "Password must be at least 8 characters",
   "passwordsDoNotMatch": "Passwords do not match",
   "tapForDetails": "Tap for details",
-  "performance": "Performance"
+  "performance": "Performance",
+  "logout": "Logout"
 }

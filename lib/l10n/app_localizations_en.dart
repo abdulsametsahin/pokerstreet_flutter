@@ -332,4 +332,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get performance => 'Performance';
+
+  @override
+  String get logout => 'Logout';
 }

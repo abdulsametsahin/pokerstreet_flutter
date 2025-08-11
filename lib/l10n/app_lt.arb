@@ -133,5 +133,6 @@
   "passwordMustBe8Characters": "Slaptažodis turi būti mažiausiai 8 simbolių",
   "passwordsDoNotMatch": "Slaptažodžiai nesutampa",
   "tapForDetails": "Spustelėkite, kad peržiūrėtumėte informaciją",
-  "performance": "Veikla"
+  "performance": "Veikla",
+  "logout": "Atsijungti"
 }
