@@ -13,6 +13,7 @@ class Event {
   final int remaining;
   final int elapsedTime;
   final int activePlayersCount;
+  final int playersCount;
   final List<Level> levels;
   final List<Participant> participants;
   final List<Prize> prizes;
@@ -35,6 +36,7 @@ class Event {
     required this.remaining,
     required this.elapsedTime,
     required this.activePlayersCount,
+    required this.playersCount,
     required this.levels,
     required this.participants,
     required this.prizes,
@@ -59,6 +61,7 @@ class Event {
       remaining: json['remaining'] ?? 0,
       elapsedTime: _parseDouble(json['elapsed_time']).toInt(),
       activePlayersCount: json['active_players_count'] ?? 0,
+      playersCount: json['players_count'] ?? 0,
       levels: (json['levels'] as List?)
               ?.map((level) => Level.fromJson(level))
               .toList() ??

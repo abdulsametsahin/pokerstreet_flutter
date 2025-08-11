@@ -425,13 +425,30 @@ class _EventsPageState extends State<EventsPage> {
         children: [
           Row(
             children: [
-              Icon(
-                event.currentLevel!.isBreak
-                    ? Icons.coffee_rounded
-                    : Icons.trending_up_rounded,
-                color: theme.colorScheme.primary,
-                size: 20,
-              ),
+              event.currentLevel!.isBreak
+                  ? Icon(
+                      Icons.coffee_rounded,
+                      color: theme.colorScheme.primary,
+                      size: 20,
+                    )
+                  : Container(
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${event.currentLevel!.levelNumber ?? 0}',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.onPrimary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ),
+                    ),
               const SizedBox(width: 8),
               Text(
                 event.currentLevel!.isBreak
@@ -480,7 +497,7 @@ class _EventsPageState extends State<EventsPage> {
             child: _buildStatItem(
               Icons.people_rounded,
               l10n.players,
-              '${event.activePlayersCount}',
+              '${event.activePlayersCount}/${event.playersCount}',
               theme,
             ),
           ),
@@ -769,13 +786,31 @@ class _EventDetailsBottomSheetState extends State<_EventDetailsBottomSheet> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                _currentEvent.currentLevel!.isBreak
-                                    ? Icons.coffee_rounded
-                                    : Icons.trending_up_rounded,
-                                color: theme.colorScheme.primary,
-                                size: 24,
-                              ),
+                              _currentEvent.currentLevel!.isBreak
+                                  ? Icon(
+                                      Icons.coffee_rounded,
+                                      color: theme.colorScheme.primary,
+                                      size: 24,
+                                    )
+                                  : Container(
+                                      width: 28,
+                                      height: 28,
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.primary,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          '${_currentEvent.currentLevel!.levelNumber ?? 0}',
+                                          style: theme.textTheme.labelMedium
+                                              ?.copyWith(
+                                            color: theme.colorScheme.onPrimary,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                               const SizedBox(width: 8),
                               Text(
                                 _currentEvent.currentLevel!.isBreak
@@ -839,7 +874,7 @@ class _EventDetailsBottomSheetState extends State<_EventDetailsBottomSheet> {
                             Expanded(
                               child: _buildDetailItem(
                                 widget.l10n.players,
-                                '${_currentEvent.activePlayersCount}',
+                                '${_currentEvent.activePlayersCount}/${_currentEvent.playersCount}',
                                 theme,
                               ),
                             ),
@@ -1197,26 +1232,18 @@ class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
                     Icon(
                       Icons.timer_rounded,
                       color: timeColor,
-                      size: 20,
+                      size: 24,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      l10n.timeRemaining,
-                      style: theme.textTheme.labelMedium?.copyWith(
+                      _formatDuration(_remaining),
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
                         color: timeColor,
-                        fontWeight: FontWeight.w500,
+                        fontFeatures: [const FontFeature.tabularFigures()],
                       ),
                     ),
                   ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _formatDuration(_remaining),
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: timeColor,
-                    fontFeatures: [const FontFeature.tabularFigures()],
-                  ),
                 ),
                 if (isLowTime) ...[
                   const SizedBox(height: 4),
