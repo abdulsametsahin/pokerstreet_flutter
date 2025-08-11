@@ -65,7 +65,7 @@
   "status": "Statusas",
   "running": "VYKSTA",
   "pending": "BŪSIMAS",
-  "live": "TIESIOGIAI",
+  "live": "LIVE",
   "blindStructure": "Blainds struktūra",
   "startsAt": "Prasideda",
   "andMoreLevels": "Ir dar {count} lygių...",

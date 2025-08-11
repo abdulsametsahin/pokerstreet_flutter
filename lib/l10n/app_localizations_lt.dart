@@ -202,7 +202,7 @@ class AppLocalizationsLt extends AppLocalizations {
   String get pending => 'BŪSIMAS';
 
   @override
-  String get live => 'TIESIOGIAI';
+  String get live => 'LIVE';
 
   @override
   String get blindStructure => 'Blainds struktūra';
