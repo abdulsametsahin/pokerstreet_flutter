@@ -21,13 +21,23 @@ class TopPlayersProvider with ChangeNotifier {
   String get monthName => _monthName;
   int get totalCount => _totalCount;
 
-  Future<void> loadTopPlayers({String? date}) async {
+  Future<void> loadTopPlayers({
+    String? date,
+    String? type,
+    String? startDate,
+    String? endDate,
+  }) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      final response = await TopPlayersService.getTopPlayers(date: date);
+      final response = await TopPlayersService.getTopPlayers(
+        date: date,
+        type: type,
+        startDate: startDate,
+        endDate: endDate,
+      );
       _players = response.players;
       _selectedDate = response.date;
       _monthName = response.monthName;

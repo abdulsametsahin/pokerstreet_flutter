@@ -4,13 +4,27 @@ import '../config/api_config.dart';
 import '../models/top_player.dart';
 
 class TopPlayersService {
-  static Future<TopPlayersResponse> getTopPlayers({String? date}) async {
+  static Future<TopPlayersResponse> getTopPlayers({
+    String? date,
+    String? type,
+    String? startDate,
+    String? endDate,
+  }) async {
     try {
       final uri = Uri.parse(ApiConfig.topPlayersEndpoint);
       final queryParams = <String, String>{};
 
       if (date != null) {
         queryParams['date'] = date;
+      }
+      if (type != null) {
+        queryParams['type'] = type;
+      }
+      if (startDate != null) {
+        queryParams['start_date'] = startDate;
+      }
+      if (endDate != null) {
+        queryParams['end_date'] = endDate;
       }
 
       final finalUri = uri.replace(queryParameters: queryParams);

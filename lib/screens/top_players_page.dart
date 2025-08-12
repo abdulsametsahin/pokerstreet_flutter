@@ -12,6 +12,8 @@ class TopPlayersPage extends StatefulWidget {
 }
 
 class _TopPlayersPageState extends State<TopPlayersPage> {
+  String _selectedFilterType = 'monthly'; // 'monthly', 'all_time', 'range'
+
   @override
   void initState() {
     super.initState();
@@ -266,8 +268,11 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
                       'Monthly',
                       provider.monthName,
                       Icons.calendar_month,
-                      true, // is selected
+                      _selectedFilterType == 'monthly',
                       () {
+                        setState(() {
+                          _selectedFilterType = 'monthly';
+                        });
                         _showMonthPicker(context, provider);
                       },
                     ),
@@ -279,9 +284,12 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
                       'All Time',
                       'Overall',
                       Icons.timeline,
-                      false, // is selected
+                      _selectedFilterType == 'all_time',
                       () {
-                        // TODO: Implement all time filter
+                        setState(() {
+                          _selectedFilterType = 'all_time';
+                        });
+                        _showAllTimeFilter(context, provider);
                       },
                     ),
                   ),
@@ -292,9 +300,12 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
                       'Range',
                       'Custom',
                       Icons.date_range,
-                      false, // is selected
+                      _selectedFilterType == 'range',
                       () {
-                        // TODO: Implement range filter
+                        setState(() {
+                          _selectedFilterType = 'range';
+                        });
+                        _showDateRangePicker(context, provider);
                       },
                     ),
                   ),
@@ -590,6 +601,38 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
     );
   }
 
+  void _showAllTimeFilter(BuildContext context, TopPlayersProvider provider) {
+    // Load all time rankings
+    provider.loadTopPlayers(type: 'all_time');
+  }
+
+  void _showDateRangePicker(
+      BuildContext context, TopPlayersProvider provider) async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+      initialDateRange: DateTimeRange(
+        start: DateTime.now().subtract(const Duration(days: 30)),
+        end: DateTime.now(),
+      ),
+    );
+
+    if (picked != null) {
+      // Load range rankings
+      provider.loadTopPlayers(
+        type: 'range',
+        startDate: picked.start.toIso8601String().split('T')[0],
+        endDate: picked.end.toIso8601String().split('T')[0],
+      );
+    } else {
+      // If user cancels, reset to monthly
+      setState(() {
+        _selectedFilterType = 'monthly';
+      });
+    }
+  }
+
   void _showMonthPicker(
       BuildContext context, TopPlayersProvider provider) async {
     if (provider.availableMonths.isEmpty) {
@@ -663,7 +706,13 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
                       ),
                     ),
                     onTap: () {
-                      provider.selectMonth(month.value);
+                      provider.loadTopPlayers(
+                        type: 'monthly',
+                        date: month.value,
+                      );
+                      setState(() {
+                        _selectedFilterType = 'monthly';
+                      });
                       Navigator.pop(context);
                     },
                   );
