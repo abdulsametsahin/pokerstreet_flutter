@@ -29,43 +29,6 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.topPlayersTitle),
-        actions: [
-          Consumer<TopPlayersProvider>(
-            builder: (context, provider, child) {
-              if (provider.availableMonths.isEmpty) {
-                return const SizedBox.shrink();
-              }
-
-              return PopupMenuButton<String>(
-                icon: const Icon(Icons.calendar_month),
-                tooltip: l10n.selectMonth,
-                onSelected: (value) => provider.selectMonth(value),
-                itemBuilder: (context) => provider.availableMonths
-                    .map((month) => PopupMenuItem<String>(
-                          value: month.value,
-                          child: Row(
-                            children: [
-                              Icon(
-                                provider.selectedDate == month.value
-                                    ? Icons.check_circle
-                                    : Icons.calendar_today,
-                                size: 18,
-                                color: provider.selectedDate == month.value
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(month.label),
-                            ],
-                          ),
-                        ))
-                    .toList(),
-              );
-            },
-          ),
-        ],
       ),
       body: Consumer<TopPlayersProvider>(
         builder: (context, provider, child) {
@@ -232,7 +195,7 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
   Widget _buildPlayersList(BuildContext context, TopPlayersProvider provider) {
     return Column(
       children: [
-        // Header with month info
+        // Header with month info and filters
         Container(
           margin: const EdgeInsets.all(16),
           padding: const EdgeInsets.all(20),
@@ -247,41 +210,95 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
             ),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Row(
+          child: Column(
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      provider.monthName,
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+              // Title row
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Top Players',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${provider.totalCount} players',
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: Colors.white.withValues(alpha: 0.9),
+                                  ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${provider.totalCount} players',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.9),
-                          ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ],
-                ),
+                    child: Icon(
+                      Icons.leaderboard,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.leaderboard,
-                  color: Colors.white,
-                  size: 32,
-                ),
+
+              const SizedBox(height: 16),
+
+              // Filter options
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildFilterButton(
+                      context,
+                      'Monthly',
+                      provider.monthName,
+                      Icons.calendar_month,
+                      true, // is selected
+                      () {
+                        _showMonthPicker(context, provider);
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: _buildFilterButton(
+                      context,
+                      'All Time',
+                      'Overall',
+                      Icons.timeline,
+                      false, // is selected
+                      () {
+                        // TODO: Implement all time filter
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: _buildFilterButton(
+                      context,
+                      'Range',
+                      'Custom',
+                      Icons.date_range,
+                      false, // is selected
+                      () {
+                        // TODO: Implement range filter
+                      },
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -303,134 +320,215 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
   }
 
   Widget _buildPlayerCard(BuildContext context, TopPlayer player, int index) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Card(
-      elevation: 0,
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.surface,
+            Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(
+          color: player.rank <= 3
+              ? _getRankBorderColor(player.rank)
+              : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          width: player.rank <= 3 ? 2 : 1,
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top row: Rank, Name, and Score
+            // Header: Rank and Score
             Row(
               children: [
-                // Rank badge
+                // Large rank badge
                 Container(
-                  width: 36,
-                  height: 36,
+                  width: 60,
+                  height: 60,
                   decoration: BoxDecoration(
                     gradient: _getRankGradient(context, player.rank),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _getRankBorderColor(player.rank)
+                            .withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Center(
                     child: Text(
                       '#${player.rank}',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: 18,
                           ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
 
-                // Player name
+                const SizedBox(width: 16),
+
+                // Player info
                 Expanded(
-                  child: Text(
-                    player.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        player.name,
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).colorScheme.primary,
+                              Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withValues(alpha: 0.8),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-
-                const SizedBox(width: 8),
-
-                // Score
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primary
-                        .withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    '${player.score.toStringAsFixed(1)} pts',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                        child: Text(
+                          '${player.score.toStringAsFixed(1)} points',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                         ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
 
-            // Second row: Badges (if any)
+            // Badges section
             if (player.badges.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Wrap(
-                  spacing: 4,
-                  runSpacing: 4,
-                  children: player.badges.map((badge) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _parseColor(badge.color),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        badge.name,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 9,
-                            ),
-                      ),
-                    );
-                  }).toList(),
-                ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: player.badges.map((badge) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _parseColor(badge.color),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color:
+                              _parseColor(badge.color).withValues(alpha: 0.3),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      badge.name,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                    ),
+                  );
+                }).toList(),
               ),
             ],
 
-            // Third row: Stats
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildStatChip(
-                  context,
-                  '${player.eventsCount}',
-                  l10n.eventsPlayed,
-                  Icons.event,
-                ),
-                if (player.averagePosition != null)
-                  _buildStatChip(
-                    context,
-                    player.averagePosition!.toStringAsFixed(1),
-                    l10n.avgPosition,
-                    Icons.trending_up,
+            // Stats section
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest
+                    .withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildLargeStatItem(
+                          context,
+                          '${player.eventsCount}',
+                          'Total Events',
+                          Icons.event_note,
+                          Colors.blue,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildLargeStatItem(
+                          context,
+                          '${player.top10Events}',
+                          'Top 10 Finishes',
+                          Icons.emoji_events,
+                          Colors.orange,
+                        ),
+                      ),
+                    ],
                   ),
-                // Add some spacing if only one stat
-                if (player.averagePosition == null) const Spacer(),
-              ],
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildLargeStatItem(
+                          context,
+                          '${player.firstPlaceEvents}',
+                          '1st Place Wins',
+                          Icons.workspace_premium,
+                          Colors.amber,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildLargeStatItem(
+                          context,
+                          player.averagePosition?.toStringAsFixed(1) ?? 'N/A',
+                          'Avg Position',
+                          Icons.trending_up,
+                          Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -438,37 +536,201 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
     );
   }
 
-  Widget _buildStatChip(
-      BuildContext context, String value, String label, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-      decoration: BoxDecoration(
-        color: Theme.of(context)
-            .colorScheme
-            .surfaceContainerHighest
-            .withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(6),
+  Widget _buildFilterButton(
+    BuildContext context,
+    String title,
+    String subtitle,
+    IconData icon,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Colors.white.withValues(alpha: 0.25)
+              : Colors.white.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected
+                ? Colors.white.withValues(alpha: 0.5)
+                : Colors.white.withValues(alpha: 0.2),
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+              size: 20,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    fontSize: 10,
+                  ),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+    );
+  }
+
+  void _showMonthPicker(
+      BuildContext context, TopPlayersProvider provider) async {
+    if (provider.availableMonths.isEmpty) {
+      await provider.loadAvailableMonths();
+    }
+    if (!mounted) return;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.outline,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Select Month',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 20),
+            Flexible(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: provider.availableMonths.length,
+                itemBuilder: (context, index) {
+                  final month = provider.availableMonths[index];
+                  final isSelected = month.value == provider.selectedDate;
+
+                  return ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.calendar_month,
+                        color: isSelected
+                            ? Colors.white
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    title: Text(
+                      month.label,
+                      style: TextStyle(
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
+                        color: isSelected
+                            ? Theme.of(context).colorScheme.primary
+                            : null,
+                      ),
+                    ),
+                    onTap: () {
+                      provider.selectMonth(month.value);
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLargeStatItem(BuildContext context, String value, String label,
+      IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: color.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
         children: [
           Icon(
             icon,
-            size: 10,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            size: 24,
+            color: color,
           ),
-          const SizedBox(width: 3),
+          const SizedBox(height: 8),
           Text(
-            '$value $label',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+            value,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
-                  fontSize: 10,
+                  fontSize: 11,
                 ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
     );
+  }
+
+  Color _getRankBorderColor(int rank) {
+    switch (rank) {
+      case 1:
+        return const Color(0xFFFFD700); // Gold
+      case 2:
+        return const Color(0xFFC0C0C0); // Silver
+      case 3:
+        return const Color(0xFFCD7F32); // Bronze
+      default:
+        return Colors.grey;
+    }
   }
 
   LinearGradient _getRankGradient(BuildContext context, int rank) {
