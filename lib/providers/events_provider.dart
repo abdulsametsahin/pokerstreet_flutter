@@ -6,6 +6,7 @@ import 'dart:async';
 class EventsProvider with ChangeNotifier {
   List<Event> _events = [];
   bool _isLoading = false;
+  bool _isRefreshing = false;
   String? _error;
 
   Stream<List<Event>>? get eventsStream => _eventsStreamController.stream;
@@ -14,6 +15,7 @@ class EventsProvider with ChangeNotifier {
 
   List<Event> get events => _events;
   bool get isLoading => _isLoading;
+  bool get isRefreshing => _isRefreshing;
   String? get error => _error;
 
   List<Event> get runningEvents => _events
@@ -26,8 +28,12 @@ class EventsProvider with ChangeNotifier {
   List<Event> get pausedEvents =>
       _events.where((event) => event.status == 'paused').toList();
 
-  Future<void> loadEvents() async {
-    _isLoading = true;
+  Future<void> loadEvents({bool isInitialLoad = false}) async {
+    if (isInitialLoad) {
+      _isLoading = true;
+    } else {
+      _isRefreshing = true;
+    }
     _error = null;
     notifyListeners();
 
@@ -38,11 +44,15 @@ class EventsProvider with ChangeNotifier {
       _eventsStreamController.add(_events);
     } catch (e) {
       _error = e.toString();
-      _events = [];
-      // Emit empty list on error
+      // Only clear events on initial load error
+      if (isInitialLoad) {
+        _events = [];
+      }
+      // Emit current events to the stream
       _eventsStreamController.add(_events);
     } finally {
       _isLoading = false;
+      _isRefreshing = false;
       notifyListeners();
     }
   }
@@ -63,7 +73,7 @@ class EventsProvider with ChangeNotifier {
     }
   }
 
-  void refreshEvents() {
-    loadEvents();
+  Future<void> refreshEvents() async {
+    await loadEvents(isInitialLoad: false);
   }
 }

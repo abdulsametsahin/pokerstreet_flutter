@@ -20,6 +20,8 @@ class Event {
   final Level? currentLevel;
   final Level? nextLevel;
   final int levelRemaining;
+  final AppBuyIn? appBuyIn;
+  final List<AppPrize> appPrizes;
 
   Event({
     required this.id,
@@ -43,9 +45,34 @@ class Event {
     this.currentLevel,
     this.nextLevel,
     required this.levelRemaining,
+    this.appBuyIn,
+    required this.appPrizes,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
+    // Parse app buy-in data
+    AppBuyIn? appBuyIn;
+    if (json['app_buyin'] != null && json['app_buyin'] is Map) {
+      final buyInData = json['app_buyin'] as Map<String, dynamic>;
+      if (buyInData['rows'] != null && buyInData['rows'] is List && (buyInData['rows'] as List).isNotEmpty) {
+        final firstRow = (buyInData['rows'] as List).first;
+        appBuyIn = AppBuyIn(
+          action: firstRow['action'] ?? '',
+          price: firstRow['price'] ?? '',
+          chips: firstRow['chips'] ?? '',
+          totalPrizepool: buyInData['total_prizepool'] ?? '',
+        );
+      }
+    }
+
+    // Parse app prizes data
+    List<AppPrize> appPrizes = [];
+    if (json['app_prizes'] != null && json['app_prizes'] is List) {
+      appPrizes = (json['app_prizes'] as List)
+          .map((prize) => AppPrize.fromJson(prize))
+          .toList();
+    }
+
     return Event(
       id: json['id'],
       name: json['name'] ?? '',
@@ -81,6 +108,8 @@ class Event {
           ? Level.fromJson(json['next_level'])
           : null,
       levelRemaining: _parseDouble(json['level_remaining']).toInt(),
+      appBuyIn: appBuyIn,
+      appPrizes: appPrizes,
     );
   }
 
@@ -225,6 +254,43 @@ class User {
     return User(
       id: json['id'],
       name: json['name'] ?? '',
+    );
+  }
+}
+
+class AppBuyIn {
+  final String action;
+  final String price;
+  final String chips;
+  final String totalPrizepool;
+
+  AppBuyIn({
+    required this.action,
+    required this.price,
+    required this.chips,
+    required this.totalPrizepool,
+  });
+
+  factory AppBuyIn.fromJson(Map<String, dynamic> json) {
+    return AppBuyIn(
+      action: json['action'] ?? '',
+      price: json['price'] ?? '',
+      chips: json['chips'] ?? '',
+      totalPrizepool: json['total_prizepool'] ?? '',
+    );
+  }
+}
+
+class AppPrize {
+  final String description;
+
+  AppPrize({
+    required this.description,
+  });
+
+  factory AppPrize.fromJson(Map<String, dynamic> json) {
+    return AppPrize(
+      description: json['description'] ?? '',
     );
   }
 }

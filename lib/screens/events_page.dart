@@ -19,7 +19,7 @@ class _EventsPageState extends State<EventsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<EventsProvider>().loadEvents();
+      context.read<EventsProvider>().loadEvents(isInitialLoad: true);
       _startAutoRefresh();
     });
   }
@@ -33,7 +33,7 @@ class _EventsPageState extends State<EventsPage> {
   void _startAutoRefresh() {
     _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       if (mounted) {
-        context.read<EventsProvider>().loadEvents();
+        context.read<EventsProvider>().refreshEvents();
       }
     });
   }
@@ -182,7 +182,7 @@ class _EventsPageState extends State<EventsPage> {
         }
 
         return RefreshIndicator(
-          onRefresh: () => eventsProvider.loadEvents(),
+          onRefresh: eventsProvider.refreshEvents,
           color: theme.colorScheme.primary,
           child: ListView(
             padding: const EdgeInsets.all(20),
@@ -343,6 +343,12 @@ class _EventsPageState extends State<EventsPage> {
                   _buildEventStats(event, l10n, theme),
                 ] else if (event.isUpcoming) ...[
                   _buildUpcomingInfo(event, l10n, theme),
+                ],
+
+                // App Info Section
+                if (event.appBuyIn != null || event.appPrizes.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  _buildAppInfo(event, l10n, theme),
                 ],
               ],
             ),
@@ -606,6 +612,100 @@ class _EventsPageState extends State<EventsPage> {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppInfo(Event event, AppLocalizations l10n, ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.tertiaryContainer.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.tertiary.withOpacity(0.2),
+        ),
+      ),
+      child: Row(
+        children: [
+          // Buy-in info (first row only)
+          if (event.appBuyIn != null) ...[
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.attach_money_rounded,
+                        size: 16,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        event.appBuyIn!.action.isNotEmpty ? event.appBuyIn!.action : 'Buy In',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${event.appBuyIn!.price} - ${event.appBuyIn!.chips}',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          
+          // Total prize pool from buy-in data
+          if (event.appBuyIn != null && event.appBuyIn!.totalPrizepool.isNotEmpty) ...[
+            if (event.appBuyIn != null) ...[
+              Container(
+                width: 1,
+                height: 40,
+                color: theme.colorScheme.outline.withOpacity(0.2),
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+              ),
+            ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.emoji_events_rounded,
+                        size: 16,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Total Prize',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    event.appBuyIn!.totalPrizepool,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -1201,20 +1301,16 @@ class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final isLowTime = _remaining.inSeconds <= 60;
     final isVeryLowTime = _remaining.inSeconds <= 10;
 
     Color timeColor = theme.colorScheme.onSurface;
-    String warningText = '';
 
     if (isVeryLowTime) {
       timeColor = const Color(0xFFDC2626); // Red for very low time
-      warningText = l10n.startingSoon; // Reusing this for "ENDING SOON!"
     } else if (isLowTime) {
       timeColor = const Color(0xFFF59E0B); // Orange for low time
-      warningText = 'Low Time'; // You might want to add this to translations
     }
 
     return AnimatedBuilder(
