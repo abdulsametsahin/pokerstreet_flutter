@@ -315,90 +315,121 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           children: [
-            // Rank badge
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                gradient: _getRankGradient(context, player.rank),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Text(
-                  '#${player.rank}',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+            // Top row: Rank, Name, and Score
+            Row(
+              children: [
+                // Rank badge
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    gradient: _getRankGradient(context, player.rank),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '#${player.rank}',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(width: 16),
+                const SizedBox(width: 12),
 
-            // Player info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
+                // Player name
+                Expanded(
+                  child: Text(
                     player.name,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                ),
 
-                  const SizedBox(height: 8),
+                const SizedBox(width: 8),
 
-                  // Stats row
-                  Row(
-                    children: [
-                      _buildStatChip(
-                        context,
-                        '${player.eventsCount}',
-                        l10n.eventsPlayed,
-                        Icons.event,
-                      ),
-                      const SizedBox(width: 8),
-                      if (player.averagePosition != null)
-                        _buildStatChip(
-                          context,
-                          player.averagePosition!.toStringAsFixed(1),
-                          l10n.avgPosition,
-                          Icons.trending_up,
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // Score and balance
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
+                // Score
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: Theme.of(context)
                         .colorScheme
                         .primary
                         .withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     '${player.score.toStringAsFixed(1)} pts',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,
+                          fontSize: 12,
                         ),
                   ),
                 ),
-                const SizedBox(height: 8),
+              ],
+            ),
+
+            // Second row: Badges (if any)
+            if (player.badges.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Wrap(
+                  spacing: 4,
+                  runSpacing: 4,
+                  children: player.badges.map((badge) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _parseColor(badge.color),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        badge.name,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 9,
+                            ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+
+            // Third row: Stats
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildStatChip(
+                  context,
+                  '${player.eventsCount}',
+                  l10n.eventsPlayed,
+                  Icons.event,
+                ),
+                if (player.averagePosition != null)
+                  _buildStatChip(
+                    context,
+                    player.averagePosition!.toStringAsFixed(1),
+                    l10n.avgPosition,
+                    Icons.trending_up,
+                  ),
+                // Add some spacing if only one stat
+                if (player.averagePosition == null) const Spacer(),
               ],
             ),
           ],
@@ -410,28 +441,29 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
   Widget _buildStatChip(
       BuildContext context, String value, String label, IconData icon) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
         color: Theme.of(context)
             .colorScheme
             .surfaceContainerHighest
             .withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             icon,
-            size: 12,
+            size: 10,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 3),
           Text(
             '$value $label',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
+                  fontSize: 10,
                 ),
           ),
         ],
@@ -468,6 +500,23 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         );
+    }
+  }
+
+  Color _parseColor(String colorString) {
+    // Remove the # if present
+    String hexColor = colorString.replaceAll('#', '');
+
+    // Add opacity if not provided
+    if (hexColor.length == 6) {
+      hexColor = 'FF$hexColor';
+    }
+
+    try {
+      return Color(int.parse(hexColor, radix: 16));
+    } catch (e) {
+      // Fallback to primary color if parsing fails
+      return Theme.of(context).colorScheme.primary;
     }
   }
 }

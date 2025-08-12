@@ -1,3 +1,5 @@
+import 'badge.dart';
+
 class TopPlayer {
   final int id;
   final String name;
@@ -6,6 +8,7 @@ class TopPlayer {
   final int eventsCount;
   final double? averagePosition;
   final DateTime? createdAt;
+  final List<Badge> badges;
 
   TopPlayer({
     required this.id,
@@ -15,6 +18,7 @@ class TopPlayer {
     required this.eventsCount,
     this.averagePosition,
     this.createdAt,
+    this.badges = const [],
   });
 
   factory TopPlayer.fromJson(Map<String, dynamic> json) {
@@ -30,6 +34,11 @@ class TopPlayer {
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,
+      badges: json['badges'] != null
+          ? (json['badges'] as List)
+              .map((badge) => Badge.fromJson(badge))
+              .toList()
+          : [],
     );
   }
 
@@ -42,6 +51,7 @@ class TopPlayer {
       'events_count': eventsCount,
       'average_position': averagePosition,
       'created_at': createdAt?.toIso8601String(),
+      'badges': badges.map((badge) => badge.toJson()).toList(),
     };
   }
 }
