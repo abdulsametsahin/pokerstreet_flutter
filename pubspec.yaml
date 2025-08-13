@@ -20,6 +20,8 @@ dependencies:
   # firebase_messaging: ^15.0.4
   provider: ^6.1.2
   flutter_native_splash: ^2.4.1
+  # Image picker for profile avatars
+  image_picker: ^1.0.7
   # Localization
   flutter_localizations:
     sdk: flutter
