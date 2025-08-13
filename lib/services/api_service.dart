@@ -113,6 +113,40 @@ class ApiService {
     }
   }
 
+  static Future<ApiResponse<ProfileResponse>> updateProfile(
+    String token,
+    Map<String, dynamic> data,
+  ) async {
+    try {
+      final response = await http.put(
+        Uri.parse(ApiConfig.updateProfileEndpoint),
+        headers: ApiConfig.authHeaders(token),
+        body: jsonEncode(data),
+      );
+
+      final jsonResponse = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return ApiResponse<ProfileResponse>(
+          success: jsonResponse['success'],
+          message: jsonResponse['message'],
+          data: ProfileResponse.fromJson(jsonResponse['data']),
+        );
+      } else {
+        return ApiResponse<ProfileResponse>(
+          success: false,
+          message: jsonResponse['message'] ?? 'Failed to update profile',
+          errors: jsonResponse['errors'],
+        );
+      }
+    } catch (e) {
+      return ApiResponse<ProfileResponse>(
+        success: false,
+        message: 'Network error: ${e.toString()}',
+      );
+    }
+  }
+
   static Future<ApiResponse<void>> logout(String token) async {
     try {
       final response = await http.post(

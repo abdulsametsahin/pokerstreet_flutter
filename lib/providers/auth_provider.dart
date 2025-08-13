@@ -57,6 +57,7 @@ class AuthProvider extends ChangeNotifier {
         'id': int.tryParse(parts[0]) ?? 0,
         'name': parts[1],
         'email': parts[2],
+        'display_name': parts.length > 3 ? parts[3] : null,
       };
     }
     return {};
@@ -65,8 +66,9 @@ class AuthProvider extends ChangeNotifier {
   // Save auth data to storage
   Future<void> _saveAuthData(String token, User user) async {
     await _prefs.setString(_tokenKey, token);
-    // Simple string format: id|name|email
-    await _prefs.setString(_userKey, '${user.id}|${user.name}|${user.email}');
+    // Simple string format: id|name|email|display_name
+    await _prefs.setString(_userKey,
+        '${user.id}|${user.name}|${user.email}|${user.displayName ?? ''}');
     _token = token;
     _user = user;
     notifyListeners();
@@ -173,7 +175,7 @@ class AuthProvider extends ChangeNotifier {
         // Update stored user data
         await _prefs.setString(
           _userKey,
-          '${_user!.id}|${_user!.name}|${_user!.email}',
+          '${_user!.id}|${_user!.name}|${_user!.email}|${_user!.displayName ?? ''}',
         );
         notifyListeners();
       }
@@ -187,6 +189,45 @@ class AuthProvider extends ChangeNotifier {
       return ApiResponse<ProfileResponse>(
         success: false,
         message: 'Failed to get profile: ${e.toString()}',
+      );
+    }
+  }
+
+  // Update profile
+  Future<ApiResponse<ProfileResponse>> updateProfile(
+      Map<String, dynamic> data) async {
+    if (_token == null) {
+      return ApiResponse<ProfileResponse>(
+        success: false,
+        message: 'No authentication token',
+      );
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await ApiService.updateProfile(_token!, data);
+
+      if (response.success && response.data != null) {
+        _user = response.data!.user;
+        // Update stored user data
+        await _prefs.setString(
+          _userKey,
+          '${_user!.id}|${_user!.name}|${_user!.email}|${_user!.displayName ?? ''}',
+        );
+        notifyListeners();
+      }
+
+      _isLoading = false;
+      notifyListeners();
+      return response;
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return ApiResponse<ProfileResponse>(
+        success: false,
+        message: 'Failed to update profile: ${e.toString()}',
       );
     }
   }
