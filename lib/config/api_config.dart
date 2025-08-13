@@ -1,6 +1,6 @@
 class ApiConfig {
   // Change this to your Laravel API base URL
-  static const String baseUrl = 'https://pokerstreet.lt/api';
+  static const String baseUrl = 'http://localhost:3001/api';
   static const String mobileBaseUrl = '$baseUrl/mobile';
 
   // Auth endpoints
@@ -9,6 +9,8 @@ class ApiConfig {
   static const String profileEndpoint = '$mobileBaseUrl/auth/profile';
   static const String updateProfileEndpoint = '$mobileBaseUrl/auth/profile';
   static const String userEventsEndpoint = '$mobileBaseUrl/auth/events';
+  static const String personalVouchersEndpoint =
+      '$mobileBaseUrl/auth/personal-vouchers';
   static const String logoutEndpoint = '$mobileBaseUrl/auth/logout';
   static const String logoutAllEndpoint = '$mobileBaseUrl/auth/logout-all';
   static const String deleteAccountEndpoint =

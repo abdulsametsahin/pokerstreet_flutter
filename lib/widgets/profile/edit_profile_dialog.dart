@@ -21,7 +21,6 @@ class EditProfileDialog extends StatefulWidget {
 class _EditProfileDialogState extends State<EditProfileDialog> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _displayNameController;
-  late final TextEditingController _avatarController;
   final TextEditingController _currentPasswordController =
       TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
@@ -41,13 +40,11 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     _displayNameController = TextEditingController(
       text: widget.user.displayName ?? widget.user.name,
     );
-    _avatarController = TextEditingController(text: widget.user.avatar ?? '');
   }
 
   @override
   void dispose() {
     _displayNameController.dispose();
-    _avatarController.dispose();
     _currentPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
@@ -75,8 +72,6 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                   if (image != null) {
                     setState(() {
                       _selectedImage = File(image.path);
-                      _avatarController.text =
-                          image.path; // Temporary, you'll need to upload this
                     });
                   }
                 },
@@ -95,13 +90,11 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                   if (image != null) {
                     setState(() {
                       _selectedImage = File(image.path);
-                      _avatarController.text =
-                          image.path; // Temporary, you'll need to upload this
                     });
                   }
                 },
               ),
-              if (_selectedImage != null || _avatarController.text.isNotEmpty)
+              if (_selectedImage != null)
                 ListTile(
                   leading: const Icon(Icons.delete),
                   title: const Text('Remove Photo'),
@@ -109,7 +102,6 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                     Navigator.of(context).pop();
                     setState(() {
                       _selectedImage = null;
-                      _avatarController.text = '';
                     });
                   },
                 ),
@@ -126,20 +118,16 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
         radius: 32,
         backgroundImage: FileImage(_selectedImage!),
       );
-    } else if (_avatarController.text.isNotEmpty &&
-        !_avatarController.text.startsWith('/')) {
+    } else if (widget.user.avatar != null && widget.user.avatar!.isNotEmpty) {
       return CircleAvatar(
         radius: 32,
-        backgroundImage: NetworkImage(_avatarController.text),
+        backgroundImage: NetworkImage(widget.user.avatar!),
         onBackgroundImageError: (_, __) {},
-        child: _avatarController.text.isEmpty
-            ? Icon(Icons.person, size: 32, color: Colors.grey[400])
-            : null,
       );
     } else {
       return CircleAvatar(
         radius: 32,
-        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         child: Icon(
           Icons.person,
           size: 32,
@@ -268,38 +256,6 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                               return 'Please enter a display name';
                             }
                             return null;
-                          },
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Avatar URL Field (Optional, for manual URL entry)
-                        TextFormField(
-                          controller: _avatarController,
-                          decoration: InputDecoration(
-                            labelText: 'Avatar URL (Optional)',
-                            border: const OutlineInputBorder(),
-                            prefixIcon: const Icon(Icons.link),
-                            helperText:
-                                'Or enter a URL for your profile picture',
-                            suffixIcon: _avatarController.text.isNotEmpty
-                                ? IconButton(
-                                    icon: const Icon(Icons.clear),
-                                    onPressed: () {
-                                      setState(() {
-                                        _avatarController.clear();
-                                        _selectedImage = null;
-                                      });
-                                    },
-                                  )
-                                : null,
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              if (value.isNotEmpty) {
-                                _selectedImage =
-                                    null; // Clear selected image if URL is entered
-                              }
-                            });
                           },
                         ),
                         const SizedBox(height: 24),

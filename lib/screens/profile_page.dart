@@ -3,9 +3,16 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
+import '../services/banner_service.dart';
+import '../services/api_service.dart';
+import '../models/banner.dart' as BannerModel;
+import '../models/personal_voucher.dart';
 import '../widgets/profile/profile_header.dart';
+import '../widgets/profile/banners_section.dart';
+import '../widgets/profile/balance_box.dart';
+import '../widgets/profile/coupons_box.dart';
 import '../widgets/profile/profile_events_section.dart';
-import '../widgets/profile/profile_settings_section.dart';
+import '../widgets/profile/profile_actions.dart';
 import '../widgets/profile/profile_login_form.dart';
 import '../widgets/profile/edit_profile_dialog.dart';
 
@@ -17,6 +24,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  List<BannerModel.Banner> _banners = [];
+  List<PersonalVoucher> _personalVouchers = [];
+
   @override
   void initState() {
     super.initState();
@@ -26,8 +36,54 @@ class _ProfilePageState extends State<ProfilePage> {
       if (authProvider.isAuthenticated) {
         authProvider.getProfile();
         authProvider.getUserEvents();
+        _loadBanners();
+        _loadPersonalVouchers();
       }
     });
+  }
+
+  Future<void> _loadBanners() async {
+    if (!mounted) return;
+
+    try {
+      final banners = await BannerService.getBanners();
+      if (mounted) {
+        setState(() {
+          _banners = banners;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _banners = [];
+        });
+      }
+      print('Error loading banners: $e');
+    }
+  }
+
+  Future<void> _loadPersonalVouchers() async {
+    if (!mounted) return;
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAuthenticated || authProvider.token == null) return;
+
+    try {
+      final response =
+          await ApiService.getPersonalVouchers(authProvider.token!);
+      if (mounted && response.success && response.data != null) {
+        setState(() {
+          _personalVouchers = response.data!;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _personalVouchers = [];
+        });
+      }
+      print('Error loading personal vouchers: $e');
+    }
   }
 
   void _showEditProfileDialog(BuildContext context, AuthProvider authProvider) {
@@ -100,7 +156,17 @@ class _ProfilePageState extends State<ProfilePage> {
         }
 
         if (authProvider.user != null) {
-          return _buildProfileContent(context, authProvider);
+          return RefreshIndicator(
+            onRefresh: () async {
+              await Future.wait([
+                authProvider.getProfile(),
+                authProvider.getUserEvents(),
+                _loadBanners(),
+                _loadPersonalVouchers(),
+              ]);
+            },
+            child: _buildProfileContent(context, authProvider),
+          );
         }
 
         return _buildError(context);
@@ -119,19 +185,31 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Profile Header
+          // Profile Header with Edit Icon
           ProfileHeader(
             user: authProvider.user!,
             onEditProfile: () => _showEditProfileDialog(context, authProvider),
           ),
           const SizedBox(height: 24),
 
-          // Events Section
+          // Banners Section
+          BannersSection(banners: _banners),
+          const SizedBox(height: 24),
+
+          // My Events Section (improved)
           ProfileEventsSection(authProvider: authProvider),
           const SizedBox(height: 24),
 
-          // Settings Section
-          ProfileSettingsSection(authProvider: authProvider),
+          // Balance Box
+          const BalanceBox(),
+          const SizedBox(height: 24),
+
+          // Coupons Box
+          CouponsBox(vouchers: _personalVouchers),
+          const SizedBox(height: 24),
+
+          // Profile Actions (Delete Account, Logout)
+          const ProfileActions(),
           const SizedBox(height: 24),
         ],
       ),

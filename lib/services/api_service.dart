@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import '../config/api_config.dart';
 import '../models/api_response.dart';
 import '../models/user_event.dart';
+import '../models/personal_voucher.dart';
 
 class ApiService {
   static Future<ApiResponse<AuthResponse>> login({
@@ -192,6 +193,40 @@ class ApiService {
       }
     } catch (e) {
       return ApiResponse<UserEventsResponse>(
+        success: false,
+        message: 'Network error: ${e.toString()}',
+      );
+    }
+  }
+
+  static Future<ApiResponse<List<PersonalVoucher>>> getPersonalVouchers(
+      String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse(ApiConfig.personalVouchersEndpoint),
+        headers: ApiConfig.authHeaders(token),
+      );
+
+      final jsonResponse = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> vouchersJson = jsonResponse['data']['vouchers'];
+        final vouchers =
+            vouchersJson.map((json) => PersonalVoucher.fromJson(json)).toList();
+
+        return ApiResponse<List<PersonalVoucher>>(
+          success: jsonResponse['success'],
+          message: jsonResponse['message'],
+          data: vouchers,
+        );
+      } else {
+        return ApiResponse<List<PersonalVoucher>>(
+          success: false,
+          message: jsonResponse['message'] ?? 'Failed to get personal vouchers',
+        );
+      }
+    } catch (e) {
+      return ApiResponse<List<PersonalVoucher>>(
         success: false,
         message: 'Network error: ${e.toString()}',
       );
