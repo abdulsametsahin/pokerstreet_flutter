@@ -134,5 +134,12 @@
   "passwordsDoNotMatch": "Slaptažodžiai nesutampa",
   "tapForDetails": "Spustelėkite, kad peržiūrėtumėte informaciją",
   "performance": "Veikla",
-  "logout": "Atsijungti"
+  "logout": "Atsijungti",
+  "deleteAccount": "Ištrinti paskyrą",
+  "deleteAccountDescription": "Visam laikui ištrinti savo paskyrą",
+  "deleteAccountConfirmation": "Ar tikrai norite ištrinti savo paskyrą?",
+  "cancel": "Atšaukti",
+  "deleteAccountButton": "Ištrinti paskyrą",
+  "accountDeletedSuccessfully": "Paskyra sėkmingai ištrinta",
+  "accountDeletionFailed": "Nepavyko ištrinti paskyros"
 }

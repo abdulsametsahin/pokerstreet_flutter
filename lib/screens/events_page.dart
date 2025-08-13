@@ -644,7 +644,9 @@ class _EventsPageState extends State<EventsPage> {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        event.appBuyIn!.action.isNotEmpty ? event.appBuyIn!.action : 'Buy In',
+                        event.appBuyIn!.action.isNotEmpty
+                            ? event.appBuyIn!.action
+                            : 'Buy In',
                         style: theme.textTheme.labelMedium?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -663,9 +665,10 @@ class _EventsPageState extends State<EventsPage> {
               ),
             ),
           ],
-          
+
           // Total prize pool from buy-in data
-          if (event.appBuyIn != null && event.appBuyIn!.totalPrizepool.isNotEmpty) ...[
+          if (event.appBuyIn != null &&
+              event.appBuyIn!.totalPrizepool.isNotEmpty) ...[
             if (event.appBuyIn != null) ...[
               Container(
                 width: 1,

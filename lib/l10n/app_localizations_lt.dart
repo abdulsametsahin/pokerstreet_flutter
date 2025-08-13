@@ -335,4 +335,25 @@ class AppLocalizationsLt extends AppLocalizations {
 
   @override
   String get logout => 'Atsijungti';
+
+  @override
+  String get deleteAccount => 'Ištrinti paskyrą';
+
+  @override
+  String get deleteAccountDescription => 'Visam laikui ištrinti savo paskyrą';
+
+  @override
+  String get deleteAccountConfirmation => 'Ar tikrai norite ištrinti savo paskyrą?';
+
+  @override
+  String get cancel => 'Atšaukti';
+
+  @override
+  String get deleteAccountButton => 'Ištrinti paskyrą';
+
+  @override
+  String get accountDeletedSuccessfully => 'Paskyra sėkmingai ištrinta';
+
+  @override
+  String get accountDeletionFailed => 'Nepavyko ištrinti paskyros';
 }

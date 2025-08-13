@@ -10,6 +10,8 @@ class ApiConfig {
   static const String userEventsEndpoint = '$mobileBaseUrl/auth/events';
   static const String logoutEndpoint = '$mobileBaseUrl/auth/logout';
   static const String logoutAllEndpoint = '$mobileBaseUrl/auth/logout-all';
+  static const String deleteAccountEndpoint =
+      '$mobileBaseUrl/auth/delete-account';
 
   // Public endpoints
   static const String topPlayersEndpoint = '$mobileBaseUrl/top-players';

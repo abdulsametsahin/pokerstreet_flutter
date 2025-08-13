@@ -230,4 +230,37 @@ class AuthProvider extends ChangeNotifier {
       );
     }
   }
+
+  // Delete account (soft delete)
+  Future<ApiResponse<void>> deleteAccount() async {
+    if (_token == null) {
+      return ApiResponse<void>(
+        success: false,
+        message: 'No authentication token',
+      );
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await ApiService.deleteAccount(_token!);
+
+      if (response.success) {
+        // Clear auth data after successful deletion
+        await _clearAuthData();
+      }
+
+      _isLoading = false;
+      notifyListeners();
+      return response;
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return ApiResponse<void>(
+        success: false,
+        message: 'Failed to delete account: ${e.toString()}',
+      );
+    }
+  }
 }

@@ -134,5 +134,12 @@
   "passwordsDoNotMatch": "Passwords do not match",
   "tapForDetails": "Tap for details",
   "performance": "Performance",
-  "logout": "Logout"
+  "logout": "Logout",
+  "deleteAccount": "Delete Account",
+  "deleteAccountDescription": "Permanently delete your account",
+  "deleteAccountConfirmation": "Are you sure you want to delete your account?",
+  "cancel": "Cancel",
+  "deleteAccountButton": "Delete Account",
+  "accountDeletedSuccessfully": "Account deleted successfully",
+  "accountDeletionFailed": "Failed to delete account"
 }

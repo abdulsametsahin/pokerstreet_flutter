@@ -163,4 +163,25 @@ class ApiService {
       );
     }
   }
+
+  static Future<ApiResponse<void>> deleteAccount(String token) async {
+    try {
+      final response = await http.delete(
+        Uri.parse(ApiConfig.deleteAccountEndpoint),
+        headers: ApiConfig.authHeaders(token),
+      );
+
+      final jsonResponse = jsonDecode(response.body);
+
+      return ApiResponse<void>(
+        success: jsonResponse['success'] ?? false,
+        message: jsonResponse['message'] ?? 'Account deletion completed',
+      );
+    } catch (e) {
+      return ApiResponse<void>(
+        success: false,
+        message: 'Network error: ${e.toString()}',
+      );
+    }
+  }
 }

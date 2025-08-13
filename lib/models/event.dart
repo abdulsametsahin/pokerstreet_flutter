@@ -54,7 +54,9 @@ class Event {
     AppBuyIn? appBuyIn;
     if (json['app_buyin'] != null && json['app_buyin'] is Map) {
       final buyInData = json['app_buyin'] as Map<String, dynamic>;
-      if (buyInData['rows'] != null && buyInData['rows'] is List && (buyInData['rows'] as List).isNotEmpty) {
+      if (buyInData['rows'] != null &&
+          buyInData['rows'] is List &&
+          (buyInData['rows'] as List).isNotEmpty) {
         final firstRow = (buyInData['rows'] as List).first;
         appBuyIn = AppBuyIn(
           action: firstRow['action'] ?? '',
