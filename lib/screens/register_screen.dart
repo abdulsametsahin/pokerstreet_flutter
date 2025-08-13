@@ -49,8 +49,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             backgroundColor: Colors.green,
           ),
         );
-        Navigator.of(context).pop(); // Return to login screen
-        Navigator.of(context).pop(); // Return to main screen
+        // After successful registration, user is automatically logged in
+        // Just pop back to the profile page which will now show authenticated state
+        Navigator.of(context).pop();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
