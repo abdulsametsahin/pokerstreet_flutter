@@ -63,8 +63,8 @@ class BannerCard extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.black.withOpacity(0.1),
-                      Colors.black.withOpacity(0.4),
+                      Colors.black.withOpacity(0.5),
+                      Colors.black.withOpacity(0.2),
                     ],
                   ),
                 ),
