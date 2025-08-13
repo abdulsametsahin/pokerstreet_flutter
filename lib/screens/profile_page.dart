@@ -9,7 +9,8 @@ import '../models/banner.dart' as BannerModel;
 import '../models/personal_voucher.dart';
 import '../widgets/profile/banners_section.dart';
 import '../widgets/profile/profile_login_form.dart';
-import '../widgets/profile/edit_profile_dialog.dart';
+import '../widgets/profile/edit_profile_dialog_new.dart';
+import '../widgets/settings_bottom_sheet.dart';
 import '../screens/user_events_page.dart';
 import '../screens/vouchers_page.dart';
 
@@ -457,10 +458,10 @@ class _ProfilePageState extends State<ProfilePage> {
               _buildSettingsItem(
                 context,
                 'Account Settings',
-                'Privacy, security, and more',
+                'Language, theme, and more',
                 Icons.settings,
                 () {
-                  // Navigate to settings
+                  _showSettingsBottomSheet(context);
                 },
               ),
               Divider(
@@ -474,6 +475,20 @@ class _ProfilePageState extends State<ProfilePage> {
                 Icons.logout,
                 () async {
                   await authProvider.logout();
+                },
+                isDestructive: true,
+              ),
+              Divider(
+                height: 1,
+                color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+              ),
+              _buildSettingsItem(
+                context,
+                AppLocalizations.of(context)!.deleteAccount,
+                AppLocalizations.of(context)!.deleteAccountDescription,
+                Icons.delete_forever,
+                () {
+                  _showDeleteAccountDialog(context, authProvider);
                 },
                 isDestructive: true,
               ),
@@ -548,6 +563,107 @@ class _ProfilePageState extends State<ProfilePage> {
         return EditProfileDialog(
           user: authProvider.user!,
           authProvider: authProvider,
+        );
+      },
+    );
+  }
+
+  void _showSettingsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return const SettingsBottomSheet();
+      },
+    );
+  }
+
+  void _showDeleteAccountDialog(BuildContext context, AuthProvider authProvider) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(l10n.deleteAccount),
+          content: Text(l10n.deleteAccountConfirmation),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                
+                // Show loading indicator
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
+
+                try {
+                  final response = await authProvider.deleteAccount();
+                  
+                  // Hide loading indicator
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                  
+                  if (response.success) {
+                    // Show success message
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(l10n.accountDeletedSuccessfully),
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                        ),
+                      );
+                    }
+                  } else {
+                    // Show error message
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(response.message.isEmpty ? l10n.accountDeletionFailed : response.message),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ),
+                      );
+                    }
+                  }
+                } catch (e) {
+                  // Hide loading indicator
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                  
+                  // Show error message
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(l10n.accountDeletionFailed),
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                      ),
+                    );
+                  }
+                }
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: Text(l10n.deleteAccountButton),
+            ),
+          ],
         );
       },
     );

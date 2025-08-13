@@ -1,13 +1,14 @@
 class ApiConfig {
   // Change this to your Laravel API base URL
-  static const String baseUrl = 'http://localhost:3001/api';
+  static const String baseUrl = 'https://7deb40b7c974.ngrok-free.app/api';
   static const String mobileBaseUrl = '$baseUrl/mobile';
 
   // Auth endpoints
   static const String loginEndpoint = '$mobileBaseUrl/auth/login';
   static const String registerEndpoint = '$mobileBaseUrl/auth/register';
   static const String profileEndpoint = '$mobileBaseUrl/auth/profile';
-  static const String updateProfileEndpoint = '$mobileBaseUrl/auth/profile';
+  static const String updateProfileEndpoint =
+      '$mobileBaseUrl/auth/profile/update';
   static const String userEventsEndpoint = '$mobileBaseUrl/auth/events';
   static const String personalVouchersEndpoint =
       '$mobileBaseUrl/auth/personal-vouchers';

@@ -137,6 +137,62 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     }
   }
 
+  Future<void> _handleSubmit(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    
+    try {
+      // Prepare update data
+      final Map<String, dynamic> updateData = {};
+
+      // Add display name if changed
+      final newDisplayName = _displayNameController.text.trim();
+      if (newDisplayName != (widget.user.displayName ?? widget.user.name)) {
+        updateData['display_name'] = newDisplayName;
+      }
+
+      // Add password data if changing password
+      if (_showPasswordFields && _newPasswordController.text.isNotEmpty) {
+        updateData['current_password'] = _currentPasswordController.text;
+        updateData['password'] = _newPasswordController.text;
+        updateData['password_confirmation'] = _confirmPasswordController.text;
+      }
+
+      // Call update profile with avatar file
+      final response = await widget.authProvider.updateProfile(
+        updateData,
+        avatarFile: _selectedImage,
+      );
+
+      if (context.mounted) {
+        if (response.success) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response.message),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response.message),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('An error occurred: ${e.toString()}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -613,8 +669,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                             ? null
                             : () async {
                                 if (_formKey.currentState!.validate()) {
-                                  // TODO: Handle form submission with image upload
-                                  Navigator.pop(context);
+                                  await _handleSubmit(context);
                                 }
                               },
                         style: FilledButton.styleFrom(

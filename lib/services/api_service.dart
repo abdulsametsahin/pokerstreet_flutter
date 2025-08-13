@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import '../config/api_config.dart';
@@ -116,15 +117,52 @@ class ApiService {
 
   static Future<ApiResponse<ProfileResponse>> updateProfile(
     String token,
-    Map<String, dynamic> data,
-  ) async {
+    Map<String, dynamic> data, {
+    File? avatarFile,
+  }) async {
     try {
-      final response = await http.put(
+      var request = http.MultipartRequest(
+        'POST',
         Uri.parse(ApiConfig.updateProfileEndpoint),
-        headers: ApiConfig.authHeaders(token),
-        body: jsonEncode(data),
       );
 
+      // Add authorization header
+      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Accept'] = 'application/json';
+
+      // Debug logging
+      print('UpdateProfile - Data: $data');
+      print('UpdateProfile - Avatar file: ${avatarFile?.path}');
+
+      // Add text fields
+      if (data['display_name'] != null) {
+        request.fields['display_name'] = data['display_name'].toString();
+        print('Added display_name: ${data['display_name']}');
+      }
+
+      if (data['password'] != null) {
+        request.fields['password'] = data['password'].toString();
+        request.fields['password_confirmation'] =
+            data['password_confirmation'].toString();
+      }
+
+      if (data['current_password'] != null) {
+        request.fields['current_password'] =
+            data['current_password'].toString();
+      }
+
+      // Add avatar file if provided
+      if (avatarFile != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'avatar',
+            avatarFile.path,
+          ),
+        );
+      }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
       final jsonResponse = jsonDecode(response.body);
 
       if (response.statusCode == 200) {

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,7 +58,9 @@ class AuthProvider extends ChangeNotifier {
         'id': int.tryParse(parts[0]) ?? 0,
         'name': parts[1],
         'email': parts[2],
-        'display_name': parts.length > 3 ? parts[3] : null,
+        'display_name':
+            parts.length > 3 && parts[3].isNotEmpty ? parts[3] : null,
+        'avatar': parts.length > 4 && parts[4].isNotEmpty ? parts[4] : null,
       };
     }
     return {};
@@ -66,9 +69,9 @@ class AuthProvider extends ChangeNotifier {
   // Save auth data to storage
   Future<void> _saveAuthData(String token, User user) async {
     await _prefs.setString(_tokenKey, token);
-    // Simple string format: id|name|email|display_name
+    // Simple string format: id|name|email|display_name|avatar
     await _prefs.setString(_userKey,
-        '${user.id}|${user.name}|${user.email}|${user.displayName ?? ''}');
+        '${user.id}|${user.name}|${user.email}|${user.displayName ?? ''}|${user.avatar ?? ''}');
     _token = token;
     _user = user;
     notifyListeners();
@@ -175,7 +178,7 @@ class AuthProvider extends ChangeNotifier {
         // Update stored user data
         await _prefs.setString(
           _userKey,
-          '${_user!.id}|${_user!.name}|${_user!.email}|${_user!.displayName ?? ''}',
+          '${_user!.id}|${_user!.name}|${_user!.email}|${_user!.displayName ?? ''}|${_user!.avatar ?? ''}',
         );
         notifyListeners();
       }
@@ -194,8 +197,8 @@ class AuthProvider extends ChangeNotifier {
   }
 
   // Update profile
-  Future<ApiResponse<ProfileResponse>> updateProfile(
-      Map<String, dynamic> data) async {
+  Future<ApiResponse<ProfileResponse>> updateProfile(Map<String, dynamic> data,
+      {File? avatarFile}) async {
     if (_token == null) {
       return ApiResponse<ProfileResponse>(
         success: false,
@@ -207,14 +210,15 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await ApiService.updateProfile(_token!, data);
+      final response =
+          await ApiService.updateProfile(_token!, data, avatarFile: avatarFile);
 
       if (response.success && response.data != null) {
         _user = response.data!.user;
         // Update stored user data
         await _prefs.setString(
           _userKey,
-          '${_user!.id}|${_user!.name}|${_user!.email}|${_user!.displayName ?? ''}',
+          '${_user!.id}|${_user!.name}|${_user!.email}|${_user!.displayName ?? ''}|${_user!.avatar ?? ''}',
         );
         notifyListeners();
       }
