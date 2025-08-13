@@ -84,7 +84,7 @@ class CouponsBox extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'No active vouchers available',
+                          'No vouchers available',
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: Theme.of(context)
@@ -97,125 +97,76 @@ class CouponsBox extends StatelessWidget {
                   ),
                 ),
               ] else ...[
-                // Active vouchers count
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .surfaceVariant
-                        .withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Active Vouchers',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          '${activeVouchers.length}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Show first few vouchers preview
-                if (activeVouchers.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  ...activeVouchers
-                      .take(2)
-                      .map(
-                        (voucher) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
+                // Show vouchers directly
+                ...activeVouchers
+                    .take(2)
+                    .map(
+                      (voucher) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .tertiary
+                                .withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
                               color: Theme.of(context)
                                   .colorScheme
                                   .tertiary
-                                  .withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .tertiary
-                                    .withOpacity(0.3),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.local_offer,
-                                  color: Theme.of(context).colorScheme.tertiary,
-                                  size: 16,
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    '€${voucher.amount.toStringAsFixed(2)} - ${voucher.code}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                  ),
-                                ),
-                                if (voucher.expiresAt != null)
-                                  Text(
-                                    _formatExpiryDate(voucher.expiresAt!),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurfaceVariant,
-                                        ),
-                                  ),
-                              ],
+                                  .withOpacity(0.3),
                             ),
                           ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.local_offer,
+                                color: Theme.of(context).colorScheme.tertiary,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  '€${voucher.amount.toStringAsFixed(2)} - ${voucher.code}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                ),
+                              ),
+                              if (voucher.expiresAt != null)
+                                Text(
+                                  _formatExpiryDate(voucher.expiresAt!),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                      ),
+                                ),
+                            ],
+                          ),
                         ),
-                      )
-                      .toList(),
-                  if (activeVouchers.length > 2) ...[
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        '+${activeVouchers.length - 2} more vouchers',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                              fontStyle: FontStyle.italic,
-                            ),
                       ),
+                    )
+                    .toList(),
+                if (activeVouchers.length > 2) ...[
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      '+${activeVouchers.length - 2} more vouchers',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            fontStyle: FontStyle.italic,
+                          ),
                     ),
-                  ],
+                  ),
                 ],
               ],
             ],

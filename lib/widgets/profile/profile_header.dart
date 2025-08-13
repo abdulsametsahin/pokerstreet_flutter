@@ -14,7 +14,7 @@ class ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -28,63 +28,90 @@ class ProfileHeader extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              shape: BoxShape.circle,
-            ),
-            child: user.avatar != null && user.avatar!.isNotEmpty
-                ? CircleAvatar(
-                    radius: 24,
-                    backgroundImage: NetworkImage(user.avatar!),
-                    child: Text(
-                      user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
-                      style:
-                          Theme.of(context).textTheme.headlineLarge?.copyWith(
+          // Horizontal layout: Avatar - Name - Edit button
+          Row(
+            children: [
+              // Avatar on the left
+              Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: user.avatar != null && user.avatar!.isNotEmpty
+                    ? CircleAvatar(
+                        radius: 24,
+                        backgroundImage: NetworkImage(user.avatar!),
+                        onBackgroundImageError: (_, __) {},
+                        child: null,
+                      )
+                    : CircleAvatar(
+                        radius: 24,
+                        backgroundColor: Colors.white.withOpacity(0.1),
+                        child: Text(
+                          user.name.isNotEmpty
+                              ? user.name[0].toUpperCase()
+                              : 'U',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
-                    ),
-                  )
-                : Text(
-                    user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
                         ),
-                  ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                user.displayNameOrName,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                      ),
               ),
-              const SizedBox(width: 8),
-              IconButton(
-                onPressed: onEditProfile,
-                icon: const Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                  size: 20,
+
+              const SizedBox(width: 16),
+
+              // Name in the center (expanded to take available space)
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      user.displayNameOrName,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      user.email,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
-                padding: const EdgeInsets.all(4),
-                constraints: const BoxConstraints(),
+              ),
+
+              const SizedBox(width: 8),
+
+              // Edit button on the right
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: IconButton(
+                  onPressed: onEditProfile,
+                  icon: const Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  padding: const EdgeInsets.all(8),
+                  constraints: const BoxConstraints(),
+                ),
               ),
             ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            user.email,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.white.withOpacity(0.9),
-                ),
           ),
         ],
       ),

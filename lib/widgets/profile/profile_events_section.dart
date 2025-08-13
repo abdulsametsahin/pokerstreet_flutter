@@ -13,30 +13,7 @@ class ProfileEventsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(
-              Icons.event,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              l10n.myEvents,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        _buildEventsCard(context, authProvider),
-      ],
-    );
+    return _buildEventsCard(context, authProvider);
   }
 
   Widget _buildEventsCard(BuildContext context, AuthProvider authProvider) {

@@ -20,132 +20,111 @@ class BannerCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
         onTap: onTap ?? () => _handleTap(context),
         child: Container(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              // Icon or Image
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: banner.imageUrl != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          banner.imageUrl!,
-                          width: 48,
-                          height: 48,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              _buildDefaultIcon(context),
-                        ),
-                      )
-                    : _buildDefaultIcon(context),
-              ),
-              const SizedBox(width: 16),
-
-              // Content
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      banner.title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    if (banner.description != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        banner.description!,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+          height: 120,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: banner.imageUrl != null
+                ? DecorationImage(
+                    image: NetworkImage(banner.imageUrl!),
+                    fit: BoxFit.cover,
+                    onError: (error, stackTrace) {
+                      // Handle image loading error silently
+                    },
+                  )
+                : null,
+            gradient: banner.imageUrl == null
+                ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Theme.of(context).colorScheme.primary,
+                      Theme.of(context).colorScheme.primary.withOpacity(0.8),
                     ],
-                    if (banner.expiresAt != null) ...[
-                      const SizedBox(height: 8),
-                      Row(
+                  )
+                : null,
+          ),
+          child: Container(
+            // Add a subtle dark overlay to ensure text readability
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.2),
+                  Colors.black.withOpacity(0.4),
+                ],
+              ),
+            ),
+            padding: const EdgeInsets.all(16),
+            child: Stack(
+              children: [
+                // Title positioned on the left/center
+                Positioned(
+                  top: 8,
+                  left: 0,
+                  right: 60, // Leave space for expiry date
+                  child: Text(
+                    banner.title,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withOpacity(0.5),
+                          offset: const Offset(1, 1),
+                          blurRadius: 2,
+                        ),
+                      ],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+
+                // Expiry date positioned at bottom right
+                if (banner.expiresAt != null)
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             Icons.schedule,
-                            size: 16,
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            size: 12,
+                            color: Colors.white,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             'Expires ${_formatDate(banner.expiresAt!)}',
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
                                     ),
                           ),
                         ],
                       ),
-                    ],
-                  ],
-                ),
-              ),
-
-              // Arrow icon
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ],
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildDefaultIcon(BuildContext context) {
-    IconData iconData = Icons.campaign;
-
-    if (banner.icon != null) {
-      switch (banner.icon!.toLowerCase()) {
-        case 'event':
-          iconData = Icons.event;
-          break;
-        case 'gift':
-          iconData = Icons.card_giftcard;
-          break;
-        case 'star':
-          iconData = Icons.star;
-          break;
-        case 'celebration':
-          iconData = Icons.celebration;
-          break;
-        case 'info':
-          iconData = Icons.info;
-          break;
-        default:
-          iconData = Icons.campaign;
-      }
-    }
-
-    return Icon(
-      iconData,
-      color: Theme.of(context).colorScheme.primary,
-      size: 24,
     );
   }
 
