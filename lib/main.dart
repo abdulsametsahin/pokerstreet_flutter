@@ -52,17 +52,55 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue,
+              seedColor: const Color(0xFF6366F1), // Modern indigo
               brightness: Brightness.light,
+              primary: const Color(0xFF6366F1),
+              secondary: const Color(0xFF8B5CF6),
+              tertiary: const Color(0xFF06B6D4),
             ),
             useMaterial3: true,
+            cardTheme: CardTheme(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+            ),
           ),
           darkTheme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue,
+              seedColor: const Color(0xFF6366F1), // Modern indigo
               brightness: Brightness.dark,
+              primary: const Color(0xFF818CF8),
+              secondary: const Color(0xFFA78BFA),
+              tertiary: const Color(0xFF22D3EE),
             ),
             useMaterial3: true,
+            cardTheme: CardTheme(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+            ),
           ),
           themeMode: themeProvider.themeMode,
           locale: localeProvider.locale,

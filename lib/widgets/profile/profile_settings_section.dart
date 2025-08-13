@@ -72,7 +72,7 @@ class ProfileSettingsSection extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          l10n.settings,
+                          '${l10n.settings} (${l10n.theme} & ${l10n.language})',
                           style:
                               Theme.of(context).textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w500,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../l10n/app_localizations.dart';
 import '../models/personal_voucher.dart';
 import '../providers/auth_provider.dart';
+import '../services/api_service.dart';
 
 class VouchersPage extends StatefulWidget {
   const VouchersPage({super.key});
@@ -23,24 +24,49 @@ class _VouchersPageState extends State<VouchersPage> {
   }
 
   Future<void> _loadVouchers() async {
-    // TODO: Implement API call to load user vouchers
-    // For now, simulate loading
-    await Future.delayed(const Duration(seconds: 1));
+    if (!mounted) return;
+
     setState(() {
-      _isLoading = false;
-      // Mock data - remove when API is implemented
-      _vouchers = [];
+      _isLoading = true;
     });
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAuthenticated || authProvider.token == null) {
+      setState(() {
+        _isLoading = false;
+        _vouchers = [];
+      });
+      return;
+    }
+
+    try {
+      final response =
+          await ApiService.getPersonalVouchers(authProvider.token!);
+      if (mounted && response.success && response.data != null) {
+        setState(() {
+          _vouchers = response.data!;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _vouchers = [];
+          _isLoading = false;
+        });
+      }
+      print('Error loading vouchers: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Coupons & Vouchers'),
+        title: const Text('My Vouchers'),
         elevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -52,30 +78,40 @@ class _VouchersPageState extends State<VouchersPage> {
 
   Widget _buildEmptyState(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.card_giftcard,
-            size: 80,
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No vouchers available',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'You don\'t have any coupons or vouchers at the moment.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.card_giftcard,
+                size: 64,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'No vouchers available',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'You don\'t have any vouchers at the moment.\nCheck back later for new offers!',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -288,11 +324,15 @@ class _VouchersPageState extends State<VouchersPage> {
   }
 
   void _copyToClipboard(String code) {
-    // TODO: Implement clipboard copy
+    Clipboard.setData(ClipboardData(text: code));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Voucher code copied to clipboard'),
+        content: Text('Voucher code "$code" copied to clipboard'),
         duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
     );
   }
