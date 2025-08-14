@@ -28,11 +28,8 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.topPlayersTitle),
-      ),
-      body: Consumer<TopPlayersProvider>(
+    return SafeArea(
+      child: Consumer<TopPlayersProvider>(
         builder: (context, provider, child) {
           return Column(
             children: [

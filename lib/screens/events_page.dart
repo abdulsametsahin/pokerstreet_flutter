@@ -36,12 +36,33 @@ class _EventsPageState extends State<EventsPage> {
     final hasBackgroundImage =
         event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty;
     if (hasBackgroundImage) {
-      return isSecondary ? Colors.white.withOpacity(0.8) : Colors.white;
+      return isSecondary ? Colors.white.withOpacity(0.9) : Colors.white;
     } else {
       return isSecondary
           ? theme.colorScheme.onSurfaceVariant
           : theme.colorScheme.onSurface;
     }
+  }
+
+  // Helper function to get text shadow for better visibility
+  List<Shadow> _getTextShadow(Event event) {
+    final hasBackgroundImage =
+        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty;
+    if (hasBackgroundImage) {
+      return [
+        Shadow(
+          offset: const Offset(0, 1),
+          blurRadius: 3,
+          color: Colors.black.withOpacity(0.8),
+        ),
+        Shadow(
+          offset: const Offset(0, 2),
+          blurRadius: 6,
+          color: Colors.black.withOpacity(0.3),
+        ),
+      ];
+    }
+    return [];
   }
 
   void _startAutoRefresh() {
@@ -57,7 +78,7 @@ class _EventsPageState extends State<EventsPage> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return Consumer<EventsProvider>(
+    return SafeArea(child: Consumer<EventsProvider>(
       builder: (context, eventsProvider, child) {
         if (eventsProvider.isLoading) {
           return Center(
@@ -142,8 +163,11 @@ class _EventsPageState extends State<EventsPage> {
 
         final runningEvents = eventsProvider.runningEvents;
         final upcomingEvents = eventsProvider.upcomingEvents;
+        final completedEvents = eventsProvider.completedEvents;
 
-        if (runningEvents.isEmpty && upcomingEvents.isEmpty) {
+        if (runningEvents.isEmpty &&
+            upcomingEvents.isEmpty &&
+            completedEvents.isEmpty) {
           return Center(
             child: Container(
               margin: const EdgeInsets.all(24),
@@ -229,13 +253,28 @@ class _EventsPageState extends State<EventsPage> {
                       padding: const EdgeInsets.only(bottom: 16),
                       child: _buildEventCard(event, l10n, theme),
                     )),
+                const SizedBox(height: 32),
+              ],
+              if (completedEvents.isNotEmpty) ...[
+                _buildSectionHeader(
+                  'Recent Events',
+                  completedEvents.length,
+                  theme.colorScheme.outline,
+                  Icons.history_rounded,
+                  theme,
+                ),
+                const SizedBox(height: 16),
+                ...completedEvents.map((event) => Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: _buildEventCard(event, l10n, theme),
+                    )),
               ],
               const SizedBox(height: 100), // Bottom padding for navigation
             ],
           ),
         );
       },
-    );
+    ));
   }
 
   Widget _buildSectionHeader(
@@ -319,19 +358,26 @@ class _EventsPageState extends State<EventsPage> {
                   },
                 ),
               ),
-            // Fallback background color
+            // Fallback white background
             if (event.backgroundUrl == null || event.backgroundUrl!.isEmpty)
               Positioned.fill(
                 child: Container(
-                  color: theme.colorScheme.surface,
+                  color: Colors.white,
                 ),
               ),
-            // Black overlay for better text visibility
+            // Gradient overlay for better text visibility
             if (event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty)
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withOpacity(0.4),
+                        Colors.black.withOpacity(0.8),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -341,7 +387,10 @@ class _EventsPageState extends State<EventsPage> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: theme.colorScheme.outline.withOpacity(0.1),
+                    color: (event.backgroundUrl == null ||
+                            event.backgroundUrl!.isEmpty)
+                        ? theme.colorScheme.outline.withOpacity(0.3)
+                        : theme.colorScheme.outline.withOpacity(0.1),
                   ),
                 ),
               ),
@@ -359,13 +408,21 @@ class _EventsPageState extends State<EventsPage> {
                     children: [
                       // Header Row
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: Text(
-                              event.name,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: _getTextColor(event, theme),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 12),
+                              child: Text(
+                                event.name,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: _getTextColor(event, theme),
+                                  shadows: _getTextShadow(event),
+                                  height: 1.3,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ),
@@ -383,6 +440,7 @@ class _EventsPageState extends State<EventsPage> {
                             color:
                                 _getTextColor(event, theme, isSecondary: true),
                             height: 1.4,
+                            shadows: _getTextShadow(event),
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -433,21 +491,45 @@ class _EventsPageState extends State<EventsPage> {
       statusColor = const Color(0xFFF59E0B);
       statusText = l10n.paused;
       statusIcon = Icons.pause_circle_filled;
-    } else {
+    } else if (event.isCompleted) {
+      statusColor = theme.colorScheme.outline;
+      statusText = 'Completed';
+      statusIcon = Icons.check_circle_rounded;
+    } else if (event.isUpcoming) {
       statusColor = theme.colorScheme.primary;
       statusText = l10n.pending;
       statusIcon = Icons.schedule;
+    } else {
+      statusColor = theme.colorScheme.outline;
+      statusText = 'Unknown';
+      statusIcon = Icons.help_outline;
     }
+
+    final hasBackgroundImage =
+        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.1),
+        color: hasBackgroundImage
+            ? statusColor.withOpacity(0.9)
+            : statusColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: statusColor.withOpacity(0.3),
+          color: hasBackgroundImage
+              ? Colors.white.withOpacity(0.3)
+              : statusColor.withOpacity(0.3),
           width: 1,
         ),
+        boxShadow: hasBackgroundImage
+            ? [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -455,14 +537,23 @@ class _EventsPageState extends State<EventsPage> {
           Icon(
             statusIcon,
             size: 14,
-            color: statusColor,
+            color: hasBackgroundImage ? Colors.white : statusColor,
           ),
           const SizedBox(width: 6),
           Text(
             statusText,
             style: theme.textTheme.labelSmall?.copyWith(
-              color: statusColor,
+              color: hasBackgroundImage ? Colors.white : statusColor,
               fontWeight: FontWeight.w600,
+              shadows: hasBackgroundImage
+                  ? [
+                      Shadow(
+                        offset: const Offset(0, 1),
+                        blurRadius: 2,
+                        color: Colors.black.withOpacity(0.8),
+                      ),
+                    ]
+                  : null,
             ),
           ),
         ],
@@ -522,8 +613,9 @@ class _EventsPageState extends State<EventsPage> {
                     ? l10n.breakTime
                     : l10n.currentLevel,
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.primary,
+                  color: _getTextColor(event, theme),
                   fontWeight: FontWeight.w600,
+                  shadows: _getTextShadow(event),
                 ),
               ),
             ],
@@ -534,6 +626,7 @@ class _EventsPageState extends State<EventsPage> {
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               color: _getTextColor(event, theme),
+              shadows: _getTextShadow(event),
             ),
           ),
           const SizedBox(height: 8),
@@ -613,6 +706,7 @@ class _EventsPageState extends State<EventsPage> {
               label,
               style: theme.textTheme.labelMedium?.copyWith(
                 color: _getTextColor(event, theme, isSecondary: true),
+                shadows: _getTextShadow(event),
               ),
             ),
           ],
@@ -623,6 +717,7 @@ class _EventsPageState extends State<EventsPage> {
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
             color: _getTextColor(event, theme),
+            shadows: _getTextShadow(event),
           ),
         ),
       ],
@@ -663,6 +758,7 @@ class _EventsPageState extends State<EventsPage> {
                   '${l10n.starts}:',
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: _getTextColor(event, theme, isSecondary: true),
+                    shadows: _getTextShadow(event),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -671,6 +767,7 @@ class _EventsPageState extends State<EventsPage> {
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: _getTextColor(event, theme),
+                    shadows: _getTextShadow(event),
                   ),
                 ),
               ],
@@ -704,7 +801,7 @@ class _EventsPageState extends State<EventsPage> {
                       Icon(
                         Icons.attach_money_rounded,
                         size: 16,
-                        color: theme.colorScheme.onSurfaceVariant,
+                        color: _getTextColor(event, theme, isSecondary: true),
                       ),
                       const SizedBox(width: 6),
                       Text(
@@ -712,7 +809,8 @@ class _EventsPageState extends State<EventsPage> {
                             ? event.appBuyIn!.action
                             : 'Buy In',
                         style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                          color: _getTextColor(event, theme, isSecondary: true),
+                          shadows: _getTextShadow(event),
                         ),
                       ),
                     ],
@@ -722,7 +820,8 @@ class _EventsPageState extends State<EventsPage> {
                     '${event.appBuyIn!.price} - ${event.appBuyIn!.chips}',
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface,
+                      color: _getTextColor(event, theme),
+                      shadows: _getTextShadow(event),
                     ),
                   ),
                 ],
@@ -750,13 +849,14 @@ class _EventsPageState extends State<EventsPage> {
                       Icon(
                         Icons.emoji_events_rounded,
                         size: 16,
-                        color: theme.colorScheme.onSurfaceVariant,
+                        color: _getTextColor(event, theme, isSecondary: true),
                       ),
                       const SizedBox(width: 6),
                       Text(
                         'Total Prize',
                         style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                          color: _getTextColor(event, theme, isSecondary: true),
+                          shadows: _getTextShadow(event),
                         ),
                       ),
                     ],
@@ -766,7 +866,8 @@ class _EventsPageState extends State<EventsPage> {
                     event.appBuyIn!.totalPrizepool,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface,
+                      color: _getTextColor(event, theme),
+                      shadows: _getTextShadow(event),
                     ),
                   ),
                 ],

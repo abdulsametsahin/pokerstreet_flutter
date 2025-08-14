@@ -28,6 +28,11 @@ class EventsProvider with ChangeNotifier {
   List<Event> get pausedEvents =>
       _events.where((event) => event.status == 'paused').toList();
 
+  List<Event> get completedEvents => _events
+      .where((event) => event.isCompleted)
+      .take(5)
+      .toList();
+
   Future<void> loadEvents({bool isInitialLoad = false}) async {
     if (isInitialLoad) {
       _isLoading = true;

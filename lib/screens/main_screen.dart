@@ -27,12 +27,6 @@ class _MainScreenState extends State<MainScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: _currentIndex == 0 // Show settings only on Events page (home)
-          ? AppBar(
-              title: Text(l10n.eventsPageTitle),
-              actions: [],
-            )
-          : null,
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
