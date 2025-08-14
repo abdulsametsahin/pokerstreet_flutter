@@ -73,8 +73,6 @@ class Event {
       }
     }
 
-    debugPrint("Parsed app buy-in");
-
     // Parse app prizes data
     List<AppPrize> appPrizes = [];
     if (json['app_prizes'] != null && json['app_prizes'] is List) {
@@ -83,13 +81,7 @@ class Event {
           .toList();
     }
 
-    debugPrint("Parsed app prizes");
-    debugPrint("Participants event: ${json['participants']}");
-
-    debugPrint("About to create Event instance");
-
     try {
-      debugPrint("Parsing basic fields...");
       final id =
           json['id'] is int ? json['id'] : int.parse(json['id'].toString());
       final name = json['name']?.toString() ?? '';
