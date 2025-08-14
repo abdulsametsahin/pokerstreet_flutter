@@ -87,43 +87,98 @@ class Event {
     debugPrint("About to create Event instance");
 
     try {
+      debugPrint("Parsing basic fields...");
+      final id =
+          json['id'] is int ? json['id'] : int.parse(json['id'].toString());
+      final name = json['name']?.toString() ?? '';
+      final description = json['description']?.toString().isEmpty == true
+          ? null
+          : json['description']?.toString();
+      final status = json['status']?.toString() ?? 'upcoming';
+
+      debugPrint("Parsing dates...");
+      final startsAt = json['starts_at'] != null
+          ? DateTime.parse(json['starts_at'].toString())
+          : DateTime.now();
+      final startedAt = json['started_at'];
+
+      debugPrint("Parsing numeric fields...");
+      final timeElapsed = _parseInt(json['time_elapsed']);
+      final isPublic = json['is_public'] == true;
+      final trackRanking = json['track_ranking'] == true;
+      final displayPrizePool = json['display_prize_pool'] == true;
+      final totalMinutes = _parseInt(json['total_minutes']);
+      final remaining = _parseInt(json['remaining']);
+      final elapsedTime = _parseDouble(json['elapsed_time']).toInt();
+      final activePlayersCount = _parseInt(json['active_players_count']);
+      final playersCount = _parseInt(json['players_count']);
+
+      debugPrint("Parsing levels...");
+      final levels = (json['levels'] as List?)?.map((level) {
+            try {
+              return Level.fromJson(level);
+            } catch (e) {
+              debugPrint("Error parsing level: $e, level data: $level");
+              rethrow;
+            }
+          }).toList() ??
+          [];
+
+      debugPrint("Parsing participants...");
+      final participants = (json['participants'] as List?)?.map((participant) {
+            try {
+              return Participant.fromJson(participant);
+            } catch (e) {
+              debugPrint(
+                  "Error parsing participant: $e, participant data: $participant");
+              rethrow;
+            }
+          }).toList() ??
+          [];
+
+      debugPrint("Parsing prizes...");
+      final prizes = (json['prizes'] as List?)?.map((prize) {
+            try {
+              return Prize.fromJson(prize);
+            } catch (e) {
+              debugPrint("Error parsing prize: $e, prize data: $prize");
+              rethrow;
+            }
+          }).toList() ??
+          [];
+
+      debugPrint("Parsing levels (current/next)...");
+      final currentLevel = json['current_level'] != null
+          ? Level.fromJson(json['current_level'])
+          : null;
+      final nextLevel = json['next_level'] != null
+          ? Level.fromJson(json['next_level'])
+          : null;
+      final levelRemaining = _parseDouble(json['level_remaining']).toInt();
+
+      debugPrint("Creating Event instance...");
       return Event(
-        id: json['id'],
-        name: json['name'] ?? '',
-        description: json['description'],
-        status: json['status'] ?? 'upcoming',
-        startsAt: json['starts_at'] != null
-            ? DateTime.parse(json['starts_at'])
-            : DateTime.now(),
-        startedAt: json['started_at'],
-        timeElapsed: json['time_elapsed'] ?? 0,
-        isPublic: json['is_public'] ?? false,
-        trackRanking: json['track_ranking'] ?? false,
-        displayPrizePool: json['display_prize_pool'] ?? false,
-        totalMinutes: _parseInt(json['total_minutes']),
-        remaining: json['remaining'] ?? 0,
-        elapsedTime: _parseDouble(json['elapsed_time']).toInt(),
-        activePlayersCount: json['active_players_count'] ?? 0,
-        playersCount: json['players_count'] ?? 0,
-        levels: (json['levels'] as List?)
-                ?.map((level) => Level.fromJson(level))
-                .toList() ??
-            [],
-        participants: (json['participants'] as List?)
-                ?.map((participant) => Participant.fromJson(participant))
-                .toList() ??
-            [],
-        prizes: (json['prizes'] as List?)
-                ?.map((prize) => Prize.fromJson(prize))
-                .toList() ??
-            [],
-        currentLevel: json['current_level'] != null
-            ? Level.fromJson(json['current_level'])
-            : null,
-        nextLevel: json['next_level'] != null
-            ? Level.fromJson(json['next_level'])
-            : null,
-        levelRemaining: _parseDouble(json['level_remaining']).toInt(),
+        id: id,
+        name: name,
+        description: description,
+        status: status,
+        startsAt: startsAt,
+        startedAt: startedAt,
+        timeElapsed: timeElapsed,
+        isPublic: isPublic,
+        trackRanking: trackRanking,
+        displayPrizePool: displayPrizePool,
+        totalMinutes: totalMinutes,
+        remaining: remaining,
+        elapsedTime: elapsedTime,
+        activePlayersCount: activePlayersCount,
+        playersCount: playersCount,
+        levels: levels,
+        participants: participants,
+        prizes: prizes,
+        currentLevel: currentLevel,
+        nextLevel: nextLevel,
+        levelRemaining: levelRemaining,
         appBuyIn: appBuyIn,
         appPrizes: appPrizes,
       );
@@ -192,15 +247,23 @@ class Level {
   });
 
   factory Level.fromJson(Map<String, dynamic> json) {
-    return Level(
-      id: json['id'],
-      levelNumber: json['level_number'],
-      smallBlind: json['small_blind'],
-      bigBlind: json['big_blind'],
-      ante: json['ante'],
-      duration: json['duration'] ?? 0,
-      type: json['type'] ?? 'round',
-    );
+    try {
+      return Level(
+        id: json['id'] is int ? json['id'] : int.parse(json['id'].toString()),
+        levelNumber: json['level_number'],
+        smallBlind: json['small_blind'],
+        bigBlind: json['big_blind'],
+        ante: json['ante'],
+        duration: json['duration'] is int
+            ? json['duration']
+            : int.parse(json['duration']?.toString() ?? '0'),
+        type: json['type']?.toString() ?? 'round',
+      );
+    } catch (e) {
+      debugPrint("Error in Level.fromJson: $e");
+      debugPrint("Level JSON data: $json");
+      rethrow;
+    }
   }
 
   bool get isBreak => type == 'break';
@@ -229,12 +292,18 @@ class Participant {
   });
 
   factory Participant.fromJson(Map<String, dynamic> json) {
-    return Participant(
-      id: json['id'],
-      status: json['status'] ?? 'playing',
-      finalTablePosition: json['final_table_position'],
-      user: json['user'] != null ? User.fromJson(json['user']) : null,
-    );
+    try {
+      return Participant(
+        id: json['id'] is int ? json['id'] : int.parse(json['id'].toString()),
+        status: json['status']?.toString() ?? 'playing',
+        finalTablePosition: json['final_table_position'],
+        user: json['user'] != null ? User.fromJson(json['user']) : null,
+      );
+    } catch (e) {
+      debugPrint("Error in Participant.fromJson: $e");
+      debugPrint("Participant JSON data: $json");
+      rethrow;
+    }
   }
 }
 
@@ -252,12 +321,20 @@ class Prize {
   });
 
   factory Prize.fromJson(Map<String, dynamic> json) {
-    return Prize(
-      id: json['id'],
-      position: json['position'] ?? 1,
-      percentage: (json['percentage'] ?? 0).toDouble(),
-      amount: json['amount']?.toDouble(),
-    );
+    try {
+      return Prize(
+        id: json['id'] is int ? json['id'] : int.parse(json['id'].toString()),
+        position: json['position'] is int
+            ? json['position']
+            : int.parse(json['position']?.toString() ?? '1'),
+        percentage: (json['percentage'] ?? 0).toDouble(),
+        amount: json['amount']?.toDouble(),
+      );
+    } catch (e) {
+      debugPrint("Error in Prize.fromJson: $e");
+      debugPrint("Prize JSON data: $json");
+      rethrow;
+    }
   }
 }
 
@@ -271,10 +348,16 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'],
-      name: json['name'] ?? '',
-    );
+    try {
+      return User(
+        id: json['id'] is int ? json['id'] : int.parse(json['id'].toString()),
+        name: json['name']?.toString() ?? '',
+      );
+    } catch (e) {
+      debugPrint("Error in User.fromJson: $e");
+      debugPrint("User JSON data: $json");
+      rethrow;
+    }
   }
 }
 
