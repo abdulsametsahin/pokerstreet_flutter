@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Event {
   final int id;
   final String name;
@@ -50,6 +52,8 @@ class Event {
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
+    debugPrint("Starting Event.fromJson");
+
     // Parse app buy-in data
     AppBuyIn? appBuyIn;
     if (json['app_buyin'] != null && json['app_buyin'] is Map) {
@@ -67,6 +71,8 @@ class Event {
       }
     }
 
+    debugPrint("Parsed app buy-in");
+
     // Parse app prizes data
     List<AppPrize> appPrizes = [];
     if (json['app_prizes'] != null && json['app_prizes'] is List) {
@@ -75,12 +81,19 @@ class Event {
           .toList();
     }
 
+    debugPrint("Parsed app prizes");
+    debugPrint("Participants event: ${json['participants']}");
+
+    debugPrint("About to create Event instance");
+
     return Event(
       id: json['id'],
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       status: json['status'] ?? 'upcoming',
-      startsAt: DateTime.parse(json['starts_at']),
+      startsAt: json['starts_at'] != null
+          ? DateTime.parse(json['starts_at'])
+          : DateTime.now(),
       startedAt: json['started_at'],
       timeElapsed: json['time_elapsed'] ?? 0,
       isPublic: json['is_public'] ?? false,

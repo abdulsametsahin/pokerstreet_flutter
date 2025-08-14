@@ -1,4 +1,4 @@
-package com.example.pokerstreet_flutter
+package lt.pokerstreet.mobileapp
 
 import io.flutter.embedding.android.FlutterActivity
 

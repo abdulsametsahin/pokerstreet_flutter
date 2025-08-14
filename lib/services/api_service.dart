@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../config/api_config.dart';
 import '../models/api_response.dart';
 import '../models/user_event.dart';
 import '../models/personal_voucher.dart';
+import '../models/event.dart';
 
 class ApiService {
   static Future<ApiResponse<AuthResponse>> login({
@@ -265,6 +267,40 @@ class ApiService {
       }
     } catch (e) {
       return ApiResponse<List<PersonalVoucher>>(
+        success: false,
+        message: 'Network error: ${e.toString()}',
+      );
+    }
+  }
+
+  static Future<ApiResponse<Event>> getEventDetails(
+      String token, int eventId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('${ApiConfig.baseUrl}/mobile/events/$eventId'),
+        headers: ApiConfig.authHeaders(token),
+      );
+
+      final jsonResponse = jsonDecode(response.body);
+
+      debugPrint("API Response Status: ${response.statusCode}");
+      debugPrint("API Response Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        debugPrint("Parsing event from: ${jsonResponse['event']}");
+        return ApiResponse<Event>(
+          success: jsonResponse['success'],
+          message: jsonResponse['message'],
+          data: Event.fromJson(jsonResponse['event']),
+        );
+      } else {
+        return ApiResponse<Event>(
+          success: false,
+          message: jsonResponse['message'] ?? 'Failed to get event details',
+        );
+      }
+    } catch (e) {
+      return ApiResponse<Event>(
         success: false,
         message: 'Network error: ${e.toString()}',
       );

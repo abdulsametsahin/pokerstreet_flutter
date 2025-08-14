@@ -1,6 +1,6 @@
 class ApiConfig {
   // Change this to your Laravel API base URL
-  static const String baseUrl = 'https://7deb40b7c974.ngrok-free.app/api';
+  static const String baseUrl = 'https://pokerstreet.lt/api';
   static const String mobileBaseUrl = '$baseUrl/mobile';
 
   // Auth endpoints
