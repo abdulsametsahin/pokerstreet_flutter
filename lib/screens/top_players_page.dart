@@ -34,22 +34,152 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
       ),
       body: Consumer<TopPlayersProvider>(
         builder: (context, provider, child) {
-          if (provider.isLoading) {
-            return _buildLoadingState(context);
-          }
+          return Column(
+            children: [
+              // Always show the header with filters
+              _buildHeader(context, provider),
 
-          if (provider.error != null) {
-            return _buildErrorState(context, provider);
-          }
-
-          if (provider.players.isEmpty) {
-            return _buildEmptyState(context);
-          }
-
-          return _buildPlayersList(context, provider);
+              // Show appropriate content based on state
+              Expanded(
+                child: _buildContent(context, provider),
+              ),
+            ],
+          );
         },
       ),
     );
+  }
+
+  Widget _buildHeader(BuildContext context, TopPlayersProvider provider) {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          // Title row
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Top Players',
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${provider.totalCount} players',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.9),
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.leaderboard,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // Filter options
+          Row(
+            children: [
+              Expanded(
+                child: _buildFilterButton(
+                  context,
+                  'Monthly',
+                  provider.monthName,
+                  Icons.calendar_month,
+                  _selectedFilterType == 'monthly',
+                  () {
+                    setState(() {
+                      _selectedFilterType = 'monthly';
+                    });
+                    _showMonthPicker(context, provider);
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildFilterButton(
+                  context,
+                  'All Time',
+                  'Overall',
+                  Icons.timeline,
+                  _selectedFilterType == 'all_time',
+                  () {
+                    setState(() {
+                      _selectedFilterType = 'all_time';
+                    });
+                    _showAllTimeFilter(context, provider);
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildFilterButton(
+                  context,
+                  'Range',
+                  'Custom',
+                  Icons.date_range,
+                  _selectedFilterType == 'range',
+                  () {
+                    setState(() {
+                      _selectedFilterType = 'range';
+                    });
+                    _showDateRangePicker(context, provider);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, TopPlayersProvider provider) {
+    if (provider.isLoading) {
+      return _buildLoadingState(context);
+    }
+
+    if (provider.error != null) {
+      return _buildErrorState(context, provider);
+    }
+
+    if (provider.players.isEmpty) {
+      return _buildEmptyState(context);
+    }
+
+    return _buildPlayersList(context, provider);
   }
 
   Widget _buildLoadingState(BuildContext context) {
@@ -195,138 +325,13 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
   }
 
   Widget _buildPlayersList(BuildContext context, TopPlayersProvider provider) {
-    return Column(
-      children: [
-        // Header with month info and filters
-        Container(
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            children: [
-              // Title row
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Top Players',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${provider.totalCount} players',
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Colors.white.withValues(alpha: 0.9),
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      Icons.leaderboard,
-                      color: Colors.white,
-                      size: 32,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              // Filter options
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildFilterButton(
-                      context,
-                      'Monthly',
-                      provider.monthName,
-                      Icons.calendar_month,
-                      _selectedFilterType == 'monthly',
-                      () {
-                        setState(() {
-                          _selectedFilterType = 'monthly';
-                        });
-                        _showMonthPicker(context, provider);
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _buildFilterButton(
-                      context,
-                      'All Time',
-                      'Overall',
-                      Icons.timeline,
-                      _selectedFilterType == 'all_time',
-                      () {
-                        setState(() {
-                          _selectedFilterType = 'all_time';
-                        });
-                        _showAllTimeFilter(context, provider);
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _buildFilterButton(
-                      context,
-                      'Range',
-                      'Custom',
-                      Icons.date_range,
-                      _selectedFilterType == 'range',
-                      () {
-                        setState(() {
-                          _selectedFilterType = 'range';
-                        });
-                        _showDateRangePicker(context, provider);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-
-        // Players list
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: provider.players.length,
-            itemBuilder: (context, index) {
-              final player = provider.players[index];
-              return _buildPlayerCard(context, player, index);
-            },
-          ),
-        ),
-      ],
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: provider.players.length,
+      itemBuilder: (context, index) {
+        final player = provider.players[index];
+        return _buildPlayerCard(context, player, index);
+      },
     );
   }
 
@@ -381,13 +386,39 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    player.name,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                  // Name and score row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          player.name,
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                    overflow: TextOverflow.ellipsis,
+                      ),
+                      // Score - moved here for better small screen layout
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${player.score.toStringAsFixed(1)} pts',
+                          style:
+                              Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -636,23 +667,6 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
                     ],
                   ),
                 ],
-              ),
-            ),
-
-            // Score
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                '${player.score.toStringAsFixed(1)} pts',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
               ),
             ),
           ],
