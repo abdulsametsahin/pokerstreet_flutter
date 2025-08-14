@@ -1410,6 +1410,11 @@ class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
         _remaining = widget.levelRemaining;
       });
       
+      // Restart timer if it was canceled due to countdown completion
+      if (!_timer.isActive && _remaining.inSeconds > 0) {
+        _startTimer();
+      }
+      
       // Restart pulsing animation if needed
       if (_remaining.inSeconds <= 60 && !_pulseController.isAnimating) {
         _pulseController.repeat(reverse: true);
