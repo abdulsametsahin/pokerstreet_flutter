@@ -30,6 +30,20 @@ class _EventsPageState extends State<EventsPage> {
     super.dispose();
   }
 
+  // Helper function to get text color based on background
+  Color _getTextColor(Event event, ThemeData theme,
+      {bool isSecondary = false}) {
+    final hasBackgroundImage =
+        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty;
+    if (hasBackgroundImage) {
+      return isSecondary ? Colors.white.withOpacity(0.8) : Colors.white;
+    } else {
+      return isSecondary
+          ? theme.colorScheme.onSurfaceVariant
+          : theme.colorScheme.onSurface;
+    }
+  }
+
   void _startAutoRefresh() {
     _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       if (mounted) {
@@ -279,7 +293,6 @@ class _EventsPageState extends State<EventsPage> {
   Widget _buildEventCard(Event event, AppLocalizations l10n, ThemeData theme) {
     return Container(
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -288,72 +301,119 @@ class _EventsPageState extends State<EventsPage> {
             offset: const Offset(0, 2),
           ),
         ],
-        border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.1),
-        ),
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () => _showEventDetails(event, l10n),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Row
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        event.name,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
-                    ),
-                    _buildStatusBadge(event, l10n, theme),
-                  ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Stack(
+          children: [
+            // Background image (if available)
+            if (event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty)
+              Positioned.fill(
+                child: Image.network(
+                  event.backgroundUrl!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: theme.colorScheme.surface,
+                    );
+                  },
                 ),
-
-                // Description
-                if (event.description != null &&
-                    event.description!.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    event.description!,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                      height: 1.4,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+              ),
+            // Fallback background color
+            if (event.backgroundUrl == null || event.backgroundUrl!.isEmpty)
+              Positioned.fill(
+                child: Container(
+                  color: theme.colorScheme.surface,
+                ),
+              ),
+            // Black overlay for better text visibility
+            if (event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
                   ),
-                ],
-
-                const SizedBox(height: 16),
-
-                // Live Event Content
-                if (event.isRunning || event.isPaused) ...[
-                  if (event.currentLevel != null) ...[
-                    _buildLiveCountdown(event, l10n, theme),
-                    const SizedBox(height: 16),
-                  ],
-                  _buildEventStats(event, l10n, theme),
-                ] else if (event.isUpcoming) ...[
-                  _buildUpcomingInfo(event, l10n, theme),
-                ],
-
-                // App Info Section
-                if (event.appBuyIn != null || event.appPrizes.isNotEmpty) ...[
-                  const SizedBox(height: 16),
-                  _buildAppInfo(event, l10n, theme),
-                ],
-              ],
+                ),
+              ),
+            // Border overlay
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: theme.colorScheme.outline.withOpacity(0.1),
+                  ),
+                ),
+              ),
             ),
-          ),
+            // Content
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: () => _showEventDetails(event, l10n),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header Row
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              event.name,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: _getTextColor(event, theme),
+                              ),
+                            ),
+                          ),
+                          _buildStatusBadge(event, l10n, theme),
+                        ],
+                      ),
+
+                      // Description
+                      if (event.description != null &&
+                          event.description!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          event.description!,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color:
+                                _getTextColor(event, theme, isSecondary: true),
+                            height: 1.4,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+
+                      const SizedBox(height: 16),
+
+                      // Live Event Content
+                      if (event.isRunning || event.isPaused) ...[
+                        if (event.currentLevel != null) ...[
+                          _buildLiveCountdown(event, l10n, theme),
+                          const SizedBox(height: 16),
+                        ],
+                        _buildEventStats(event, l10n, theme),
+                      ] else if (event.isUpcoming) ...[
+                        _buildUpcomingInfo(event, l10n, theme),
+                      ],
+
+                      // App Info Section
+                      if (event.appBuyIn != null ||
+                          event.appPrizes.isNotEmpty) ...[
+                        const SizedBox(height: 16),
+                        _buildAppInfo(event, l10n, theme),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -473,7 +533,7 @@ class _EventsPageState extends State<EventsPage> {
             event.currentLevel!.blindsText,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
+              color: _getTextColor(event, theme),
             ),
           ),
           const SizedBox(height: 8),
@@ -505,6 +565,7 @@ class _EventsPageState extends State<EventsPage> {
               Icons.people_rounded,
               l10n.players,
               '${event.activePlayersCount}/${event.playersCount}',
+              event,
               theme,
             ),
           ),
@@ -520,6 +581,7 @@ class _EventsPageState extends State<EventsPage> {
                 Icons.skip_next_rounded,
                 l10n.nextLevel,
                 event.nextLevel!.blindsText,
+                event,
                 theme,
               ),
             ),
@@ -533,6 +595,7 @@ class _EventsPageState extends State<EventsPage> {
     IconData icon,
     String label,
     String value,
+    Event event,
     ThemeData theme,
   ) {
     return Column(
@@ -543,13 +606,13 @@ class _EventsPageState extends State<EventsPage> {
             Icon(
               icon,
               size: 16,
-              color: theme.colorScheme.onSurfaceVariant,
+              color: _getTextColor(event, theme, isSecondary: true),
             ),
             const SizedBox(width: 6),
             Text(
               label,
               style: theme.textTheme.labelMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+                color: _getTextColor(event, theme, isSecondary: true),
               ),
             ),
           ],
@@ -559,7 +622,7 @@ class _EventsPageState extends State<EventsPage> {
           value,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface,
+            color: _getTextColor(event, theme),
           ),
         ),
       ],
@@ -599,7 +662,7 @@ class _EventsPageState extends State<EventsPage> {
                 Text(
                   '${l10n.starts}:',
                   style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: _getTextColor(event, theme, isSecondary: true),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -607,7 +670,7 @@ class _EventsPageState extends State<EventsPage> {
                   _formatDateTime(event.startsAt),
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
+                    color: _getTextColor(event, theme),
                   ),
                 ),
               ],

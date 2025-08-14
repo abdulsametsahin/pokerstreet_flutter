@@ -88,6 +88,33 @@ class ApiService {
     }
   }
 
+  static Future<ApiResponse<dynamic>> sendLoginCode({
+    required String email,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(ApiConfig.sendLoginCodeEndpoint),
+        headers: ApiConfig.headers,
+        body: jsonEncode({
+          'email': email,
+        }),
+      );
+
+      final jsonResponse = jsonDecode(response.body);
+
+      return ApiResponse<dynamic>(
+        success: jsonResponse['success'],
+        message: jsonResponse['message'],
+        errors: jsonResponse['errors'],
+      );
+    } catch (e) {
+      return ApiResponse<dynamic>(
+        success: false,
+        message: 'Network error: ${e.toString()}',
+      );
+    }
+  }
+
   static Future<ApiResponse<ProfileResponse>> getProfile(String token) async {
     try {
       final response = await http.get(
@@ -342,6 +369,66 @@ class ApiService {
       );
     } catch (e) {
       return ApiResponse<void>(
+        success: false,
+        message: 'Network error: ${e.toString()}',
+      );
+    }
+  }
+
+  static Future<ApiResponse<dynamic>> forgotPassword({
+    required String email,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(ApiConfig.forgotPasswordEndpoint),
+        headers: ApiConfig.headers,
+        body: jsonEncode({
+          'email': email,
+        }),
+      );
+
+      final jsonResponse = jsonDecode(response.body);
+
+      return ApiResponse<dynamic>(
+        success: jsonResponse['success'] ?? false,
+        message: jsonResponse['message'] ?? 'Password reset email sent',
+        errors: jsonResponse['errors'],
+      );
+    } catch (e) {
+      return ApiResponse<dynamic>(
+        success: false,
+        message: 'Network error: ${e.toString()}',
+      );
+    }
+  }
+
+  static Future<ApiResponse<dynamic>> resetPassword({
+    required String email,
+    required String token,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(ApiConfig.resetPasswordEndpoint),
+        headers: ApiConfig.headers,
+        body: jsonEncode({
+          'email': email,
+          'token': token,
+          'password': password,
+          'password_confirmation': passwordConfirmation,
+        }),
+      );
+
+      final jsonResponse = jsonDecode(response.body);
+
+      return ApiResponse<dynamic>(
+        success: jsonResponse['success'] ?? false,
+        message: jsonResponse['message'] ?? 'Password reset successfully',
+        errors: jsonResponse['errors'],
+      );
+    } catch (e) {
+      return ApiResponse<dynamic>(
         success: false,
         message: 'Network error: ${e.toString()}',
       );

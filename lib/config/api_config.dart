@@ -6,6 +6,8 @@ class ApiConfig {
   // Auth endpoints
   static const String loginEndpoint = '$mobileBaseUrl/auth/login';
   static const String registerEndpoint = '$mobileBaseUrl/auth/register';
+  static const String sendLoginCodeEndpoint =
+      '$mobileBaseUrl/auth/send-login-code';
   static const String profileEndpoint = '$mobileBaseUrl/auth/profile';
   static const String updateProfileEndpoint =
       '$mobileBaseUrl/auth/profile/update';
@@ -16,6 +18,10 @@ class ApiConfig {
   static const String logoutAllEndpoint = '$mobileBaseUrl/auth/logout-all';
   static const String deleteAccountEndpoint =
       '$mobileBaseUrl/auth/delete-account';
+  static const String forgotPasswordEndpoint =
+      '$mobileBaseUrl/auth/forgot-password';
+  static const String resetPasswordEndpoint =
+      '$mobileBaseUrl/auth/reset-password';
 
   // Public endpoints
   static const String topPlayersEndpoint = '$mobileBaseUrl/top-players';

@@ -24,6 +24,7 @@ class Event {
   final int levelRemaining;
   final AppBuyIn? appBuyIn;
   final List<AppPrize> appPrizes;
+  final String? backgroundUrl;
 
   Event({
     required this.id,
@@ -49,6 +50,7 @@ class Event {
     required this.levelRemaining,
     this.appBuyIn,
     required this.appPrizes,
+    this.backgroundUrl,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -181,6 +183,7 @@ class Event {
         levelRemaining: levelRemaining,
         appBuyIn: appBuyIn,
         appPrizes: appPrizes,
+        backgroundUrl: json['background_image']?.toString(),
       );
     } catch (e) {
       debugPrint("Error creating Event: $e");
