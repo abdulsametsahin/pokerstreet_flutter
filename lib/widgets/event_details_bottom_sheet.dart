@@ -70,12 +70,12 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
 
     // Filter participants with valid positions and users
     final participantsWithPosition = eventDetails!.participants
-        .where((p) => p.user != null && p.finalTablePosition != null)
+        .where((p) => p.user != null && p.position != null)
         .toList();
 
     // Sort by final table position (lower is better)
-    participantsWithPosition.sort((a, b) =>
-        (a.finalTablePosition ?? 999).compareTo(b.finalTablePosition ?? 999));
+    participantsWithPosition
+        .sort((a, b) => (a.position ?? 999).compareTo(b.position ?? 999));
 
     // Take top 3
     topParticipants = participantsWithPosition.take(3).toList();
@@ -369,15 +369,14 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: _getPositionColor(participant.finalTablePosition!)
-                  .withOpacity(0.1),
+              color: _getPositionColor(participant.position!).withOpacity(0.1),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Center(
               child: Text(
-                '#${participant.finalTablePosition}',
+                '#${participant.position}',
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: _getPositionColor(participant.finalTablePosition!),
+                  color: _getPositionColor(participant.position!),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -396,10 +395,10 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
           ),
 
           // Trophy icon for top 3
-          if (participant.finalTablePosition! <= 3)
+          if (participant.position! <= 3)
             Icon(
               Icons.emoji_events,
-              color: _getPositionColor(participant.finalTablePosition!),
+              color: _getPositionColor(participant.position!),
               size: 20,
             ),
         ],

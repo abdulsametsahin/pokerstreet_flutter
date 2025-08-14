@@ -274,12 +274,14 @@ class Level {
 class Participant {
   final int id;
   final String status;
+  final int? position;
   final int? finalTablePosition;
   final User? user;
 
   Participant({
     required this.id,
     required this.status,
+    this.position,
     this.finalTablePosition,
     this.user,
   });
@@ -289,6 +291,7 @@ class Participant {
       return Participant(
         id: json['id'] is int ? json['id'] : int.parse(json['id'].toString()),
         status: json['status']?.toString() ?? 'playing',
+        position: json['position'],
         finalTablePosition: json['final_table_position'],
         user: json['user'] != null ? User.fromJson(json['user']) : null,
       );

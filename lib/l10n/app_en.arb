@@ -68,6 +68,10 @@
   "live": "LIVE",
   "blindStructure": "Blind Structure",
   "startsAt": "Starts At",
+  "info": "Info",
+  "blindStructureTab": "Blind Structure",
+  "buyinInfo": "Buy-in Info",
+  "prizeInfo": "Prize Info",
   "andMoreLevels": "And {count} more levels...",
   "@andMoreLevels": {
     "placeholders": {
@@ -141,5 +145,15 @@
   "cancel": "Cancel",
   "deleteAccountButton": "Delete Account",
   "accountDeletedSuccessfully": "Account deleted successfully",
-  "accountDeletionFailed": "Failed to delete account"
+  "accountDeletionFailed": "Failed to delete account",
+  "buyIn": "Buy-in",
+  "prizes": "Prizes",
+  "amount": "Amount",
+  "ante": "Ante",
+  "noBlindStructureAvailable": "No blind structure available",
+  "eventDetails": "Event Details",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "location": "Location",
+  "description": "Description"
 }

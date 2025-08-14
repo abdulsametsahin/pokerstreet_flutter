@@ -211,6 +211,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startsAt => 'Starts At';
 
   @override
+  String get info => 'Info';
+
+  @override
+  String get blindStructureTab => 'Blind Structure';
+
+  @override
+  String get buyinInfo => 'Buy-in Info';
+
+  @override
+  String get prizeInfo => 'Prize Info';
+
+  @override
   String andMoreLevels(int count) {
     return 'And $count more levels...';
   }
@@ -356,4 +368,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountDeletionFailed => 'Failed to delete account';
+
+  @override
+  String get buyIn => 'Buy-in';
+
+  @override
+  String get prizes => 'Prizes';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get ante => 'Ante';
+
+  @override
+  String get noBlindStructureAvailable => 'No blind structure available';
+
+  @override
+  String get eventDetails => 'Event Details';
+
+  @override
+  String get startTime => 'Start Time';
+
+  @override
+  String get endTime => 'End Time';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get description => 'Description';
 }

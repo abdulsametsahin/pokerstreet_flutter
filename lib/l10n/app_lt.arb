@@ -68,6 +68,10 @@
   "live": "LIVE",
   "blindStructure": "Blainds struktūra",
   "startsAt": "Prasideda",
+  "info": "Informacija",
+  "blindStructureTab": "Blainds struktūra",
+  "buyinInfo": "Įstojimo informacija",
+  "prizeInfo": "Prizų informacija",
   "andMoreLevels": "Ir dar {count} lygių...",
   "@andMoreLevels": {
     "placeholders": {
@@ -141,5 +145,15 @@
   "cancel": "Atšaukti",
   "deleteAccountButton": "Ištrinti paskyrą",
   "accountDeletedSuccessfully": "Paskyra sėkmingai ištrinta",
-  "accountDeletionFailed": "Nepavyko ištrinti paskyros"
+  "accountDeletionFailed": "Nepavyko ištrinti paskyros",
+  "buyIn": "Įnašas",
+  "prizes": "Prizai",
+  "amount": "Suma",
+  "ante": "Ante",
+  "noBlindStructureAvailable": "Aklumo struktūra nepasiekiama",
+  "eventDetails": "Renginio detalės",
+  "startTime": "Pradžios laikas",
+  "endTime": "Pabaigos laikas",
+  "location": "Vieta",
+  "description": "Aprašymas"
 }

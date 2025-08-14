@@ -503,6 +503,30 @@ abstract class AppLocalizations {
   /// **'Starts At'**
   String get startsAt;
 
+  /// No description provided for @info.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info;
+
+  /// No description provided for @blindStructureTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Blind Structure'**
+  String get blindStructureTab;
+
+  /// No description provided for @buyinInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy-in Info'**
+  String get buyinInfo;
+
+  /// No description provided for @prizeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Prize Info'**
+  String get prizeInfo;
+
   /// No description provided for @andMoreLevels.
   ///
   /// In en, this message translates to:
@@ -784,6 +808,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to delete account'**
   String get accountDeletionFailed;
+
+  /// No description provided for @buyIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy-in'**
+  String get buyIn;
+
+  /// No description provided for @prizes.
+  ///
+  /// In en, this message translates to:
+  /// **'Prizes'**
+  String get prizes;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @ante.
+  ///
+  /// In en, this message translates to:
+  /// **'Ante'**
+  String get ante;
+
+  /// No description provided for @noBlindStructureAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No blind structure available'**
+  String get noBlindStructureAvailable;
+
+  /// No description provided for @eventDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Details'**
+  String get eventDetails;
+
+  /// No description provided for @startTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Time'**
+  String get startTime;
+
+  /// No description provided for @endTime.
+  ///
+  /// In en, this message translates to:
+  /// **'End Time'**
+  String get endTime;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

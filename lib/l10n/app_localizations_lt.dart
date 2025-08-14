@@ -211,6 +211,18 @@ class AppLocalizationsLt extends AppLocalizations {
   String get startsAt => 'Prasideda';
 
   @override
+  String get info => 'Informacija';
+
+  @override
+  String get blindStructureTab => 'Blainds struktūra';
+
+  @override
+  String get buyinInfo => 'Įstojimo informacija';
+
+  @override
+  String get prizeInfo => 'Prizų informacija';
+
+  @override
   String andMoreLevels(int count) {
     return 'Ir dar $count lygių...';
   }
@@ -356,4 +368,34 @@ class AppLocalizationsLt extends AppLocalizations {
 
   @override
   String get accountDeletionFailed => 'Nepavyko ištrinti paskyros';
+
+  @override
+  String get buyIn => 'Įnašas';
+
+  @override
+  String get prizes => 'Prizai';
+
+  @override
+  String get amount => 'Suma';
+
+  @override
+  String get ante => 'Ante';
+
+  @override
+  String get noBlindStructureAvailable => 'Aklumo struktūra nepasiekiama';
+
+  @override
+  String get eventDetails => 'Renginio detalės';
+
+  @override
+  String get startTime => 'Pradžios laikas';
+
+  @override
+  String get endTime => 'Pabaigos laikas';
+
+  @override
+  String get location => 'Vieta';
+
+  @override
+  String get description => 'Aprašymas';
 }
