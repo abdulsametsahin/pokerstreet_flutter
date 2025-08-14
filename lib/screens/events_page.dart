@@ -33,37 +33,13 @@ class _EventsPageState extends State<EventsPage> {
   // Helper function to get text color based on background
   Color _getTextColor(Event event, ThemeData theme,
       {bool isSecondary = false}) {
-    final hasBackgroundImage = event.backgroundUrl != null &&
-        event.backgroundUrl!.isNotEmpty &&
-        (event.isRunning || event.isPaused);
-    if (hasBackgroundImage) {
-      return isSecondary ? Colors.white.withOpacity(0.9) : Colors.white;
-    } else {
-      return isSecondary
-          ? theme.colorScheme.onSurfaceVariant
-          : theme.colorScheme.onSurface;
-    }
+    return isSecondary
+        ? theme.colorScheme.onSurfaceVariant
+        : theme.colorScheme.onSurface;
   }
 
   // Helper function to get text shadow for better visibility
   List<Shadow> _getTextShadow(Event event) {
-    final hasBackgroundImage = event.backgroundUrl != null &&
-        event.backgroundUrl!.isNotEmpty &&
-        (event.isRunning || event.isPaused);
-    if (hasBackgroundImage) {
-      return [
-        Shadow(
-          offset: const Offset(0, 1),
-          blurRadius: 3,
-          color: Colors.black.withOpacity(0.8),
-        ),
-        Shadow(
-          offset: const Offset(0, 2),
-          blurRadius: 6,
-          color: Colors.black.withOpacity(0.3),
-        ),
-      ];
-    }
     return [];
   }
 
@@ -347,59 +323,19 @@ class _EventsPageState extends State<EventsPage> {
         borderRadius: BorderRadius.circular(16),
         child: Stack(
           children: [
-            // Background image (only for truly live events - running or paused)
-            if (event.backgroundUrl != null &&
-                event.backgroundUrl!.isNotEmpty &&
-                (event.isRunning || event.isPaused))
-              Positioned.fill(
-                child: Image.network(
-                  event.backgroundUrl!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: theme.colorScheme.surface,
-                    );
-                  },
-                ),
+            // White background for all events
+            Positioned.fill(
+              child: Container(
+                color: Colors.white,
               ),
-            // Fallback white background (for events without bg or not live)
-            if (event.backgroundUrl == null ||
-                event.backgroundUrl!.isEmpty ||
-                !(event.isRunning || event.isPaused))
-              Positioned.fill(
-                child: Container(
-                  color: Colors.white,
-                ),
-              ),
-            // Gradient overlay for better text visibility (only for live events with bg)
-            if (event.backgroundUrl != null &&
-                event.backgroundUrl!.isNotEmpty &&
-                (event.isRunning || event.isPaused))
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.black.withOpacity(0.4),
-                        Colors.black.withOpacity(0.8),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+            ),
             // Border overlay
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: (event.backgroundUrl == null ||
-                            event.backgroundUrl!.isEmpty ||
-                            !(event.isRunning || event.isPaused))
-                        ? theme.colorScheme.outline.withOpacity(0.3)
-                        : theme.colorScheme.outline.withOpacity(0.1),
+                    color: theme.colorScheme.outline.withOpacity(0.3),
                   ),
                 ),
               ),
@@ -514,32 +450,15 @@ class _EventsPageState extends State<EventsPage> {
       statusIcon = Icons.help_outline;
     }
 
-    final hasBackgroundImage = event.backgroundUrl != null &&
-        event.backgroundUrl!.isNotEmpty &&
-        (event.isRunning || event.isPaused);
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: hasBackgroundImage
-            ? statusColor.withOpacity(0.9)
-            : statusColor.withOpacity(0.1),
+        color: statusColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: hasBackgroundImage
-              ? Colors.white.withOpacity(0.3)
-              : statusColor.withOpacity(0.3),
+          color: statusColor.withOpacity(0.3),
           width: 1,
         ),
-        boxShadow: hasBackgroundImage
-            ? [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -547,23 +466,14 @@ class _EventsPageState extends State<EventsPage> {
           Icon(
             statusIcon,
             size: 14,
-            color: hasBackgroundImage ? Colors.white : statusColor,
+            color: statusColor,
           ),
           const SizedBox(width: 6),
           Text(
             statusText,
             style: theme.textTheme.labelSmall?.copyWith(
-              color: hasBackgroundImage ? Colors.white : statusColor,
+              color: statusColor,
               fontWeight: FontWeight.w600,
-              shadows: hasBackgroundImage
-                  ? [
-                      Shadow(
-                        offset: const Offset(0, 1),
-                        blurRadius: 2,
-                        color: Colors.black.withOpacity(0.8),
-                      ),
-                    ]
-                  : null,
             ),
           ),
         ],

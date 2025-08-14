@@ -98,13 +98,11 @@ class Event {
           : json['description']?.toString();
       final status = json['status']?.toString() ?? 'upcoming';
 
-      debugPrint("Parsing dates...");
       final startsAt = json['starts_at'] != null
           ? DateTime.parse(json['starts_at'].toString())
           : DateTime.now();
       final startedAt = json['started_at'];
 
-      debugPrint("Parsing numeric fields...");
       final timeElapsed = _parseInt(json['time_elapsed']);
       final isPublic = json['is_public'] == true;
       final trackRanking = json['track_ranking'] == true;
@@ -115,7 +113,6 @@ class Event {
       final activePlayersCount = _parseInt(json['active_players_count']);
       final playersCount = _parseInt(json['players_count']);
 
-      debugPrint("Parsing levels...");
       final levels = (json['levels'] as List?)?.map((level) {
             try {
               return Level.fromJson(level);
@@ -126,7 +123,6 @@ class Event {
           }).toList() ??
           [];
 
-      debugPrint("Parsing participants...");
       final participants = (json['participants'] as List?)?.map((participant) {
             try {
               return Participant.fromJson(participant);
@@ -138,7 +134,6 @@ class Event {
           }).toList() ??
           [];
 
-      debugPrint("Parsing prizes...");
       final prizes = (json['prizes'] as List?)?.map((prize) {
             try {
               return Prize.fromJson(prize);
@@ -149,7 +144,6 @@ class Event {
           }).toList() ??
           [];
 
-      debugPrint("Parsing levels (current/next)...");
       final currentLevel = json['current_level'] != null
           ? Level.fromJson(json['current_level'])
           : null;
@@ -158,7 +152,6 @@ class Event {
           : null;
       final levelRemaining = _parseDouble(json['level_remaining']).toInt();
 
-      debugPrint("Creating Event instance...");
       return Event(
         id: id,
         name: name,
