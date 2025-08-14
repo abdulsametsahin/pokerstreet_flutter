@@ -965,117 +965,6 @@ class _EventDetailsBottomSheetState extends State<_EventDetailsBottomSheet> {
                     const SizedBox(height: 24),
                   ],
 
-                  // Current level for running and paused events
-                  if ((_currentEvent.isRunning || _currentEvent.isPaused) &&
-                      _currentEvent.currentLevel != null) ...[
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            theme.colorScheme.primaryContainer.withOpacity(0.3),
-                            theme.colorScheme.primaryContainer.withOpacity(0.1),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: theme.colorScheme.primary.withOpacity(0.2),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              _currentEvent.currentLevel!.isBreak
-                                  ? Icon(
-                                      Icons.coffee_rounded,
-                                      color: theme.colorScheme.primary,
-                                      size: 24,
-                                    )
-                                  : Container(
-                                      width: 28,
-                                      height: 28,
-                                      decoration: BoxDecoration(
-                                        color: theme.colorScheme.primary,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          '${_currentEvent.currentLevel!.levelNumber ?? 0}',
-                                          style: theme.textTheme.labelMedium
-                                              ?.copyWith(
-                                            color: theme.colorScheme.onPrimary,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                              const SizedBox(width: 8),
-                              Text(
-                                _currentEvent.currentLevel!.isBreak
-                                    ? widget.l10n.breakTime
-                                    : widget.l10n.currentLevel,
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            _currentEvent.currentLevel!.blindsText,
-                            style: theme.textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.onSurface,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          // Break description (if available)
-                          if (_currentEvent.currentLevel!.isBreak &&
-                              _currentEvent.currentLevel!.description != null &&
-                              _currentEvent
-                                  .currentLevel!.description!.isNotEmpty) ...[
-                            const SizedBox(height: 8),
-                            Text(
-                              _currentEvent.currentLevel!.description!,
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                                fontStyle: FontStyle.italic,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                          const SizedBox(height: 16),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surface,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: theme.colorScheme.outline.withOpacity(0.1),
-                              ),
-                            ),
-                            child: Text(
-                              'Level time remaining: ${_formatDuration(_currentEvent.levelRemainingDuration)}',
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: theme.colorScheme.onSurface,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-
                   // Event details
                   Container(
                     padding: const EdgeInsets.all(20),
@@ -1409,12 +1298,12 @@ class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
         _startTime = DateTime.now();
         _remaining = widget.levelRemaining;
       });
-      
+
       // Restart timer if it was canceled due to countdown completion
       if (!_timer.isActive && _remaining.inSeconds > 0) {
         _startTimer();
       }
-      
+
       // Restart pulsing animation if needed
       if (_remaining.inSeconds <= 60 && !_pulseController.isAnimating) {
         _pulseController.repeat(reverse: true);
@@ -1431,7 +1320,7 @@ class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
           // Calculate actual remaining time based on elapsed time since start
           final elapsed = DateTime.now().difference(_startTime);
           final newRemaining = widget.levelRemaining - elapsed;
-          
+
           if (newRemaining.inSeconds > 0) {
             _remaining = newRemaining;
 
