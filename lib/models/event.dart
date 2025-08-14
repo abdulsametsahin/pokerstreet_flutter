@@ -238,6 +238,7 @@ class Level {
   final int? ante;
   final int duration;
   final String type;
+  final String? description;
 
   Level({
     required this.id,
@@ -247,6 +248,7 @@ class Level {
     this.ante,
     required this.duration,
     required this.type,
+    this.description,
   });
 
   factory Level.fromJson(Map<String, dynamic> json) {
@@ -261,6 +263,9 @@ class Level {
             ? json['duration']
             : int.parse(json['duration']?.toString() ?? '0'),
         type: json['type']?.toString() ?? 'round',
+        description: json['description']?.toString().isEmpty == true
+            ? null
+            : json['description']?.toString(),
       );
     } catch (e) {
       debugPrint("Error in Level.fromJson: $e");

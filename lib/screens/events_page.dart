@@ -33,8 +33,9 @@ class _EventsPageState extends State<EventsPage> {
   // Helper function to get text color based on background
   Color _getTextColor(Event event, ThemeData theme,
       {bool isSecondary = false}) {
-    final hasBackgroundImage =
-        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty && (event.isRunning || event.isPaused);
+    final hasBackgroundImage = event.backgroundUrl != null &&
+        event.backgroundUrl!.isNotEmpty &&
+        (event.isRunning || event.isPaused);
     if (hasBackgroundImage) {
       return isSecondary ? Colors.white.withOpacity(0.9) : Colors.white;
     } else {
@@ -46,8 +47,9 @@ class _EventsPageState extends State<EventsPage> {
 
   // Helper function to get text shadow for better visibility
   List<Shadow> _getTextShadow(Event event) {
-    final hasBackgroundImage =
-        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty && (event.isRunning || event.isPaused);
+    final hasBackgroundImage = event.backgroundUrl != null &&
+        event.backgroundUrl!.isNotEmpty &&
+        (event.isRunning || event.isPaused);
     if (hasBackgroundImage) {
       return [
         Shadow(
@@ -346,8 +348,8 @@ class _EventsPageState extends State<EventsPage> {
         child: Stack(
           children: [
             // Background image (only for truly live events - running or paused)
-            if (event.backgroundUrl != null && 
-                event.backgroundUrl!.isNotEmpty && 
+            if (event.backgroundUrl != null &&
+                event.backgroundUrl!.isNotEmpty &&
                 (event.isRunning || event.isPaused))
               Positioned.fill(
                 child: Image.network(
@@ -361,8 +363,8 @@ class _EventsPageState extends State<EventsPage> {
                 ),
               ),
             // Fallback white background (for events without bg or not live)
-            if (event.backgroundUrl == null || 
-                event.backgroundUrl!.isEmpty || 
+            if (event.backgroundUrl == null ||
+                event.backgroundUrl!.isEmpty ||
                 !(event.isRunning || event.isPaused))
               Positioned.fill(
                 child: Container(
@@ -370,8 +372,8 @@ class _EventsPageState extends State<EventsPage> {
                 ),
               ),
             // Gradient overlay for better text visibility (only for live events with bg)
-            if (event.backgroundUrl != null && 
-                event.backgroundUrl!.isNotEmpty && 
+            if (event.backgroundUrl != null &&
+                event.backgroundUrl!.isNotEmpty &&
                 (event.isRunning || event.isPaused))
               Positioned.fill(
                 child: Container(
@@ -512,8 +514,9 @@ class _EventsPageState extends State<EventsPage> {
       statusIcon = Icons.help_outline;
     }
 
-    final hasBackgroundImage =
-        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty && (event.isRunning || event.isPaused);
+    final hasBackgroundImage = event.backgroundUrl != null &&
+        event.backgroundUrl!.isNotEmpty &&
+        (event.isRunning || event.isPaused);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -636,6 +639,21 @@ class _EventsPageState extends State<EventsPage> {
               shadows: _getTextShadow(event),
             ),
           ),
+          // Break description (if available)
+          if (event.currentLevel!.isBreak &&
+              event.currentLevel!.description != null &&
+              event.currentLevel!.description!.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              event.currentLevel!.description!,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: _getTextColor(event, theme, isSecondary: true),
+                shadows: _getTextShadow(event),
+                fontStyle: FontStyle.italic,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
           const SizedBox(height: 8),
           LevelCountdownWidget(
             levelRemaining: event.levelRemainingDuration,
@@ -1108,6 +1126,21 @@ class _EventDetailsBottomSheetState extends State<_EventDetailsBottomSheet> {
                             ),
                             textAlign: TextAlign.center,
                           ),
+                          // Break description (if available)
+                          if (_currentEvent.currentLevel!.isBreak &&
+                              _currentEvent.currentLevel!.description != null &&
+                              _currentEvent
+                                  .currentLevel!.description!.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Text(
+                              _currentEvent.currentLevel!.description!,
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                           const SizedBox(height: 16),
                           LevelCountdownWidget(
                             levelRemaining:
@@ -1138,32 +1171,20 @@ class _EventDetailsBottomSheetState extends State<_EventDetailsBottomSheet> {
                           children: [
                             Expanded(
                               child: _buildDetailItem(
-                                widget.l10n.status,
-                                _currentEvent.isRunning
-                                    ? widget.l10n.running
-                                    : _currentEvent.isPaused
-                                        ? widget.l10n.paused
-                                        : widget.l10n.pending,
-                                theme,
-                              ),
-                            ),
-                            Expanded(
-                              child: _buildDetailItem(
                                 widget.l10n.players,
                                 '${_currentEvent.activePlayersCount}/${_currentEvent.playersCount}',
                                 theme,
                               ),
                             ),
+                            if (_currentEvent.isUpcoming) ...[
+                              _buildDetailItem(
+                                widget.l10n.startsAt,
+                                _formatFullDateTime(_currentEvent.startsAt),
+                                theme,
+                              ),
+                            ],
                           ],
                         ),
-                        if (_currentEvent.isUpcoming) ...[
-                          const SizedBox(height: 16),
-                          _buildDetailItem(
-                            widget.l10n.startsAt,
-                            _formatFullDateTime(_currentEvent.startsAt),
-                            theme,
-                          ),
-                        ],
                       ],
                     ),
                   ),
