@@ -1052,15 +1052,23 @@ class _EventDetailsBottomSheetState extends State<_EventDetailsBottomSheet> {
                             ),
                           ],
                           const SizedBox(height: 16),
-                          LevelCountdownWidget(
-                            levelRemaining:
-                                _currentEvent.levelRemainingDuration,
-                            levelText: _currentEvent.currentLevel!.blindsText,
-                            isBreak: _currentEvent.currentLevel!.isBreak,
-                            onCountdownComplete: () {
-                              widget.eventsProvider.refreshEvents();
-                              Navigator.pop(context);
-                            },
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surface,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: theme.colorScheme.outline.withOpacity(0.1),
+                              ),
+                            ),
+                            child: Text(
+                              'Level time remaining: ${_formatDuration(_currentEvent.levelRemainingDuration)}',
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ],
                       ),
@@ -1321,6 +1329,21 @@ class _EventDetailsBottomSheetState extends State<_EventDetailsBottomSheet> {
         '${dateTime.hour.toString().padLeft(2, '0')}:'
         '${dateTime.minute.toString().padLeft(2, '0')}';
   }
+
+  String _formatDuration(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+
+    if (hours > 0) {
+      return '${hours.toString().padLeft(2, '0')}:'
+          '${minutes.toString().padLeft(2, '0')}:'
+          '${seconds.toString().padLeft(2, '0')}';
+    } else {
+      return '${minutes.toString().padLeft(2, '0')}:'
+          '${seconds.toString().padLeft(2, '0')}';
+    }
+  }
 }
 
 // Enhanced LevelCountdownWidget with callback functionality
@@ -1348,10 +1371,12 @@ class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
   late Duration _remaining;
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
+  late DateTime _startTime;
 
   @override
   void initState() {
     super.initState();
+    _startTime = DateTime.now();
     _remaining = widget.levelRemaining;
 
     _pulseController = AnimationController(
@@ -1375,24 +1400,46 @@ class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
     }
   }
 
+  @override
+  void didUpdateWidget(LevelCountdownWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update remaining time when widget receives new data
+    if (widget.levelRemaining != oldWidget.levelRemaining) {
+      setState(() {
+        _startTime = DateTime.now();
+        _remaining = widget.levelRemaining;
+      });
+      
+      // Restart pulsing animation if needed
+      if (_remaining.inSeconds <= 60 && !_pulseController.isAnimating) {
+        _pulseController.repeat(reverse: true);
+      } else if (_remaining.inSeconds > 60 && _pulseController.isAnimating) {
+        _pulseController.stop();
+      }
+    }
+  }
+
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
         setState(() {
-          if (_remaining.inSeconds > 0) {
-            _remaining = Duration(seconds: _remaining.inSeconds - 1);
+          // Calculate actual remaining time based on elapsed time since start
+          final elapsed = DateTime.now().difference(_startTime);
+          final newRemaining = widget.levelRemaining - elapsed;
+          
+          if (newRemaining.inSeconds > 0) {
+            _remaining = newRemaining;
 
             // Start pulsing when countdown gets low
             if (_remaining.inSeconds <= 60 && !_pulseController.isAnimating) {
               _pulseController.repeat(reverse: true);
             }
-
+          } else {
+            _remaining = Duration.zero;
             // Stop pulsing when countdown ends
-            if (_remaining.inSeconds <= 0) {
-              _pulseController.stop();
-              timer.cancel();
-              widget.onCountdownComplete?.call();
-            }
+            _pulseController.stop();
+            timer.cancel();
+            widget.onCountdownComplete?.call();
           }
         });
       }
