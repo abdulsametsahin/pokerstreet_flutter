@@ -294,7 +294,7 @@ class ApiService {
             final event = Event.fromJson(eventData);
             return ApiResponse<Event>(
               success: jsonResponse['success'],
-              message: jsonResponse['message'],
+              message: jsonResponse['message'] ?? 'Event details retrieved',
               data: event,
             );
           } catch (parseError) {
