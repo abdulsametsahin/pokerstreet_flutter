@@ -103,8 +103,92 @@ class _PublicEventDetailsBottomSheetState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Buy-in Information
-          if (widget.event.appBuyIn != null) ...[
+          // Additional event details
+          Text(
+            AppLocalizations.of(context)!.eventDetails,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+
+          const SizedBox(height: 12),
+
+          Table(
+            columnWidths: const {
+              0: FlexColumnWidth(2),
+              1: FlexColumnWidth(3),
+            },
+            border: TableBorder.all(color: Colors.grey[200]!),
+            children: [
+              TableRow(
+                decoration: BoxDecoration(color: Colors.grey[100]),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      AppLocalizations.of(context)!.startTime,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      DateFormat('yyyy-MM-dd HH:mm')
+                          .format(widget.event.startsAt),
+                    ),
+                  ),
+                ],
+              ),
+              TableRow(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Status',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(widget.event.status.toUpperCase()),
+                  ),
+                ],
+              ),
+              TableRow(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Players',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('${widget.event.playersCount}'),
+                  ),
+                ],
+              ),
+              TableRow(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Active Players',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('${widget.event.activePlayersCount}'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          // Buy-in Information (Table)
+          if (widget.event.allBuyIns.isNotEmpty) ...[
             Text(
               AppLocalizations.of(context)!.buyIn,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -112,58 +196,55 @@ class _PublicEventDetailsBottomSheetState
                   ),
             ),
             const SizedBox(height: 12),
-            Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[200]!),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.event.appBuyIn!.action,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text('${AppLocalizations.of(context)!.amount}: '),
-                      Text(
-                        widget.event.appBuyIn!.price,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Text('Chips: '),
-                      Text(
-                        widget.event.appBuyIn!.chips,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Text('Total Prize Pool: '),
-                      Text(
-                        widget.event.appBuyIn!.totalPrizepool,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+            Table(
+              columnWidths: const {
+                0: FlexColumnWidth(2),
+                1: FlexColumnWidth(2),
+                2: FlexColumnWidth(2),
+              },
+              border: TableBorder.all(color: Colors.grey[200]!),
+              children: [
+                TableRow(
+                  decoration: BoxDecoration(color: Colors.grey[100]),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Action',
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(AppLocalizations.of(context)!.amount,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Chips',
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+                ...widget.event.allBuyIns.map((buyin) => TableRow(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(buyin.action),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(buyin.price),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(buyin.chips),
+                        ),
+                      ],
+                    )),
+              ],
             ),
             const SizedBox(height: 24),
           ],
-
-          // Prize Information
+          // Prize Information (Table)
           if (widget.event.prizes.isNotEmpty) ...[
             Text(
               AppLocalizations.of(context)!.prizes,
@@ -172,43 +253,76 @@ class _PublicEventDetailsBottomSheetState
                   ),
             ),
             const SizedBox(height: 12),
-            ...widget.event.prizes
-                .map((prize) => Container(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[200]!),
+            Table(
+              columnWidths: const {
+                0: FlexColumnWidth(1),
+                1: FlexColumnWidth(2),
+                2: FlexColumnWidth(2),
+              },
+              border: TableBorder.all(color: Colors.grey[200]!),
+              children: [
+                TableRow(
+                  decoration: BoxDecoration(color: Colors.grey[100]),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        AppLocalizations.of(context)!.position,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${AppLocalizations.of(context)!.position}: ${prize.position}',
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Text('${AppLocalizations.of(context)!.amount}: '),
-                              Text(
-                                prize.amount != null
-                                    ? '€${prize.amount!.toStringAsFixed(2)}'
-                                    : '${prize.percentage.toStringAsFixed(1)}%',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        AppLocalizations.of(context)!.amount,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    ))
-                .toList(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Type',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                ...widget.event.prizes.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final prize = entry.value;
+                  return TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('${index + 1}'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          prize.amount != null
+                              ? '€${prize.amount!.toStringAsFixed(2)}'
+                              : '${prize.percentage.toStringAsFixed(1)}%',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          prize.amount != null ? 'Fixed' : 'Percentage',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ],
+            ),
             const SizedBox(height: 24),
           ],
 
-          // App Prizes Information
+          // App Prizes Information (Table)
           if (widget.event.appPrizes.isNotEmpty) ...[
             Text(
               'Prize Structure',
@@ -217,52 +331,55 @@ class _PublicEventDetailsBottomSheetState
                   ),
             ),
             const SizedBox(height: 12),
-            ...widget.event.appPrizes
-                .map((appPrize) => Container(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[200]!),
-                      ),
+            Table(
+              columnWidths: const {
+                0: FlexColumnWidth(1),
+                1: FlexColumnWidth(5),
+              },
+              border: TableBorder.all(color: Colors.grey[200]!),
+              children: [
+                TableRow(
+                  decoration: BoxDecoration(color: Colors.grey[100]),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        appPrize.description,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
+                        '#',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    ))
-                .toList(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Description',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                ...widget.event.appPrizes.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final appPrize = entry.value;
+                  return TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('${index + 1}'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          appPrize.description,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ],
+            ),
             const SizedBox(height: 24),
           ],
-
-          // Additional event details
-          Text(
-            AppLocalizations.of(context)!.eventDetails,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 12),
-
-          _buildDetailItem(
-            AppLocalizations.of(context)!.startTime,
-            DateFormat('yyyy-MM-dd HH:mm').format(widget.event.startsAt),
-          ),
-
-          _buildDetailItem(
-            'Status',
-            widget.event.status.toUpperCase(),
-          ),
-
-          _buildDetailItem(
-            'Players',
-            '${widget.event.playersCount}',
-          ),
-
-          _buildDetailItem(
-            'Active Players',
-            '${widget.event.activePlayersCount}',
-          ),
 
           if (widget.event.description != null) ...[
             const SizedBox(height: 16),

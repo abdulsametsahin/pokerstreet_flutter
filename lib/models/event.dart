@@ -23,6 +23,7 @@ class Event {
   final Level? nextLevel;
   final int levelRemaining;
   final AppBuyIn? appBuyIn;
+  final List<AppBuyIn> allBuyIns;
   final List<AppPrize> appPrizes;
   final String? backgroundUrl;
 
@@ -49,6 +50,7 @@ class Event {
     this.nextLevel,
     required this.levelRemaining,
     this.appBuyIn,
+    required this.allBuyIns,
     required this.appPrizes,
     this.backgroundUrl,
   });
@@ -136,6 +138,15 @@ class Event {
           }).toList() ??
           [];
 
+      final appBuyIns = (json['app_buyin'] != null &&
+              json['app_buyin'] is Map &&
+              (json['app_buyin']['rows'] is List) &&
+              (json['app_buyin']['rows'] as List).isNotEmpty)
+          ? ((json['app_buyin']['rows'] as List)
+              .map((buyIn) => AppBuyIn.fromJson(buyIn))
+              .toList() as List<AppBuyIn>)
+          : <AppBuyIn>[];
+
       final currentLevel = json['current_level'] != null
           ? Level.fromJson(json['current_level'])
           : null;
@@ -169,6 +180,7 @@ class Event {
         appBuyIn: appBuyIn,
         appPrizes: appPrizes,
         backgroundUrl: json['background_image']?.toString(),
+        allBuyIns: appBuyIns,
       );
     } catch (e) {
       debugPrint("Error creating Event: $e");
