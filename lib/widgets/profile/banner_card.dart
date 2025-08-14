@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/banner.dart' as BannerModel;
+import '../../providers/auth_provider.dart';
 import '../../screens/webview_screen.dart';
 
 class BannerCard extends StatelessWidget {
@@ -199,11 +201,23 @@ class BannerCard extends StatelessWidget {
 
   void _handleTap(BuildContext context) {
     if (banner.linkUrl != null && banner.linkUrl!.isNotEmpty) {
+      // Get the current user from AuthProvider
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      String finalUrl = banner.linkUrl!;
+
+      // Add user's full name as a parameter if user is authenticated
+      if (authProvider.isAuthenticated && authProvider.user != null) {
+        final userName = authProvider.user!.name;
+        final separator = banner.linkUrl!.contains('?') ? '&' : '?';
+        finalUrl =
+            '${banner.linkUrl!}${separator}name=${Uri.encodeComponent(userName)}';
+      }
+
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => WebViewScreen(
-            url: banner.linkUrl!,
+            url: finalUrl,
             title: banner.title,
           ),
         ),
