@@ -276,20 +276,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // Send login code to email
-  Future<ApiResponse<dynamic>> sendLoginCode({
-    required String email,
-  }) async {
-    try {
-      final response = await ApiService.sendLoginCode(email: email);
-      return response;
-    } catch (e) {
-      return ApiResponse<dynamic>(
-        success: false,
-        message: 'Failed to send login code: ${e.toString()}',
-      );
-    }
-  }
 
   // Delete account (soft delete)
   Future<ApiResponse<void>> deleteAccount() async {
@@ -324,46 +310,15 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // Forgot password
-  Future<ApiResponse<dynamic>> forgotPassword({
-    required String email,
-  }) async {
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      final response = await ApiService.forgotPassword(email: email);
-
-      _isLoading = false;
-      notifyListeners();
-      return response;
-    } catch (e) {
-      _isLoading = false;
-      notifyListeners();
-      return ApiResponse<dynamic>(
-        success: false,
-        message: 'Failed to send password reset email: ${e.toString()}',
-      );
-    }
-  }
-
   // Reset password
   Future<ApiResponse<dynamic>> resetPassword({
     required String email,
-    required String token,
-    required String password,
-    required String passwordConfirmation,
   }) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      final response = await ApiService.resetPassword(
-        email: email,
-        token: token,
-        password: password,
-        passwordConfirmation: passwordConfirmation,
-      );
+      final response = await ApiService.resetPassword(email: email);
 
       _isLoading = false;
       notifyListeners();

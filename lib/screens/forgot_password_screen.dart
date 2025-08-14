@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
-import 'reset_password_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -22,12 +21,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  Future<void> _sendResetEmail() async {
+  Future<void> _resetPassword() async {
     if (!_formKey.currentState!.validate()) return;
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    final response = await authProvider.forgotPassword(
+    final response = await authProvider.resetPassword(
       email: _emailController.text.trim(),
     );
 
@@ -40,14 +39,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       );
 
       if (response.success) {
-        // Navigate to reset password screen with email pre-filled
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ResetPasswordScreen(
-              email: _emailController.text.trim(),
-            ),
-          ),
-        );
+        // Go back to login screen
+        Navigator.of(context).pop();
       }
     }
   }
@@ -86,7 +79,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Enter your email address and we\'ll send you instructions to reset your password.',
+                    'Enter your email address and we\'ll generate a new password and send it to your email.',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -114,7 +107,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: authProvider.isLoading ? null : _sendResetEmail,
+                    onPressed: authProvider.isLoading ? null : _resetPassword,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
@@ -124,7 +117,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Send Reset Instructions'),
+                        : const Text('Reset Password'),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
