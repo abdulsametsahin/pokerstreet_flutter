@@ -70,6 +70,9 @@ class _PublicEventDetailsBottomSheetState
             ),
           ),
 
+          // Top Three Players
+          _buildTopThreePlayers(),
+
           // Tab Bar
           TabBar(
             controller: _tabController,
@@ -513,6 +516,111 @@ class _PublicEventDetailsBottomSheetState
     );
   }
 
+  Widget _buildTopThreePlayers() {
+    // Get top 3 participants sorted by position
+    final topParticipants = widget.event.participants
+        .where((p) => p.position != null && p.user != null)
+        .toList()
+      ..sort((a, b) => a.position!.compareTo(b.position!));
+
+    final top3 = topParticipants.take(3).toList();
+
+    if (top3.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      child: Container(
+        padding: const EdgeInsets.all(12.0),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Top Players',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            ...top3.map((participant) {
+              final position = participant.position!;
+              final user = participant.user!;
+
+              Color color = position == 1
+                  ? Colors.amber
+                  : position == 2
+                      ? Colors.grey[400]!
+                      : Colors.brown[400]!;
+
+              IconData icon = position == 1
+                  ? Icons.emoji_events
+                  : position == 2
+                      ? Icons.military_tech
+                      : Icons.workspace_premium;
+
+              return Container(
+                margin: const EdgeInsets.only(bottom: 6),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: color.withOpacity(0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      icon,
+                      color: color,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      width: 24,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$position',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        user.name,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildStatusBadge(String? status) {
     Color backgroundColor;
     String displayStatus = status ?? 'Unknown';
@@ -547,34 +655,6 @@ class _PublicEventDetailsBottomSheetState
           fontSize: 12,
           fontWeight: FontWeight.bold,
         ),
-      ),
-    );
-  }
-
-  Widget _buildDetailItem(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 80,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[600],
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.w400),
-            ),
-          ),
-        ],
       ),
     );
   }
