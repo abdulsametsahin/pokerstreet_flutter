@@ -34,7 +34,7 @@ class _EventsPageState extends State<EventsPage> {
   Color _getTextColor(Event event, ThemeData theme,
       {bool isSecondary = false}) {
     final hasBackgroundImage =
-        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty;
+        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty && (event.isRunning || event.isPaused);
     if (hasBackgroundImage) {
       return isSecondary ? Colors.white.withOpacity(0.9) : Colors.white;
     } else {
@@ -47,7 +47,7 @@ class _EventsPageState extends State<EventsPage> {
   // Helper function to get text shadow for better visibility
   List<Shadow> _getTextShadow(Event event) {
     final hasBackgroundImage =
-        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty;
+        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty && (event.isRunning || event.isPaused);
     if (hasBackgroundImage) {
       return [
         Shadow(
@@ -345,8 +345,10 @@ class _EventsPageState extends State<EventsPage> {
         borderRadius: BorderRadius.circular(16),
         child: Stack(
           children: [
-            // Background image (if available)
-            if (event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty)
+            // Background image (only for truly live events - running or paused)
+            if (event.backgroundUrl != null && 
+                event.backgroundUrl!.isNotEmpty && 
+                (event.isRunning || event.isPaused))
               Positioned.fill(
                 child: Image.network(
                   event.backgroundUrl!,
@@ -358,15 +360,19 @@ class _EventsPageState extends State<EventsPage> {
                   },
                 ),
               ),
-            // Fallback white background
-            if (event.backgroundUrl == null || event.backgroundUrl!.isEmpty)
+            // Fallback white background (for events without bg or not live)
+            if (event.backgroundUrl == null || 
+                event.backgroundUrl!.isEmpty || 
+                !(event.isRunning || event.isPaused))
               Positioned.fill(
                 child: Container(
                   color: Colors.white,
                 ),
               ),
-            // Gradient overlay for better text visibility
-            if (event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty)
+            // Gradient overlay for better text visibility (only for live events with bg)
+            if (event.backgroundUrl != null && 
+                event.backgroundUrl!.isNotEmpty && 
+                (event.isRunning || event.isPaused))
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
@@ -388,7 +394,8 @@ class _EventsPageState extends State<EventsPage> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: (event.backgroundUrl == null ||
-                            event.backgroundUrl!.isEmpty)
+                            event.backgroundUrl!.isEmpty ||
+                            !(event.isRunning || event.isPaused))
                         ? theme.colorScheme.outline.withOpacity(0.3)
                         : theme.colorScheme.outline.withOpacity(0.1),
                   ),
@@ -506,7 +513,7 @@ class _EventsPageState extends State<EventsPage> {
     }
 
     final hasBackgroundImage =
-        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty;
+        event.backgroundUrl != null && event.backgroundUrl!.isNotEmpty && (event.isRunning || event.isPaused);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
