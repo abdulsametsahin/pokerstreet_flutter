@@ -319,10 +319,11 @@ class _EventsPageState extends State<EventsPage> {
                 ),
 
                 // Description
-                if (event.description.isNotEmpty) ...[
+                if (event.description != null &&
+                    event.description!.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   Text(
-                    event.description,
+                    event.description!,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                       height: 1.4,
@@ -845,7 +846,8 @@ class _EventDetailsBottomSheetState extends State<_EventDetailsBottomSheet> {
                   const SizedBox(height: 20),
 
                   // Description
-                  if (_currentEvent.description.isNotEmpty) ...[
+                  if (_currentEvent.description != null &&
+                      _currentEvent.description!.isNotEmpty) ...[
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
@@ -855,7 +857,7 @@ class _EventDetailsBottomSheetState extends State<_EventDetailsBottomSheet> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        _currentEvent.description,
+                        _currentEvent.description!,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           height: 1.5,
                         ),

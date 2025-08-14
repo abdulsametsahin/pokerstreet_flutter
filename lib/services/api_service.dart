@@ -273,12 +273,12 @@ class ApiService {
     }
   }
 
-  static Future<ApiResponse<Event>> getEventDetails(
-      String token, int eventId) async {
+  static Future<ApiResponse<Event>> getEventDetails(int eventId) async {
     try {
       final response = await http.get(
         Uri.parse('${ApiConfig.baseUrl}/mobile/events/$eventId'),
-        headers: ApiConfig.authHeaders(token),
+        headers: ApiConfig
+            .headers, // Remove auth headers since it's a public endpoint
       );
 
       final jsonResponse = jsonDecode(response.body);
@@ -286,13 +286,32 @@ class ApiService {
       debugPrint("API Response Status: ${response.statusCode}");
       debugPrint("API Response Body: ${response.body}");
 
-      if (response.statusCode == 200) {
-        debugPrint("Parsing event from: ${jsonResponse['event']}");
-        return ApiResponse<Event>(
-          success: jsonResponse['success'],
-          message: jsonResponse['message'],
-          data: Event.fromJson(jsonResponse['event']),
-        );
+      if (response.statusCode == 200 && jsonResponse['success'] == true) {
+        final eventData = jsonResponse['event'];
+        if (eventData != null) {
+          debugPrint("Parsing event from: $eventData");
+          try {
+            final event = Event.fromJson(eventData);
+            return ApiResponse<Event>(
+              success: jsonResponse['success'],
+              message: jsonResponse['message'],
+              data: event,
+            );
+          } catch (parseError) {
+            debugPrint("Error parsing event JSON: $parseError");
+            debugPrint("Event data keys: ${eventData.keys.toList()}");
+            return ApiResponse<Event>(
+              success: false,
+              message: 'Failed to parse event data: ${parseError.toString()}',
+            );
+          }
+        } else {
+          debugPrint("Event data is null in response");
+          return ApiResponse<Event>(
+            success: false,
+            message: 'Event data is missing from response',
+          );
+        }
       } else {
         return ApiResponse<Event>(
           success: false,
@@ -300,6 +319,7 @@ class ApiService {
         );
       }
     } catch (e) {
+      debugPrint("Error in getEventDetails: $e");
       return ApiResponse<Event>(
         success: false,
         message: 'Network error: ${e.toString()}',

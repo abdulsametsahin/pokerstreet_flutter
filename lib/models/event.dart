@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Event {
   final int id;
   final String name;
-  final String description;
+  final String? description;
   final String status;
   final DateTime startsAt;
   final int? startedAt;
@@ -28,7 +28,7 @@ class Event {
   Event({
     required this.id,
     required this.name,
-    required this.description,
+    this.description,
     required this.status,
     required this.startsAt,
     this.startedAt,
@@ -86,46 +86,51 @@ class Event {
 
     debugPrint("About to create Event instance");
 
-    return Event(
-      id: json['id'],
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
-      status: json['status'] ?? 'upcoming',
-      startsAt: json['starts_at'] != null
-          ? DateTime.parse(json['starts_at'])
-          : DateTime.now(),
-      startedAt: json['started_at'],
-      timeElapsed: json['time_elapsed'] ?? 0,
-      isPublic: json['is_public'] ?? false,
-      trackRanking: json['track_ranking'] ?? false,
-      displayPrizePool: json['display_prize_pool'] ?? false,
-      totalMinutes: _parseInt(json['total_minutes']),
-      remaining: json['remaining'] ?? 0,
-      elapsedTime: _parseDouble(json['elapsed_time']).toInt(),
-      activePlayersCount: json['active_players_count'] ?? 0,
-      playersCount: json['players_count'] ?? 0,
-      levels: (json['levels'] as List?)
-              ?.map((level) => Level.fromJson(level))
-              .toList() ??
-          [],
-      participants: (json['participants'] as List?)
-              ?.map((participant) => Participant.fromJson(participant))
-              .toList() ??
-          [],
-      prizes: (json['prizes'] as List?)
-              ?.map((prize) => Prize.fromJson(prize))
-              .toList() ??
-          [],
-      currentLevel: json['current_level'] != null
-          ? Level.fromJson(json['current_level'])
-          : null,
-      nextLevel: json['next_level'] != null
-          ? Level.fromJson(json['next_level'])
-          : null,
-      levelRemaining: _parseDouble(json['level_remaining']).toInt(),
-      appBuyIn: appBuyIn,
-      appPrizes: appPrizes,
-    );
+    try {
+      return Event(
+        id: json['id'],
+        name: json['name'] ?? '',
+        description: json['description'],
+        status: json['status'] ?? 'upcoming',
+        startsAt: json['starts_at'] != null
+            ? DateTime.parse(json['starts_at'])
+            : DateTime.now(),
+        startedAt: json['started_at'],
+        timeElapsed: json['time_elapsed'] ?? 0,
+        isPublic: json['is_public'] ?? false,
+        trackRanking: json['track_ranking'] ?? false,
+        displayPrizePool: json['display_prize_pool'] ?? false,
+        totalMinutes: _parseInt(json['total_minutes']),
+        remaining: json['remaining'] ?? 0,
+        elapsedTime: _parseDouble(json['elapsed_time']).toInt(),
+        activePlayersCount: json['active_players_count'] ?? 0,
+        playersCount: json['players_count'] ?? 0,
+        levels: (json['levels'] as List?)
+                ?.map((level) => Level.fromJson(level))
+                .toList() ??
+            [],
+        participants: (json['participants'] as List?)
+                ?.map((participant) => Participant.fromJson(participant))
+                .toList() ??
+            [],
+        prizes: (json['prizes'] as List?)
+                ?.map((prize) => Prize.fromJson(prize))
+                .toList() ??
+            [],
+        currentLevel: json['current_level'] != null
+            ? Level.fromJson(json['current_level'])
+            : null,
+        nextLevel: json['next_level'] != null
+            ? Level.fromJson(json['next_level'])
+            : null,
+        levelRemaining: _parseDouble(json['level_remaining']).toInt(),
+        appBuyIn: appBuyIn,
+        appPrizes: appPrizes,
+      );
+    } catch (e) {
+      debugPrint("Error creating Event: $e");
+      rethrow;
+    }
   }
 
   static int _parseInt(dynamic value) {

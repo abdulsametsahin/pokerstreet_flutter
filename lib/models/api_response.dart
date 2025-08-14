@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'user.dart';
 
 class ApiResponse<T> {
@@ -17,6 +19,7 @@ class ApiResponse<T> {
     Map<String, dynamic> json,
     T Function(Map<String, dynamic>)? fromJsonT,
   ) {
+    debugPrint("Parsing API response: $json");
     return ApiResponse(
       success: json['success'] ?? false,
       message: json['message'] ?? '',
