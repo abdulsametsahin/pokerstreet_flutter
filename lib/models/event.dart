@@ -56,8 +56,6 @@ class Event {
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    debugPrint("Starting Event.fromJson");
-
     // Parse app buy-in data
     AppBuyIn? appBuyIn;
     if (json['app_buyin'] != null && json['app_buyin'] is Map) {
