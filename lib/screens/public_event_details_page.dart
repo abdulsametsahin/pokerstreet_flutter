@@ -287,55 +287,95 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
   Widget _buildModernStatusBadge(String? status) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     Color backgroundColor;
+    Color borderColor;
     Color textColor;
     IconData icon;
     String displayStatus = status ?? 'Unknown';
 
     switch (status?.toLowerCase()) {
       case 'upcoming':
-        backgroundColor = colorScheme.primary;
-        textColor = colorScheme.onPrimary;
-        icon = Icons.schedule;
-        displayStatus = 'UPCOMING';
+        backgroundColor = isDark
+            ? const Color(0xFF1E3A8A).withOpacity(0.2)
+            : const Color(0xFF3B82F6).withOpacity(0.1);
+        borderColor = isDark
+            ? const Color(0xFF3B82F6).withOpacity(0.5)
+            : const Color(0xFF3B82F6).withOpacity(0.3);
+        textColor = isDark ? const Color(0xFF93C5FD) : const Color(0xFF1E40AF);
+        icon = Icons.schedule_outlined;
+        displayStatus = 'PENDING';
         break;
       case 'ongoing':
       case 'in progress':
-        backgroundColor = Colors.green;
-        textColor = Colors.white;
-        icon = Icons.play_circle_filled;
-        displayStatus = 'ONGOING';
+        backgroundColor = isDark
+            ? const Color(0xFF059669).withOpacity(0.2)
+            : const Color(0xFF10B981).withOpacity(0.1);
+        borderColor = isDark
+            ? const Color(0xFF10B981).withOpacity(0.5)
+            : const Color(0xFF10B981).withOpacity(0.3);
+        textColor = isDark ? const Color(0xFF6EE7B7) : const Color(0xFF047857);
+        icon = Icons.play_circle_outline_rounded;
+        displayStatus = 'LIVE';
         break;
       case 'completed':
-        backgroundColor = colorScheme.outline;
-        textColor = colorScheme.onSurface;
-        icon = Icons.check_circle;
+        backgroundColor = isDark
+            ? const Color(0xFF374151).withOpacity(0.3)
+            : const Color(0xFF6B7280).withOpacity(0.1);
+        borderColor = isDark
+            ? const Color(0xFF6B7280).withOpacity(0.5)
+            : const Color(0xFF6B7280).withOpacity(0.3);
+        textColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF374151);
+        icon = Icons.check_circle_outline_rounded;
         displayStatus = 'COMPLETED';
         break;
       case 'cancelled':
-        backgroundColor = colorScheme.error;
-        textColor = colorScheme.onError;
-        icon = Icons.cancel;
+        backgroundColor = isDark
+            ? const Color(0xFFDC2626).withOpacity(0.2)
+            : const Color(0xFFEF4444).withOpacity(0.1);
+        borderColor = isDark
+            ? const Color(0xFFEF4444).withOpacity(0.5)
+            : const Color(0xFFEF4444).withOpacity(0.3);
+        textColor = isDark ? const Color(0xFFFCA5A5) : const Color(0xFFDC2626);
+        icon = Icons.cancel_outlined;
         displayStatus = 'CANCELLED';
         break;
+      case 'pending':
+        backgroundColor = isDark
+            ? const Color(0xFFB45309).withOpacity(0.2)
+            : const Color(0xFFB45309).withOpacity(0.1);
+        borderColor = isDark
+            ? const Color(0xFFB45309).withOpacity(0.5)
+            : const Color(0xFFB45309).withOpacity(0.3);
+        textColor = isDark ? const Color(0xFFFBBF24) : const Color(0xFFB45309);
+        icon = Icons.hourglass_empty;
+        displayStatus = 'PENDING';
+        break;
       default:
-        backgroundColor = colorScheme.outline;
-        textColor = colorScheme.onSurface;
-        icon = Icons.help_outline;
+        debugPrint('Unknown event status: $status');
+        backgroundColor = colorScheme.surfaceVariant.withOpacity(0.5);
+        borderColor = colorScheme.outline.withOpacity(0.3);
+        textColor = colorScheme.onSurfaceVariant;
+        icon = Icons.help_outline_rounded;
         displayStatus = 'UNKNOWN';
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: borderColor,
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
-            color: backgroundColor.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: borderColor.withOpacity(0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+            spreadRadius: 0,
           ),
         ],
       ),
@@ -345,16 +385,16 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
           Icon(
             icon,
             color: textColor,
-            size: 16,
+            size: 18,
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: 8),
           Text(
             displayStatus,
             style: TextStyle(
               color: textColor,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.8,
             ),
           ),
         ],
@@ -414,50 +454,61 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
             final position = participant.position!;
             final user = participant.user!;
 
-            Color positionColor;
+            final positionColor = _getPositionColor(position);
             IconData positionIcon;
 
             switch (position) {
               case 1:
-                positionColor = const Color(0xFFFFD700); // Gold
-                positionIcon = Icons.emoji_events;
+                positionIcon = Icons.emoji_events_rounded;
                 break;
               case 2:
-                positionColor = const Color(0xFFC0C0C0); // Silver
-                positionIcon = Icons.military_tech;
+                positionIcon = Icons.military_tech_rounded;
                 break;
               case 3:
-                positionColor = const Color(0xFFCD7F32); // Bronze
-                positionIcon = Icons.workspace_premium;
+                positionIcon = Icons.workspace_premium_rounded;
                 break;
               default:
-                positionColor = colorScheme.primary;
-                positionIcon = Icons.stars;
+                positionIcon = Icons.stars_rounded;
             }
 
             return Container(
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: positionColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
+                color: positionColor.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: positionColor.withOpacity(0.3),
+                  color: positionColor.withOpacity(0.2),
+                  width: 1.5,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: positionColor.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
                   Container(
-                    width: 32,
-                    height: 32,
+                    width: 36,
+                    height: 36,
                     decoration: BoxDecoration(
-                      color: positionColor,
-                      borderRadius: BorderRadius.circular(16),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          positionColor,
+                          positionColor.withOpacity(0.8),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
                           color: positionColor.withOpacity(0.3),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -466,7 +517,7 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
                         '$position',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 14,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -476,7 +527,7 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
                   Icon(
                     positionIcon,
                     color: positionColor,
-                    size: 20,
+                    size: 22,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -1039,6 +1090,7 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
+    final isDark = theme.brightness == Brightness.dark;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -1051,6 +1103,10 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
               final level = entry.value;
               final isBreak = level.isBreak;
 
+              final breakColor = isDark
+                  ? const Color(0xFFD97706) // Premium amber for dark mode
+                  : const Color(0xFFB45309); // Elegant amber for light mode
+
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
@@ -1058,7 +1114,7 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: isBreak
-                        ? Colors.orange.withOpacity(0.3)
+                        ? breakColor.withOpacity(0.3)
                         : colorScheme.outline.withOpacity(0.1),
                   ),
                   boxShadow: [
@@ -1077,7 +1133,7 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
                       Container(
                         width: 4,
                         height: 80,
-                        color: isBreak ? Colors.orange : colorScheme.primary,
+                        color: isBreak ? breakColor : colorScheme.primary,
                       ),
 
                       // Content
@@ -1092,7 +1148,7 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
                                 height: 48,
                                 decoration: BoxDecoration(
                                   color: isBreak
-                                      ? Colors.orange.withOpacity(0.1)
+                                      ? breakColor.withOpacity(0.1)
                                       : colorScheme.primary.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(24),
                                 ),
@@ -1100,7 +1156,7 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
                                   child: isBreak
                                       ? Icon(
                                           Icons.coffee_rounded,
-                                          color: Colors.orange,
+                                          color: breakColor,
                                           size: 24,
                                         )
                                       : Text(
@@ -1232,33 +1288,45 @@ class _PublicEventDetailsPageState extends State<PublicEventDetailsPage>
   }
 
   Color _getStatusColor(String status) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     switch (status.toLowerCase()) {
       case 'completed':
-        return Colors.green;
+        return isDark ? const Color(0xFF9CA3AF) : const Color(0xFF374151);
       case 'ongoing':
       case 'in progress':
-        return Colors.orange;
+        return isDark ? const Color(0xFF6EE7B7) : const Color(0xFF047857);
       case 'upcoming':
-        return colorScheme.primary;
+        return isDark ? const Color(0xFF93C5FD) : const Color(0xFF1E40AF);
       case 'cancelled':
-        return colorScheme.error;
+        return isDark ? const Color(0xFFFCA5A5) : const Color(0xFFDC2626);
       default:
-        return colorScheme.outline;
+        return isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
     }
   }
 
   Color _getPositionColor(int position) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     switch (position) {
       case 1:
-        return const Color(0xFFFFD700); // Gold
+        return isDark
+            ? const Color(0xFFFBBF24) // Premium gold for dark mode
+            : const Color(0xFFD97706); // Elegant amber for light mode
       case 2:
-        return const Color(0xFFC0C0C0); // Silver
+        return isDark
+            ? const Color(0xFFE5E7EB) // Premium silver for dark mode
+            : const Color(0xFF9CA3AF); // Sophisticated gray for light mode
       case 3:
-        return const Color(0xFFCD7F32); // Bronze
+        return isDark
+            ? const Color(0xFFD69E2E) // Warm bronze for dark mode
+            : const Color(0xFFB45309); // Rich bronze for light mode
       default:
-        return Theme.of(context).colorScheme.primary;
+        return isDark
+            ? const Color(0xFF6366F1) // Modern purple for dark mode
+            : const Color(0xFF4F46E5); // Professional indigo for light mode
     }
   }
 }

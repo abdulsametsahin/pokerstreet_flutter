@@ -324,10 +324,10 @@ class _EventsPageState extends State<EventsPage> {
         borderRadius: BorderRadius.circular(16),
         child: Stack(
           children: [
-            // White background for all events
+            // Theme-aware background for all events
             Positioned.fill(
               child: Container(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
               ),
             ),
             // Border overlay
