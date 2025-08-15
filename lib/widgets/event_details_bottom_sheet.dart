@@ -30,11 +30,20 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
   bool isLoading = true;
   String? errorMessage;
   List<Participant> topParticipants = [];
+  bool _hasInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _loadEventDetails();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_hasInitialized) {
+      _hasInitialized = true;
+      _loadEventDetails();
+    }
   }
 
   Future<void> _loadEventDetails() async {
