@@ -178,7 +178,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nextLevel => 'Next Level';
 
   @override
-  String get players => 'Players';
+  String get players => 'players';
 
   @override
   String get starts => 'Starts';
@@ -370,7 +370,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountDeletionFailed => 'Failed to delete account';
 
   @override
-  String get buyIn => 'Buy-in';
+  String get buyIn => 'Buy In';
 
   @override
   String get prizes => 'Prizes';
@@ -545,4 +545,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get forgotPasswordQuestion => 'Forgot Password?';
+
+  @override
+  String get monthly => 'Monthly';
+
+  @override
+  String get allTime => 'All Time';
+
+  @override
+  String get overall => 'Overall';
+
+  @override
+  String get range => 'Range';
+
+  @override
+  String get custom => 'Custom';
+
+  @override
+  String get recentEvents => 'Recent Events';
+
+  @override
+  String get unknown => 'Unknown';
+
+  @override
+  String get totalPrize => 'Total Prize';
+
+  @override
+  String get vouchers => 'Vouchers';
+
+  @override
+  String get featuredOffers => 'Featured Offers';
+
+  @override
+  String get noPlayersFoundFor => 'No players found for';
+
+  @override
+  String get totalPlayers => 'Total Players';
+
+  @override
+  String get activePlayers => 'Active Players';
+
+  @override
+  String get unknownPlayer => 'Unknown Player';
 }

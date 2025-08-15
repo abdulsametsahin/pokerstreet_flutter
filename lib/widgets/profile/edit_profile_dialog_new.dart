@@ -255,7 +255,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Edit Profile',
+                        l10n.profile,
                         style:
                             Theme.of(context).textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.w600,
@@ -347,7 +347,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
-                                  'Tap to change photo',
+                                  l10n.tapToChangePhoto,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium
@@ -364,7 +364,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
                           // Display Name Field
                           Text(
-                            'Display Name',
+                            l10n.displayName,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
@@ -376,7 +376,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                           TextFormField(
                             controller: _displayNameController,
                             decoration: InputDecoration(
-                              hintText: 'Enter your display name',
+                              hintText: l10n.enterDisplayName,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -386,11 +386,11 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                                   .surfaceVariant
                                   .withOpacity(0.3),
                               prefixIcon: const Icon(Icons.person),
-                              helperText: 'This name will be shown publicly',
+                              helperText: l10n.displayNameHelper,
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'Please enter a display name';
+                                return l10n.pleaseEnterDisplayName;
                               }
                               return null;
                             },
@@ -399,7 +399,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
                           // Password Section Toggle
                           Text(
-                            'Change Password',
+                            l10n.changePassword,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
@@ -447,8 +447,8 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                                   Expanded(
                                     child: Text(
                                       _showPasswordFields
-                                          ? 'Hide password fields'
-                                          : 'Show password fields',
+                                          ? l10n.hidePasswordFields
+                                          : l10n.showPasswordFields,
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium
@@ -468,7 +468,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
                             // Current Password
                             Text(
-                              'Current Password',
+                              l10n.currentPassword,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall
@@ -481,7 +481,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                               controller: _currentPasswordController,
                               obscureText: _obscureCurrentPassword,
                               decoration: InputDecoration(
-                                hintText: 'Enter current password',
+                                hintText: l10n.enterCurrentPassword,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -508,7 +508,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                               validator: (value) {
                                 if (_showPasswordFields &&
                                     (value == null || value.isEmpty)) {
-                                  return 'Please enter your current password';
+                                  return l10n.pleaseEnterCurrentPassword;
                                 }
                                 return null;
                               },
@@ -517,7 +517,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
                             // New Password
                             Text(
-                              'New Password',
+                              l10n.newPassword,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall
@@ -530,7 +530,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                               controller: _newPasswordController,
                               obscureText: _obscureNewPassword,
                               decoration: InputDecoration(
-                                hintText: 'Enter new password',
+                                hintText: l10n.enterNewPassword,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -571,7 +571,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
                             // Confirm Password
                             Text(
-                              'Confirm New Password',
+                              l10n.confirmNewPassword,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall
@@ -584,7 +584,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                               controller: _confirmPasswordController,
                               obscureText: _obscureConfirmPassword,
                               decoration: InputDecoration(
-                                hintText: 'Confirm new password',
+                                hintText: l10n.confirmNewPassword,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -688,7 +688,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text('Save Changes'),
+                            : Text(l10n.saveChanges),
                       ),
                     ),
                   ],

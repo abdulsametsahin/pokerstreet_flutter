@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../l10n/app_localizations.dart';
 
 class WebViewScreen extends StatefulWidget {
   final String url;
@@ -60,6 +61,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -88,33 +90,33 @@ class _WebViewScreenState extends State<WebViewScreen> {
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'refresh',
                 child: Row(
                   children: [
-                    Icon(Icons.refresh),
-                    SizedBox(width: 8),
-                    Text('Refresh'),
+                    const Icon(Icons.refresh),
+                    const SizedBox(width: 8),
+                    Text(l10n.refresh),
                   ],
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'back',
                 child: Row(
                   children: [
-                    Icon(Icons.arrow_back),
-                    SizedBox(width: 8),
-                    Text('Back'),
+                    const Icon(Icons.arrow_back),
+                    const SizedBox(width: 8),
+                    Text(l10n.back),
                   ],
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'forward',
                 child: Row(
                   children: [
-                    Icon(Icons.arrow_forward),
-                    SizedBox(width: 8),
-                    Text('Forward'),
+                    const Icon(Icons.arrow_forward),
+                    const SizedBox(width: 8),
+                    Text(l10n.forward),
                   ],
                 ),
               ),
@@ -136,6 +138,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   }
 
   Widget _buildErrorView() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -149,7 +152,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load page',
+              l10n.failedToLoadPage,
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
@@ -174,7 +177,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     controller.reload();
                   },
                   icon: const Icon(Icons.refresh),
-                  label: const Text('Retry'),
+                  label: Text(l10n.retry),
                 ),
                 const SizedBox(width: 16),
                 OutlinedButton.icon(
@@ -182,7 +185,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     Navigator.of(context).pop();
                   },
                   icon: const Icon(Icons.close),
-                  label: const Text('Close'),
+                  label: Text(l10n.close),
                 ),
               ],
             ),

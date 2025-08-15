@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/banner.dart' as BannerModel;
+import '../../l10n/app_localizations.dart';
 import 'banner_card.dart';
 
 class BannersSection extends StatelessWidget {
@@ -26,7 +27,7 @@ class BannersSection extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: Text(
-              'Featured Offers',
+              AppLocalizations.of(context)!.featuredOffers,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

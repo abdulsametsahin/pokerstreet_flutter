@@ -331,12 +331,13 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildQuickStatsRow(BuildContext context, AuthProvider authProvider) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Expanded(
           child: _buildStatCard(
             context,
-            'Events',
+            l10n.events,
             '${authProvider.userEvents.length}',
             Icons.event,
             Theme.of(context).colorScheme.primary,
@@ -354,7 +355,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Expanded(
           child: _buildStatCard(
             context,
-            'Balance',
+            l10n.balance,
             '€0.00',
             Icons.account_balance_wallet,
             Colors.green,
@@ -364,7 +365,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Expanded(
           child: _buildStatCard(
             context,
-            'Vouchers',
+            l10n.vouchers,
             '${_personalVouchers.length}',
             Icons.card_giftcard,
             Colors.orange,
@@ -440,7 +441,7 @@ class _ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Settings',
+          l10n.settings,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),

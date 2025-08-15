@@ -10,7 +10,7 @@ class AppLocalizationsLt extends AppLocalizations {
   String get appTitle => 'PokerStreet';
 
   @override
-  String get events => 'Įvykiai';
+  String get events => 'Renginiai';
 
   @override
   String get topPlayers => 'Geriausi žaidėjai';
@@ -178,7 +178,7 @@ class AppLocalizationsLt extends AppLocalizations {
   String get nextLevel => 'Kitas lygis';
 
   @override
-  String get players => 'Žaidėjai';
+  String get players => 'žaidėjai';
 
   @override
   String get starts => 'Prasideda';
@@ -545,4 +545,46 @@ class AppLocalizationsLt extends AppLocalizations {
 
   @override
   String get forgotPasswordQuestion => 'Pamiršote slaptažodį?';
+
+  @override
+  String get monthly => 'Mėnesio';
+
+  @override
+  String get allTime => 'Visų laikų';
+
+  @override
+  String get overall => 'Bendrai';
+
+  @override
+  String get range => 'Intervalas';
+
+  @override
+  String get custom => 'Pasirinktas';
+
+  @override
+  String get recentEvents => 'Paskutiniai renginiai';
+
+  @override
+  String get unknown => 'Nežinomas';
+
+  @override
+  String get totalPrize => 'Bendras prizas';
+
+  @override
+  String get vouchers => 'Kuponai';
+
+  @override
+  String get featuredOffers => 'Rekomenduojami pasiūlymai';
+
+  @override
+  String get noPlayersFoundFor => 'Nerasta žaidėjų';
+
+  @override
+  String get totalPlayers => 'Visi žaidėjai';
+
+  @override
+  String get activePlayers => 'Aktyvūs žaidėjai';
+
+  @override
+  String get unknownPlayer => 'Nežinomas žaidėjas';
 }

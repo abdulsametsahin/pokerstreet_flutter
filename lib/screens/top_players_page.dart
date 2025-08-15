@@ -34,7 +34,7 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
           return Column(
             children: [
               // Always show the header with filters
-              _buildHeader(context, provider),
+              _buildHeader(context, provider, l10n),
 
               // Show appropriate content based on state
               Expanded(
@@ -47,7 +47,7 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
     );
   }
 
-  Widget _buildHeader(BuildContext context, TopPlayersProvider provider) {
+  Widget _buildHeader(BuildContext context, TopPlayersProvider provider, AppLocalizations l10n) {
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
@@ -72,7 +72,7 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Top Players',
+                      l10n.topPlayersTitle,
                       style:
                           Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 color: Colors.white,
@@ -81,7 +81,7 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${provider.totalCount} players',
+                      '${provider.totalCount} ${l10n.players}',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white.withValues(alpha: 0.9),
                           ),
@@ -112,7 +112,7 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
               Expanded(
                 child: _buildFilterButton(
                   context,
-                  'Monthly',
+                  l10n.monthly,
                   provider.monthName,
                   Icons.calendar_month,
                   _selectedFilterType == 'monthly',
@@ -128,8 +128,8 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
               Expanded(
                 child: _buildFilterButton(
                   context,
-                  'All Time',
-                  'Overall',
+                  l10n.allTime,
+                  l10n.overall,
                   Icons.timeline,
                   _selectedFilterType == 'all_time',
                   () {
@@ -144,8 +144,8 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
               Expanded(
                 child: _buildFilterButton(
                   context,
-                  'Range',
-                  'Custom',
+                  l10n.range,
+                  l10n.custom,
                   Icons.date_range,
                   _selectedFilterType == 'range',
                   () {
@@ -306,7 +306,7 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
               builder: (context, provider, child) {
                 return Text(
                   provider.monthName.isNotEmpty
-                      ? 'No players found for ${provider.monthName}'
+                      ? '${l10n.noPlayersFoundFor} ${provider.monthName}'
                       : l10n.noPlayersThisMonth,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -760,6 +760,7 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
 
   void _showMonthPicker(
       BuildContext context, TopPlayersProvider provider) async {
+    final l10n = AppLocalizations.of(context)!;
     if (provider.availableMonths.isEmpty) {
       await provider.loadAvailableMonths();
     }
@@ -787,7 +788,7 @@ class _TopPlayersPageState extends State<TopPlayersPage> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Select Month',
+              l10n.selectMonth,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

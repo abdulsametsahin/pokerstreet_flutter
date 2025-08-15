@@ -236,7 +236,7 @@ class _EventsPageState extends State<EventsPage> {
               ],
               if (completedEvents.isNotEmpty) ...[
                 _buildSectionHeader(
-                  'Recent Events',
+                  l10n.recentEvents,
                   completedEvents.length,
                   theme.colorScheme.outline,
                   Icons.history_rounded,
@@ -439,7 +439,7 @@ class _EventsPageState extends State<EventsPage> {
       statusIcon = Icons.pause_circle_filled;
     } else if (event.isCompleted) {
       statusColor = theme.colorScheme.outline;
-      statusText = 'Completed';
+      statusText = l10n.completed;
       statusIcon = Icons.check_circle_rounded;
     } else if (event.isUpcoming) {
       statusColor = theme.colorScheme.primary;
@@ -447,7 +447,7 @@ class _EventsPageState extends State<EventsPage> {
       statusIcon = Icons.schedule;
     } else {
       statusColor = theme.colorScheme.outline;
-      statusText = 'Unknown';
+      statusText = l10n.unknown;
       statusIcon = Icons.help_outline;
     }
 
@@ -743,7 +743,7 @@ class _EventsPageState extends State<EventsPage> {
                       Text(
                         event.appBuyIn!.action.isNotEmpty
                             ? event.appBuyIn!.action
-                            : 'Buy In',
+                            : l10n.buyIn,
                         style: theme.textTheme.labelMedium?.copyWith(
                           color: _getTextColor(event, theme, isSecondary: true),
                           shadows: _getTextShadow(event),
@@ -789,7 +789,7 @@ class _EventsPageState extends State<EventsPage> {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        'Total Prize',
+                        l10n.totalPrize,
                         style: theme.textTheme.labelMedium?.copyWith(
                           color: _getTextColor(event, theme, isSecondary: true),
                           shadows: _getTextShadow(event),
@@ -954,6 +954,7 @@ class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final isLowTime = _remaining.inSeconds <= 60;
     final isVeryLowTime = _remaining.inSeconds <= 10;
 
@@ -1003,7 +1004,7 @@ class _LevelCountdownWidgetState extends State<LevelCountdownWidget>
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      isVeryLowTime ? 'ENDING SOON!' : 'Low Time',
+                      isVeryLowTime ? l10n.endingSoon : l10n.lowTime,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: timeColor,
                         fontWeight: FontWeight.w600,

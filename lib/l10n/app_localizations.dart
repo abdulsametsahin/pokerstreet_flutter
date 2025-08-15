@@ -440,7 +440,7 @@ abstract class AppLocalizations {
   /// No description provided for @players.
   ///
   /// In en, this message translates to:
-  /// **'Players'**
+  /// **'players'**
   String get players;
 
   /// No description provided for @starts.
@@ -812,7 +812,7 @@ abstract class AppLocalizations {
   /// No description provided for @buyIn.
   ///
   /// In en, this message translates to:
-  /// **'Buy-in'**
+  /// **'Buy In'**
   String get buyIn;
 
   /// No description provided for @prizes.
@@ -1162,6 +1162,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Forgot Password?'**
   String get forgotPasswordQuestion;
+
+  /// No description provided for @monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly;
+
+  /// No description provided for @allTime.
+  ///
+  /// In en, this message translates to:
+  /// **'All Time'**
+  String get allTime;
+
+  /// No description provided for @overall.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall'**
+  String get overall;
+
+  /// No description provided for @range.
+  ///
+  /// In en, this message translates to:
+  /// **'Range'**
+  String get range;
+
+  /// No description provided for @custom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get custom;
+
+  /// No description provided for @recentEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Events'**
+  String get recentEvents;
+
+  /// No description provided for @unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown;
+
+  /// No description provided for @totalPrize.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Prize'**
+  String get totalPrize;
+
+  /// No description provided for @vouchers.
+  ///
+  /// In en, this message translates to:
+  /// **'Vouchers'**
+  String get vouchers;
+
+  /// No description provided for @featuredOffers.
+  ///
+  /// In en, this message translates to:
+  /// **'Featured Offers'**
+  String get featuredOffers;
+
+  /// No description provided for @noPlayersFoundFor.
+  ///
+  /// In en, this message translates to:
+  /// **'No players found for'**
+  String get noPlayersFoundFor;
+
+  /// No description provided for @totalPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Players'**
+  String get totalPlayers;
+
+  /// No description provided for @activePlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Players'**
+  String get activePlayers;
+
+  /// No description provided for @unknownPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Player'**
+  String get unknownPlayer;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

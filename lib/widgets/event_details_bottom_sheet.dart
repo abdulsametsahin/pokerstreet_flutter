@@ -38,6 +38,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
   }
 
   Future<void> _loadEventDetails() async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final response = await ApiService.getEventDetails(widget.userEvent.id);
 
@@ -50,7 +51,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
           } else {
             errorMessage = response.message.isNotEmpty
                 ? response.message
-                : 'Failed to load event details';
+                : l10n.failedToLoadEventDetails;
           }
           isLoading = false;
         });
@@ -175,7 +176,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
                   });
                   _loadEventDetails();
                 },
-                child: const Text('Retry'),
+                child: Text(l10n.retry),
               ),
             ],
           ),
@@ -240,7 +241,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Your Performance',
+            l10n.yourPerformance,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -295,7 +296,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Event Details',
+            l10n.eventDetails,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -304,21 +305,21 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
           _buildDetailRow(
             l10n,
             theme,
-            'Status',
+            l10n.status,
             eventDetails!.status,
             Icons.info,
           ),
           _buildDetailRow(
             l10n,
             theme,
-            'Total Players',
+            l10n.totalPlayers,
             '${eventDetails!.playersCount}',
             Icons.people,
           ),
           _buildDetailRow(
             l10n,
             theme,
-            'Active Players',
+            l10n.activePlayers,
             '${eventDetails!.activePlayersCount}',
             Icons.person,
           ),
@@ -326,7 +327,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
             _buildDetailRow(
               l10n,
               theme,
-              'Current Level',
+              l10n.currentLevel,
               'Level ${eventDetails!.currentLevel!.levelNumber ?? 'N/A'}',
               Icons.layers,
             ),
@@ -340,7 +341,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Top Players',
+          l10n.topPlayers,
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -353,6 +354,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
   }
 
   Widget _buildParticipantCard(Participant participant, ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
@@ -387,7 +389,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet> {
           // Player info
           Expanded(
             child: Text(
-              participant.user?.name ?? 'Unknown Player',
+              participant.user?.name ?? l10n.unknownPlayer,
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
