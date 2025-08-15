@@ -398,4 +398,151 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get description => 'Description';
+
+  @override
+  String get myVouchers => 'My Vouchers';
+
+  @override
+  String get noVouchersAvailable => 'No vouchers available';
+
+  @override
+  String get noVouchersDescription => 'You don\'t have any vouchers at the moment.\nCheck back later for new offers!';
+
+  @override
+  String get activeVouchers => 'Active Vouchers';
+
+  @override
+  String get expiredUsedVouchers => 'Expired/Used Vouchers';
+
+  @override
+  String get voucherCode => 'Voucher Code';
+
+  @override
+  String get expiresOn => 'Expires on';
+
+  @override
+  String get voucherCodeCopied => 'Voucher code copied to clipboard';
+
+  @override
+  String get deleteAccountConfirmationText => 'Are you sure you want to delete your account? This action cannot be undone.';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get logoutConfirmation => 'Are you sure you want to logout?';
+
+  @override
+  String get deletingAccount => 'Deleting account...';
+
+  @override
+  String get errorGeneric => 'Error';
+
+  @override
+  String get errorLoggingOut => 'Error logging out';
+
+  @override
+  String get loggingOut => 'Logging out...';
+
+  @override
+  String get chooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get takePhoto => 'Take Photo';
+
+  @override
+  String get removePhoto => 'Remove Photo';
+
+  @override
+  String get errorOccurred => 'An error occurred';
+
+  @override
+  String get tapToChangePhoto => 'Tap to change photo';
+
+  @override
+  String get displayName => 'Display Name';
+
+  @override
+  String get enterDisplayName => 'Enter your display name';
+
+  @override
+  String get displayNameHelper => 'This name will be shown publicly';
+
+  @override
+  String get pleaseEnterDisplayName => 'Please enter a display name';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get hidePasswordFields => 'Hide password fields';
+
+  @override
+  String get showPasswordFields => 'Show password fields';
+
+  @override
+  String get currentPassword => 'Current Password';
+
+  @override
+  String get enterCurrentPassword => 'Enter current password';
+
+  @override
+  String get pleaseEnterCurrentPassword => 'Please enter your current password';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get enterNewPassword => 'Enter new password';
+
+  @override
+  String get confirmNewPassword => 'Confirm New Password';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get forgotPassword => 'Forgot Password';
+
+  @override
+  String get resetYourPassword => 'Reset your password';
+
+  @override
+  String get resetPasswordDescription => 'Enter your email address and we\'ll generate a new password and send it to your email.';
+
+  @override
+  String get enterEmailAddress => 'Enter your email address';
+
+  @override
+  String get resetPassword => 'Reset Password';
+
+  @override
+  String get backToLogin => 'Back to Login';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get forward => 'Forward';
+
+  @override
+  String get failedToLoadPage => 'Failed to load page';
+
+  @override
+  String get accountSettings => 'Account Settings';
+
+  @override
+  String get accountSettingsDescription => 'Language, theme, and more';
+
+  @override
+  String get signOutDescription => 'Sign out of your account';
+
+  @override
+  String get failedToLoadEventDetails => 'Failed to load event details';
+
+  @override
+  String get yourPerformance => 'Your Performance';
+
+  @override
+  String get forgotPasswordQuestion => 'Forgot Password?';
 }

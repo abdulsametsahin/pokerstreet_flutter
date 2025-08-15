@@ -37,7 +37,7 @@ class ProfileActions extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Delete Account',
+                      l10n.deleteAccount,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: Colors.red.shade600,
                             fontWeight: FontWeight.w500,
@@ -107,9 +107,9 @@ class ProfileActions extends StatelessWidget {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text('Delete Account'),
+          title: Text(l10n.deleteAccount),
           content: Text(
-            'Are you sure you want to delete your account? This action cannot be undone.',
+            l10n.deleteAccountConfirmationText,
           ),
           actions: [
             TextButton(
@@ -124,7 +124,7 @@ class ProfileActions extends StatelessWidget {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red,
               ),
-              child: Text('Delete'),
+              child: Text(l10n.delete),
             ),
           ],
         );
@@ -140,7 +140,7 @@ class ProfileActions extends StatelessWidget {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: Text(l10n.logout),
-          content: Text('Are you sure you want to logout?'),
+          content: Text(l10n.logoutConfirmation),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
@@ -161,18 +161,19 @@ class ProfileActions extends StatelessWidget {
 
   Future<void> _deleteAccount(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final l10n = AppLocalizations.of(context)!;
 
     // Show loading indicator
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return const AlertDialog(
+        return AlertDialog(
           content: Row(
             children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 20),
-              Text('Deleting account...'),
+              const CircularProgressIndicator(),
+              const SizedBox(width: 20),
+              Text(l10n.deletingAccount),
             ],
           ),
         );
@@ -188,7 +189,7 @@ class ProfileActions extends StatelessWidget {
         if (response.success) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Account deleted successfully'),
+              content: Text(l10n.accountDeletedSuccessfully),
               backgroundColor: Colors.green,
             ),
           );
@@ -206,7 +207,7 @@ class ProfileActions extends StatelessWidget {
         Navigator.of(context).pop(); // Close loading dialog
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: ${e.toString()}'),
+            content: Text('${l10n.errorGeneric}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -216,18 +217,19 @@ class ProfileActions extends StatelessWidget {
 
   Future<void> _logout(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final l10n = AppLocalizations.of(context)!;
 
     // Show loading indicator
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return const AlertDialog(
+        return AlertDialog(
           content: Row(
             children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 20),
-              Text('Logging out...'),
+              const CircularProgressIndicator(),
+              const SizedBox(width: 20),
+              Text(l10n.loggingOut),
             ],
           ),
         );
@@ -245,7 +247,7 @@ class ProfileActions extends StatelessWidget {
         Navigator.of(context).pop(); // Close loading dialog
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error logging out: ${e.toString()}'),
+            content: Text('${l10n.errorLoggingOut}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );

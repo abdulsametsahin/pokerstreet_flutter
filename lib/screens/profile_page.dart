@@ -435,6 +435,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildSettingsSection(
       BuildContext context, AuthProvider authProvider) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -457,8 +458,8 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               _buildSettingsItem(
                 context,
-                'Account Settings',
-                'Language, theme, and more',
+                l10n.accountSettings,
+                l10n.accountSettingsDescription,
                 Icons.settings,
                 () {
                   _showSettingsBottomSheet(context);
@@ -470,8 +471,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               _buildSettingsItem(
                 context,
-                'Logout',
-                'Sign out of your account',
+                l10n.logout,
+                l10n.signOutDescription,
                 Icons.logout,
                 () async {
                   await authProvider.logout();

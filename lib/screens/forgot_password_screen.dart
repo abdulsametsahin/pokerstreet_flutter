@@ -52,7 +52,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Forgot Password'),
+        title: Text(l10n.forgotPassword),
       ),
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
@@ -71,7 +71,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                   const SizedBox(height: 32),
                   Text(
-                    'Reset your password',
+                    l10n.resetYourPassword,
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -79,7 +79,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Enter your email address and we\'ll generate a new password and send it to your email.',
+                    l10n.resetPasswordDescription,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -93,7 +93,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       labelText: l10n.email,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.email),
-                      hintText: 'Enter your email address',
+                      hintText: l10n.enterEmailAddress,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -117,12 +117,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Reset Password'),
+                        : Text(l10n.resetPassword),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Back to Login'),
+                    child: Text(l10n.backToLogin),
                   ),
                 ],
               ),

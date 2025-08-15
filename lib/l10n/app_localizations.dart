@@ -868,6 +868,300 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Description'**
   String get description;
+
+  /// No description provided for @myVouchers.
+  ///
+  /// In en, this message translates to:
+  /// **'My Vouchers'**
+  String get myVouchers;
+
+  /// No description provided for @noVouchersAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No vouchers available'**
+  String get noVouchersAvailable;
+
+  /// No description provided for @noVouchersDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have any vouchers at the moment.\nCheck back later for new offers!'**
+  String get noVouchersDescription;
+
+  /// No description provided for @activeVouchers.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Vouchers'**
+  String get activeVouchers;
+
+  /// No description provided for @expiredUsedVouchers.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired/Used Vouchers'**
+  String get expiredUsedVouchers;
+
+  /// No description provided for @voucherCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Voucher Code'**
+  String get voucherCode;
+
+  /// No description provided for @expiresOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires on'**
+  String get expiresOn;
+
+  /// No description provided for @voucherCodeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Voucher code copied to clipboard'**
+  String get voucherCodeCopied;
+
+  /// No description provided for @deleteAccountConfirmationText.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account? This action cannot be undone.'**
+  String get deleteAccountConfirmationText;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @logoutConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to logout?'**
+  String get logoutConfirmation;
+
+  /// No description provided for @deletingAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting account...'**
+  String get deletingAccount;
+
+  /// No description provided for @errorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorGeneric;
+
+  /// No description provided for @errorLoggingOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Error logging out'**
+  String get errorLoggingOut;
+
+  /// No description provided for @loggingOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Logging out...'**
+  String get loggingOut;
+
+  /// No description provided for @chooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get chooseFromGallery;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhoto;
+
+  /// No description provided for @removePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Photo'**
+  String get removePhoto;
+
+  /// No description provided for @errorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get errorOccurred;
+
+  /// No description provided for @tapToChangePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change photo'**
+  String get tapToChangePhoto;
+
+  /// No description provided for @displayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Display Name'**
+  String get displayName;
+
+  /// No description provided for @enterDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your display name'**
+  String get enterDisplayName;
+
+  /// No description provided for @displayNameHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'This name will be shown publicly'**
+  String get displayNameHelper;
+
+  /// No description provided for @pleaseEnterDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a display name'**
+  String get pleaseEnterDisplayName;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @hidePasswordFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password fields'**
+  String get hidePasswordFields;
+
+  /// No description provided for @showPasswordFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password fields'**
+  String get showPasswordFields;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get currentPassword;
+
+  /// No description provided for @enterCurrentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter current password'**
+  String get enterCurrentPassword;
+
+  /// No description provided for @pleaseEnterCurrentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your current password'**
+  String get pleaseEnterCurrentPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @enterNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter new password'**
+  String get enterNewPassword;
+
+  /// No description provided for @confirmNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm New Password'**
+  String get confirmNewPassword;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password'**
+  String get forgotPassword;
+
+  /// No description provided for @resetYourPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your password'**
+  String get resetYourPassword;
+
+  /// No description provided for @resetPasswordDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email address and we\'ll generate a new password and send it to your email.'**
+  String get resetPasswordDescription;
+
+  /// No description provided for @enterEmailAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email address'**
+  String get enterEmailAddress;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
+
+  /// No description provided for @backToLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Login'**
+  String get backToLogin;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @forward.
+  ///
+  /// In en, this message translates to:
+  /// **'Forward'**
+  String get forward;
+
+  /// No description provided for @failedToLoadPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load page'**
+  String get failedToLoadPage;
+
+  /// No description provided for @accountSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Settings'**
+  String get accountSettings;
+
+  /// No description provided for @accountSettingsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Language, theme, and more'**
+  String get accountSettingsDescription;
+
+  /// No description provided for @signOutDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of your account'**
+  String get signOutDescription;
+
+  /// No description provided for @failedToLoadEventDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load event details'**
+  String get failedToLoadEventDetails;
+
+  /// No description provided for @yourPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Performance'**
+  String get yourPerformance;
+
+  /// No description provided for @forgotPasswordQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPasswordQuestion;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

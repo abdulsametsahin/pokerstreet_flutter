@@ -398,4 +398,151 @@ class AppLocalizationsLt extends AppLocalizations {
 
   @override
   String get description => 'Aprašymas';
+
+  @override
+  String get myVouchers => 'Mano kuponai';
+
+  @override
+  String get noVouchersAvailable => 'Nėra prieinamų kuponų';
+
+  @override
+  String get noVouchersDescription => 'Šiuo metu neturite jokių kuponų.\nPatikrinkite vėliau dėl naujų pasiūlymų!';
+
+  @override
+  String get activeVouchers => 'Aktyvūs kuponai';
+
+  @override
+  String get expiredUsedVouchers => 'Pasibaigę/Panaudoti kuponai';
+
+  @override
+  String get voucherCode => 'Kupono kodas';
+
+  @override
+  String get expiresOn => 'Baigiasi';
+
+  @override
+  String get voucherCodeCopied => 'Kupono kodas nukopijuotas į iškarpinę';
+
+  @override
+  String get deleteAccountConfirmationText => 'Ar tikrai norite ištrinti savo paskyrą? Šio veiksmo negalima anuliuoti.';
+
+  @override
+  String get delete => 'Ištrinti';
+
+  @override
+  String get logoutConfirmation => 'Ar tikrai norite atsijungti?';
+
+  @override
+  String get deletingAccount => 'Trinama paskyra...';
+
+  @override
+  String get errorGeneric => 'Klaida';
+
+  @override
+  String get errorLoggingOut => 'Atsijungimo klaida';
+
+  @override
+  String get loggingOut => 'Atsijungiama...';
+
+  @override
+  String get chooseFromGallery => 'Pasirinkti iš galerijos';
+
+  @override
+  String get takePhoto => 'Fotografuoti';
+
+  @override
+  String get removePhoto => 'Pašalinti nuotrauką';
+
+  @override
+  String get errorOccurred => 'Įvyko klaida';
+
+  @override
+  String get tapToChangePhoto => 'Spustelėkite, kad pakeistumėte nuotrauką';
+
+  @override
+  String get displayName => 'Rodomas vardas';
+
+  @override
+  String get enterDisplayName => 'Įveskite rodomą vardą';
+
+  @override
+  String get displayNameHelper => 'Šis vardas bus rodomas viešai';
+
+  @override
+  String get pleaseEnterDisplayName => 'Įveskite rodomą vardą';
+
+  @override
+  String get changePassword => 'Keisti slaptažodį';
+
+  @override
+  String get hidePasswordFields => 'Slėpti slaptažodžio laukus';
+
+  @override
+  String get showPasswordFields => 'Rodyti slaptažodžio laukus';
+
+  @override
+  String get currentPassword => 'Dabartinis slaptažodis';
+
+  @override
+  String get enterCurrentPassword => 'Įveskite dabartinį slaptažodį';
+
+  @override
+  String get pleaseEnterCurrentPassword => 'Įveskite dabartinį slaptažodį';
+
+  @override
+  String get newPassword => 'Naujas slaptažodis';
+
+  @override
+  String get enterNewPassword => 'Įveskite naują slaptažodį';
+
+  @override
+  String get confirmNewPassword => 'Patvirtinti naują slaptažodį';
+
+  @override
+  String get saveChanges => 'Išsaugoti pakeitimus';
+
+  @override
+  String get forgotPassword => 'Pamiršau slaptažodį';
+
+  @override
+  String get resetYourPassword => 'Atkurti slaptažodį';
+
+  @override
+  String get resetPasswordDescription => 'Įveskite savo el. pašto adresą ir mes sugeneruosime naują slaptažodį bei atsiųsime jį į jūsų el. paštą.';
+
+  @override
+  String get enterEmailAddress => 'Įveskite savo el. pašto adresą';
+
+  @override
+  String get resetPassword => 'Atkurti slaptažodį';
+
+  @override
+  String get backToLogin => 'Grįžti prie prisijungimo';
+
+  @override
+  String get back => 'Atgal';
+
+  @override
+  String get forward => 'Pirmyn';
+
+  @override
+  String get failedToLoadPage => 'Nepavyko įkelti puslapio';
+
+  @override
+  String get accountSettings => 'Paskyros nustatymai';
+
+  @override
+  String get accountSettingsDescription => 'Kalba, tema ir daugiau';
+
+  @override
+  String get signOutDescription => 'Atsijungti nuo paskyros';
+
+  @override
+  String get failedToLoadEventDetails => 'Nepavyko įkelti renginio detalių';
+
+  @override
+  String get yourPerformance => 'Jūsų veikla';
+
+  @override
+  String get forgotPasswordQuestion => 'Pamiršote slaptažodį?';
 }

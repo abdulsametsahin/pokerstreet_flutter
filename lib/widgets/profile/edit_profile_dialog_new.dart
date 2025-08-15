@@ -52,6 +52,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
   }
 
   Future<void> _pickImage() async {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -60,7 +61,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             children: [
               ListTile(
                 leading: const Icon(Icons.photo_library),
-                title: const Text('Choose from Gallery'),
+                title: Text(l10n.chooseFromGallery),
                 onTap: () async {
                   Navigator.of(context).pop();
                   final XFile? image = await _picker.pickImage(
@@ -78,7 +79,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               ),
               ListTile(
                 leading: const Icon(Icons.photo_camera),
-                title: const Text('Take Photo'),
+                title: Text(l10n.takePhoto),
                 onTap: () async {
                   Navigator.of(context).pop();
                   final XFile? image = await _picker.pickImage(
@@ -97,7 +98,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               if (_selectedImage != null)
                 ListTile(
                   leading: const Icon(Icons.delete),
-                  title: const Text('Remove Photo'),
+                  title: Text(l10n.removePhoto),
                   onTap: () {
                     Navigator.of(context).pop();
                     setState(() {

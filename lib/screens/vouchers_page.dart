@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/personal_voucher.dart';
 import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
+import '../l10n/app_localizations.dart';
 
 class VouchersPage extends StatefulWidget {
   const VouchersPage({super.key});
@@ -63,7 +64,7 @@ class _VouchersPageState extends State<VouchersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Vouchers'),
+        title: Text(AppLocalizations.of(context)!.myVouchers),
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
@@ -97,14 +98,14 @@ class _VouchersPageState extends State<VouchersPage> {
             ),
             const SizedBox(height: 24),
             Text(
-              'No vouchers available',
+              AppLocalizations.of(context)!.noVouchersAvailable,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
             ),
             const SizedBox(height: 12),
             Text(
-              'You don\'t have any vouchers at the moment.\nCheck back later for new offers!',
+              AppLocalizations.of(context)!.noVouchersDescription,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -127,7 +128,7 @@ class _VouchersPageState extends State<VouchersPage> {
         children: [
           if (activeVouchers.isNotEmpty) ...[
             Text(
-              'Active Vouchers',
+              AppLocalizations.of(context)!.activeVouchers,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -139,7 +140,7 @@ class _VouchersPageState extends State<VouchersPage> {
           ],
           if (expiredVouchers.isNotEmpty) ...[
             Text(
-              'Expired/Used Vouchers',
+              AppLocalizations.of(context)!.expiredUsedVouchers,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -205,7 +206,7 @@ class _VouchersPageState extends State<VouchersPage> {
                                 ),
                       ),
                       Text(
-                        'Voucher Code',
+                        AppLocalizations.of(context)!.voucherCode,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
@@ -296,7 +297,7 @@ class _VouchersPageState extends State<VouchersPage> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Expires on ${_formatDate(voucher.expiresAt!)}',
+                    '${AppLocalizations.of(context)!.expiresOn} ${_formatDate(voucher.expiresAt!)}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -327,7 +328,7 @@ class _VouchersPageState extends State<VouchersPage> {
     Clipboard.setData(ClipboardData(text: code));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Voucher code "$code" copied to clipboard'),
+        content: Text('${AppLocalizations.of(context)!.voucherCode} "$code" ${AppLocalizations.of(context)!.voucherCodeCopied}'),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
