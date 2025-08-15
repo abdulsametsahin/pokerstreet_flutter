@@ -4,7 +4,7 @@ import 'dart:async';
 import '../providers/events_provider.dart';
 import '../models/event.dart';
 import '../l10n/app_localizations.dart';
-import '../widgets/public_event_details_bottom_sheet.dart';
+import 'public_event_details_page.dart';
 
 class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
@@ -831,11 +831,10 @@ class _EventsPageState extends State<EventsPage> {
   }
 
   void _showEventDetails(Event event, AppLocalizations l10n) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => PublicEventDetailsBottomSheet(event: event),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PublicEventDetailsPage(event: event),
+      ),
     );
   }
 }
