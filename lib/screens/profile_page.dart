@@ -334,7 +334,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final l10n = AppLocalizations.of(context)!;
     final totalBalance = authProvider.user?.totalBalance ?? 0.0;
     final balanceColor = totalBalance >= 0 ? Colors.green : Colors.red;
-    
+
     return Row(
       children: [
         Expanded(
@@ -586,9 +586,10 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _showDeleteAccountDialog(BuildContext context, AuthProvider authProvider) {
+  void _showDeleteAccountDialog(
+      BuildContext context, AuthProvider authProvider) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -605,7 +606,7 @@ class _ProfilePageState extends State<ProfilePage> {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                
+
                 // Show loading indicator
                 showDialog(
                   context: context,
@@ -619,19 +620,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 try {
                   final response = await authProvider.deleteAccount();
-                  
+
                   // Hide loading indicator
                   if (context.mounted) {
                     Navigator.of(context).pop();
                   }
-                  
+
                   if (response.success) {
                     // Show success message
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(l10n.accountDeletedSuccessfully),
-                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
                         ),
                       );
                     }
@@ -640,7 +642,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(response.message.isEmpty ? l10n.accountDeletionFailed : response.message),
+                          content: Text(response.message.isEmpty
+                              ? l10n.accountDeletionFailed
+                              : response.message),
                           backgroundColor: Theme.of(context).colorScheme.error,
                         ),
                       );
@@ -651,7 +655,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   if (context.mounted) {
                     Navigator.of(context).pop();
                   }
-                  
+
                   // Show error message
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
