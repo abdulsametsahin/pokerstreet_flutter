@@ -332,6 +332,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildQuickStatsRow(BuildContext context, AuthProvider authProvider) {
     final l10n = AppLocalizations.of(context)!;
+    final totalBalance = authProvider.user?.totalBalance ?? 0.0;
+    final balanceColor = totalBalance >= 0 ? Colors.green : Colors.red;
+    
     return Row(
       children: [
         Expanded(
@@ -356,9 +359,9 @@ class _ProfilePageState extends State<ProfilePage> {
           child: _buildStatCard(
             context,
             l10n.balance,
-            '€0.00',
+            '€${totalBalance.toStringAsFixed(2)}',
             Icons.account_balance_wallet,
-            Colors.green,
+            balanceColor,
           ),
         ),
         const SizedBox(width: 12),
